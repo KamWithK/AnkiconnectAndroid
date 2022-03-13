@@ -5,11 +5,9 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import com.ichi2.anki.api.AddContentApi;
 
 import java.io.IOException;
 import java.util.*;
@@ -23,7 +21,7 @@ public class IntegratedAPI {
     private final NoteAPI noteAPI;
     private final MediaAPI mediaAPI;
 
-    private static String preferredName = "";
+    private static HashMap<String, String> pathFixes = new HashMap<>();
 
     public IntegratedAPI() {
         deckAPI = new DeckAPI();
@@ -58,11 +56,9 @@ public class IntegratedAPI {
      * @param data Map of (field name, field value) pairs
      */
     public Long addNote(final Map<String, String> data, String deck_name, String model_name) throws Exception {
-//        Replace old paths with new ones
-//        TODO: Handle multiple media appropriately
         for (Map.Entry<String, String> entry : data.entrySet()) {
-            if (entry.getValue().matches("\\[.*:.*\\]")) {
-                String replaced = entry.getValue().replaceAll("(?<=:).*(?=])", preferredName);
+            for (Map.Entry<String, String> nameMap : pathFixes.entrySet()) {
+                String replaced = entry.getValue().replaceAll(nameMap.getKey(), nameMap.getValue());
                 data.put(entry.getKey(), replaced);
             }
         }
@@ -82,7 +78,7 @@ public class IntegratedAPI {
 
     public String storeMediaFile(String filename, byte[] data) throws IOException {
         String ankidroid_path = mediaAPI.storeMediaFile(filename, data);
-        preferredName = ankidroid_path;
+        pathFixes.put(filename, ankidroid_path);
         return ankidroid_path;
     }
 }
