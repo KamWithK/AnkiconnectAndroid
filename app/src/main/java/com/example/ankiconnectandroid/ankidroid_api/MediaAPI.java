@@ -37,30 +37,16 @@ public class MediaAPI {
             throw e;
         }
 
-        // TODO: Check mimetype to support audio and images
-//        String mimetype = MimeTypeMap.getFileExtensionFromUrl(file.toURI().toString());
+        Uri file_uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID, file);
+        context.grantUriPermission("com.ichi2.anki", file_uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-        String result = null;
-        try {
-            Uri file_uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID, file);
-            context.grantUriPermission("com.ichi2.anki", file_uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            result = api.addMediaFromUri(file_uri, Uri.parse(filename).getLastPathSegment().replaceAll("\\..*", ""), "audio");
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(FlashCardsContract.AnkiMedia.FILE_URI, file_uri.toString());
+        contentValues.put(FlashCardsContract.AnkiMedia.PREFERRED_NAME, Uri.parse(filename).getLastPathSegment().replaceAll("\\..*", ""));
 
-//            ContentValues contentValues = new ContentValues();
-//            contentValues.put(FlashCardsContract.AnkiMedia.FILE_URI, file_uri.toString());
-//            contentValues.put(FlashCardsContract.AnkiMedia.PREFERRED_NAME, filename);
-//
-//            ContentResolver contentResolver = context.getContentResolver();
-//            Uri returnUri = contentResolver.insert(FlashCardsContract.AnkiMedia.CONTENT_URI, contentValues);
-//
-//            Log.w("Content Values", contentValues.toString());
-//            result = String.format("[sound:%s]", new File(returnUri.getPath()).toString().substring(1));
-            Log.w("Cache Path", file_uri.toString());
-            Log.w("Result", result);
-        } catch (Exception e) {
-            Log.w("Ankidroid", e);
-        }
+        ContentResolver contentResolver = context.getContentResolver();
+        Uri returnUri = contentResolver.insert(FlashCardsContract.AnkiMedia.CONTENT_URI, contentValues);
 
-        return result;
+        return new File(returnUri.getPath()).toString().substring(1);
     }
 }

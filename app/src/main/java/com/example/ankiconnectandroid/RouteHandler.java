@@ -90,7 +90,7 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
                 case "storeMediaFile":
                     Map<String, String> response_ = new HashMap<>();
 
-                    response_.put("result", mediaAPI.storeMediaFile(Parser.getMediaFilename(raw_json), Parser.getMediaData(raw_json)));
+                    response_.put("result", integratedAPI.storeMediaFile(Parser.getMediaFilename(raw_json), Parser.getMediaData(raw_json)));
                     response_.put("error", null);
 
                     return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/json", Parser.gson.toJson(response_));
