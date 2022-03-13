@@ -1,6 +1,5 @@
 package com.example.ankiconnectandroid;
 
-import android.util.Log;
 import com.example.ankiconnectandroid.ankidroid_api.DeckAPI;
 import com.example.ankiconnectandroid.ankidroid_api.IntegratedAPI;
 import com.example.ankiconnectandroid.ankidroid_api.MediaAPI;
@@ -10,11 +9,10 @@ import com.google.gson.JsonObject;
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.router.RouterNanoHTTPD;
 
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
+import static com.example.ankiconnectandroid.Router.contentType;
 import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 
 public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
@@ -51,6 +49,9 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
     }
 
     public NanoHTTPD.Response get(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, NanoHTTPD.IHTTPSession session) {
+//        Enforce UTF-8 encoding (response doesn't always contain by default)
+        session.getHeaders().put("content-type", contentType);
+
         Map<String, String> files = new HashMap<>();
         try {
             session.parseBody(files);
