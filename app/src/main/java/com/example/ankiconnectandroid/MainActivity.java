@@ -5,7 +5,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.ankiconnectandroid.ankidroid_api.IntegratedAPI;
-import com.example.ankiconnectandroid.request_parsers.Parser;
 
 import java.io.IOException;
 

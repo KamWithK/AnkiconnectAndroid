@@ -27,7 +27,6 @@ public class MediaAPI {
 
     @SuppressLint("SetWorldReadable")
     public String storeMediaFile(String filename, byte[] data) throws IOException {
-        Log.w("Given Filename", filename);
         File file = new File(context.getCacheDir(), Uri.parse(filename).getLastPathSegment());
 
 //        Write to a temporary file

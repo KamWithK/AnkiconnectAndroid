@@ -2,7 +2,6 @@ package com.example.ankiconnectandroid.ankidroid_api;
 
 import com.ichi2.anki.api.AddContentApi;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.example.ankiconnectandroid.Router.context;
