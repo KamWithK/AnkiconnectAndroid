@@ -47,6 +47,9 @@ public class MediaAPI {
         ContentResolver contentResolver = context.getContentResolver();
         Uri returnUri = contentResolver.insert(FlashCardsContract.AnkiMedia.CONTENT_URI, contentValues);
 
+//        Remove temporary file
+        file.deleteOnExit();
+
         return new File(returnUri.getPath()).toString().substring(1);
     }
 }
