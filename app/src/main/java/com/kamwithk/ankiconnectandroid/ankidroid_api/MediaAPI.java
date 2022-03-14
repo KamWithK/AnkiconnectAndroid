@@ -1,4 +1,4 @@
-package com.example.ankiconnectandroid.ankidroid_api;
+package com.kamwithk.ankiconnectandroid.ankidroid_api;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import androidx.core.content.FileProvider;
-import com.example.ankiconnectandroid.BuildConfig;
+import com.kamwithk.ankiconnectandroid.BuildConfig;
 import com.ichi2.anki.FlashCardsContract;
 import com.ichi2.anki.api.AddContentApi;
 

@@ -1,12 +1,12 @@
-package com.example.ankiconnectandroid;
+package com.kamwithk.ankiconnectandroid;
 
 import android.content.Context;
 import android.util.Log;
-import com.example.ankiconnectandroid.ankidroid_api.DeckAPI;
-import com.example.ankiconnectandroid.ankidroid_api.IntegratedAPI;
-import com.example.ankiconnectandroid.ankidroid_api.MediaAPI;
-import com.example.ankiconnectandroid.ankidroid_api.ModelAPI;
-import com.example.ankiconnectandroid.request_parsers.Parser;
+import com.kamwithk.ankiconnectandroid.ankidroid_api.DeckAPI;
+import com.kamwithk.ankiconnectandroid.ankidroid_api.IntegratedAPI;
+import com.kamwithk.ankiconnectandroid.ankidroid_api.MediaAPI;
+import com.kamwithk.ankiconnectandroid.ankidroid_api.ModelAPI;
+import com.kamwithk.ankiconnectandroid.request_parsers.Parser;
 import com.google.gson.JsonObject;
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.router.RouterNanoHTTPD;
@@ -14,7 +14,7 @@ import fi.iki.elonen.router.RouterNanoHTTPD;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.ankiconnectandroid.Router.contentType;
+import static com.kamwithk.ankiconnectandroid.Router.contentType;
 import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 
 public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {

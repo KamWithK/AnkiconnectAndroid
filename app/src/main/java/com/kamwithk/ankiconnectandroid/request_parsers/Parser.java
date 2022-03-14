@@ -1,4 +1,4 @@
-package com.example.ankiconnectandroid.request_parsers;
+package com.kamwithk.ankiconnectandroid.request_parsers;
 
 import android.util.Base64;
 import com.google.gson.*;

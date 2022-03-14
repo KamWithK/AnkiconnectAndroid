@@ -1,4 +1,4 @@
-package com.example.ankiconnectandroid.ankidroid_api;
+package com.kamwithk.ankiconnectandroid.ankidroid_api;
 
 import android.content.Context;
 import com.ichi2.anki.api.AddContentApi;

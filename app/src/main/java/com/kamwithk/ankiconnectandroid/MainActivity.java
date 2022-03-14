@@ -1,4 +1,4 @@
-package com.example.ankiconnectandroid;
+package com.kamwithk.ankiconnectandroid;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -9,7 +9,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.core.content.ContextCompat;
-import com.example.ankiconnectandroid.ankidroid_api.IntegratedAPI;
+import com.kamwithk.ankiconnectandroid.ankidroid_api.IntegratedAPI;
 
 public class MainActivity extends AppCompatActivity {
 

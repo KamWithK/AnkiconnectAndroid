@@ -1,4 +1,4 @@
-package com.example.ankiconnectandroid;
+package com.kamwithk.ankiconnectandroid;
 
 import org.junit.Test;
 
