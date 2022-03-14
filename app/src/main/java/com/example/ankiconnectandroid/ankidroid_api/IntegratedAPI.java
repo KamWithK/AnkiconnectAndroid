@@ -1,6 +1,7 @@
 package com.example.ankiconnectandroid.ankidroid_api;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
@@ -12,22 +13,24 @@ import androidx.core.content.ContextCompat;
 import java.io.IOException;
 import java.util.*;
 
-import static com.example.ankiconnectandroid.Router.context;
 import static com.ichi2.anki.api.AddContentApi.READ_WRITE_PERMISSION;
 
 public class IntegratedAPI {
-    private final DeckAPI deckAPI;
-    private final ModelAPI modelAPI;
-    private final NoteAPI noteAPI;
-    private final MediaAPI mediaAPI;
+    private Context context;
+    public final DeckAPI deckAPI;
+    public final ModelAPI modelAPI;
+    public final NoteAPI noteAPI;
+    public final MediaAPI mediaAPI;
 
     private static HashMap<String, String> pathFixes = new HashMap<>();
 
-    public IntegratedAPI() {
-        deckAPI = new DeckAPI();
-        modelAPI = new ModelAPI();
-        noteAPI = new NoteAPI();
-        mediaAPI = new MediaAPI();
+    public IntegratedAPI(Context context) {
+        this.context = context;
+
+        deckAPI = new DeckAPI(context);
+        modelAPI = new ModelAPI(context);
+        noteAPI = new NoteAPI(context);
+        mediaAPI = new MediaAPI(context);
 
 //        Get permissions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

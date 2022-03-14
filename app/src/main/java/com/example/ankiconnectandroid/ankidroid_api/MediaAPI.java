@@ -3,9 +3,9 @@ package com.example.ankiconnectandroid.ankidroid_api;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.util.Log;
 import androidx.core.content.FileProvider;
 import com.example.ankiconnectandroid.BuildConfig;
@@ -16,12 +16,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import static com.example.ankiconnectandroid.Router.context;
-
 public class MediaAPI {
+    private Context context;
     private final AddContentApi api;
 
-    public MediaAPI() {
+    public MediaAPI(Context context) {
+        this.context = context;
         api = new AddContentApi(context);
     }
 

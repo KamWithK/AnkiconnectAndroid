@@ -1,5 +1,6 @@
 package com.example.ankiconnectandroid;
 
+import android.content.Context;
 import com.example.ankiconnectandroid.ankidroid_api.DeckAPI;
 import com.example.ankiconnectandroid.ankidroid_api.IntegratedAPI;
 import com.example.ankiconnectandroid.ankidroid_api.MediaAPI;
@@ -16,22 +17,14 @@ import static com.example.ankiconnectandroid.Router.contentType;
 import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 
 public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
-    public DeckAPI deckAPI;
-    public ModelAPI modelAPI;
-    public MediaAPI mediaAPI;
-    public IntegratedAPI integratedAPI;
+
+    private IntegratedAPI integratedAPI = null;
+    private DeckAPI deckAPI;
+    private ModelAPI modelAPI;
+    private MediaAPI mediaAPI;
 
     public RouteHandler() {
         super();
-
-        try {
-            deckAPI = new DeckAPI();
-            modelAPI = new ModelAPI();
-            mediaAPI = new MediaAPI();
-            integratedAPI = new IntegratedAPI();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
     @Override
     public String getText() {
@@ -49,6 +42,16 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
     }
 
     public NanoHTTPD.Response get(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, NanoHTTPD.IHTTPSession session) {
+        Context context = uriResource.initParameter(0, Context.class);
+
+//        Setup
+        if (integratedAPI == null) {
+            integratedAPI = new IntegratedAPI(context);
+            deckAPI = integratedAPI.deckAPI;
+            modelAPI = integratedAPI.modelAPI;
+            mediaAPI = integratedAPI.mediaAPI;
+        }
+
 //        Enforce UTF-8 encoding (response doesn't always contain by default)
         session.getHeaders().put("content-type", contentType);
 

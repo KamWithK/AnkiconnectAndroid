@@ -1,16 +1,15 @@
 package com.example.ankiconnectandroid.ankidroid_api;
 
+import android.content.Context;
 import com.ichi2.anki.api.AddContentApi;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.ankiconnectandroid.Router.context;
-
 public class ModelAPI {
     private final AddContentApi api;
 
-    public ModelAPI() {
+    public ModelAPI(Context context) {
         api = new AddContentApi(context);
     }
 

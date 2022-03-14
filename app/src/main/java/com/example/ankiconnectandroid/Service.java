@@ -7,7 +7,6 @@ import android.os.IBinder;
 import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import com.example.ankiconnectandroid.ankidroid_api.IntegratedAPI;
 
 import java.io.IOException;
 
@@ -16,19 +15,11 @@ import static com.example.ankiconnectandroid.MainActivity.CHANNEL_ID;
 public class Service extends android.app.Service {
     private static final int PORT = 8765;
 
-    public IntegratedAPI integratedAPI;
     private Router server;
 
     @Override
     public void onCreate() { // Only one time
         super.onCreate();
-
-        try {
-            integratedAPI = new IntegratedAPI();
-        } catch (Exception e) {
-            Log.w("Ankidroid", "Unable to connect to Ankidroid");
-            e.printStackTrace();
-        }
 
         try {
             server = new Router(PORT, this);
