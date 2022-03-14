@@ -31,8 +31,9 @@ public class IntegratedAPI {
         modelAPI = new ModelAPI(context);
         noteAPI = new NoteAPI(context);
         mediaAPI = new MediaAPI(context);
+    }
 
-//        Get permissions
+    public static void authenticate(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int permission = ContextCompat.checkSelfPermission(context, READ_WRITE_PERMISSION);
 

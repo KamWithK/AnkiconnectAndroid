@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.core.content.ContextCompat;
+import com.example.ankiconnectandroid.ankidroid_api.IntegratedAPI;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        IntegratedAPI.authenticate(this);
 
         NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "Ankiconnect Android", NotificationManager.IMPORTANCE_DEFAULT);
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
