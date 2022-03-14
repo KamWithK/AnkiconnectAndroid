@@ -12,7 +12,7 @@ It reimplements their core APIs used by Yomichan to work with [Ankidroid](https:
 Here's how to set everything up from scratch (if you've already got Yomichan working then skip to step 5):
 
 1. Install [Kiwi Browser](https://play.google.com/store/apps/details?id=com.kiwibrowser.browser) and [Ankidroid](https://play.google.com/store/apps/details?id=com.ichi2.anki)
-2. Install Ankiconnect Android
+2. Install Ankiconnect Android - [Download](https://github.com/KamWithK/AnkiconnectAndroid/releases)
 3. Start the Ankiconnect Android app, accept the permissions and hit start service
 4. Set up the [Yomichan extension](https://chrome.google.com/webstore/detail/yomichan/ogmnaimimemjmbakcfefmnahgdfhfami) in Kiwi Browser to your liking:
 
