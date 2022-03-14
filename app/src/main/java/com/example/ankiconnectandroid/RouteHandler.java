@@ -1,6 +1,7 @@
 package com.example.ankiconnectandroid;
 
 import android.content.Context;
+import android.util.Log;
 import com.example.ankiconnectandroid.ankidroid_api.DeckAPI;
 import com.example.ankiconnectandroid.ankidroid_api.IntegratedAPI;
 import com.example.ankiconnectandroid.ankidroid_api.MediaAPI;
@@ -63,7 +64,13 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
                 case "version":
                     return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/json", "6");
                 case "deckNames":
-                    return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/json", Parser.gson.toJson(deckAPI.deckNames()));
+                    try {
+                        return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/json", Parser.gson.toJson(deckAPI.deckNames()));
+                    } catch (Exception e) {
+//                        Assume problem is deck had 0 length
+                        Log.d("Can't Load Deck", e.toString());
+                        return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/json", Parser.gson.toJson(new String[0]));
+                    }
                 case "deckNamesAndIds":
                     return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/json", Parser.gson.toJson(deckAPI.deckNamesAndIds()));
                 case "modelNames":
