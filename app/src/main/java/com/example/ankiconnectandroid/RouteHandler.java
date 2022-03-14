@@ -64,13 +64,7 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
                 case "version":
                     return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/json", "6");
                 case "deckNames":
-                    try {
-                        return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/json", Parser.gson.toJson(deckAPI.deckNames()));
-                    } catch (Exception e) {
-//                        Assume problem is deck had 0 length
-                        Log.d("Can't Load Deck", e.toString());
-                        return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/json", Parser.gson.toJson(new String[0]));
-                    }
+                    return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/json", Parser.gson.toJson(deckAPI.deckNames()));
                 case "deckNamesAndIds":
                     return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/json", Parser.gson.toJson(deckAPI.deckNamesAndIds()));
                 case "modelNames":
@@ -104,10 +98,15 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
                     response_.put("error", null);
 
                     return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/json", Parser.gson.toJson(response_));
+                default:
+                    return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/json", "AnkiConnect v.6");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Map<String, String> response = new HashMap<>();
+            response.put("result", null);
+            response.put("error", e.toString());
+
+            return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/json", Parser.gson.toJson(response));
         }
-        return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/json", "AnkiConnect v.6");
     }
 }
