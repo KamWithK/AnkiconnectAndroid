@@ -38,6 +38,7 @@ public class Service extends android.app.Service {
                 .setContentTitle("Ankiconnect Android")
                 .setContentText("Ankiconnect Android")
                 .setContentIntent(pendingIntent)
+                .setOngoing(true)
                 .build();
 
         startForeground(1, notification);
