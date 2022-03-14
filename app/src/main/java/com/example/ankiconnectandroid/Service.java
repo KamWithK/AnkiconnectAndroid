@@ -48,7 +48,7 @@ public class Service extends android.app.Service {
 
     @Override
     public void onDestroy() {
-        server.closeAllConnections(); // TODO: Check if this is right way
+        server.stop();
         super.onDestroy();
     }
 
