@@ -31,12 +31,13 @@ public class Service extends android.app.Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) { // Every time start is called
+        Log.w("onStartCommand", "onStartCommand");
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Ankiconnect Android")
-                .setContentText("Ankiconnect Android")
+                .setSmallIcon(R.mipmap.app_launcher)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
                 .build();
