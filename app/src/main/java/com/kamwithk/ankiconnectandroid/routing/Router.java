@@ -1,4 +1,4 @@
-package com.kamwithk.ankiconnectandroid;
+package com.kamwithk.ankiconnectandroid.routing;
 
 import android.content.Context;
 import fi.iki.elonen.NanoHTTPD;
