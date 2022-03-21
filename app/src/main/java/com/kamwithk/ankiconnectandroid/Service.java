@@ -1,5 +1,6 @@
 package com.kamwithk.ankiconnectandroid;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -29,6 +30,7 @@ public class Service extends android.app.Service {
         }
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) { // Every time start is called
         Log.w("onStartCommand", "onStartCommand");
