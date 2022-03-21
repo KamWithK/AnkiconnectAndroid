@@ -26,9 +26,7 @@ public class AnkiAPIRouting {
         mediaAPI = integratedAPI.mediaAPI;
     }
 
-    public NanoHTTPD.Response findRoute(String json_string) throws Exception {
-        JsonObject raw_json = Parser.parse(json_string);
-
+    public NanoHTTPD.Response findRoute(JsonObject raw_json) throws Exception {
         switch (Parser.get_action(raw_json)) {
             case "version":
                 return version();
@@ -53,9 +51,9 @@ public class AnkiAPIRouting {
         }
     }
 
-    public NanoHTTPD.Response findRouteHandleError(String json_string) {
+    public NanoHTTPD.Response findRouteHandleError(JsonObject raw_json) {
         try {
-            return findRoute(json_string);
+            return findRoute(raw_json);
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
             response.put("result", null);

@@ -1,12 +1,8 @@
 package com.kamwithk.ankiconnectandroid.routing;
 
 import android.content.Context;
-import com.kamwithk.ankiconnectandroid.ankidroid_api.DeckAPI;
+import android.util.Log;
 import com.kamwithk.ankiconnectandroid.ankidroid_api.IntegratedAPI;
-import com.kamwithk.ankiconnectandroid.ankidroid_api.MediaAPI;
-import com.kamwithk.ankiconnectandroid.ankidroid_api.ModelAPI;
-import com.kamwithk.ankiconnectandroid.request_parsers.Parser;
-import com.google.gson.JsonObject;
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.router.RouterNanoHTTPD;
 
@@ -19,7 +15,7 @@ import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 
 public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
 
-    private AnkiAPIRouting ankiAPIRouting = null;
+    private APIHandler apiHandler = null;
 
     public RouteHandler() {
         super();
@@ -41,9 +37,9 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
 
     public NanoHTTPD.Response get(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, NanoHTTPD.IHTTPSession session) {
 //        Setup
-        if (ankiAPIRouting == null) {
+        if (apiHandler == null) {
             Context context = uriResource.initParameter(0, Context.class);
-            ankiAPIRouting = new AnkiAPIRouting(new IntegratedAPI(context));
+            apiHandler = new APIHandler(new IntegratedAPI(context));
         }
 
 //        Enforce UTF-8 encoding (response doesn't always contain by default)
@@ -56,6 +52,6 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
             e.printStackTrace();
         }
 
-        return ankiAPIRouting.findRouteHandleError(files.get("postData"));
+        return apiHandler.chooseAPI(files.get("postData"), session.getParameters());
     }
 }
