@@ -52,4 +52,8 @@ public class Parser {
         String encoded = raw_data.get("params").getAsJsonObject().get("data").getAsString();
         return Base64.decode(encoded, Base64.DEFAULT);
     }
+
+    public static JsonArray getMultiActions(JsonObject raw_data) {
+        return raw_data.get("params").getAsJsonObject().get("actions").getAsJsonArray();
+    }
 }
