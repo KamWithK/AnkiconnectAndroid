@@ -35,6 +35,13 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
 
 > Easier Yomichan setup: If you import settings from a computer, ensure that the bolded steps are still followed
 
+## Common Errors and Solutions
+1. Yomichan shows it's connected but I can't see the green plus arrow to create cards - By default Yomichan has duplicate checks enabled, go into the advanced settings and disable it
+2. Forvo audio won't load - Make sure you've copy pasted the EXACT URL from above (any small changes will likely cause it to stop working, the URL is different from the one on your PC)
+3. App crashes - Each version of Android has many API changes to handle, these can sometimes cause crashes, the newest release contains an Android 12 fix
+
+If you've gone through the instructions and are still having trouble, feel free to create an issue here on GitHub or @/dm me on Discord.
+
 ## Limitations
 Because Ankiconnect Android is a small project with a limited scope, not all API queries/cases are implemented/considered.
 The only currently known breaking example is when duplicate card checks are enabled.
