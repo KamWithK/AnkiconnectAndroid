@@ -34,7 +34,6 @@ public class Service extends android.app.Service {
     @SuppressLint("UnspecifiedImmutableFlag")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) { // Every time start is called
-        Log.w("onStartCommand", "onStartCommand");
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
