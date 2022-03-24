@@ -29,16 +29,22 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
 6. Set up Forvo audio
     * Click on `Configure audio playback sources` and under the `Audio` section
     * Click the `Add` button (top right corner)
-    * Select `Custom URL (JSON)` and copy paste `http://localhost:8765/?term={term}&reading={reading}` into the `URL` box (NOTE: This is NOT the same URL as from your PC, the port is different)
+    * **Select `Custom URL (JSON)` and copy paste `http://localhost:8765/?term={term}&reading={reading}` into the `URL` box** (NOTE: This is NOT the same URL as from your PC, the port is different)
 
 ***Sections and Advanced options visible via the blue menu icon on the bottom right of the screen***
 
 > Easier Yomichan setup: If you import settings from a computer, ensure that the bolded steps are still followed
 
 ## Common Errors and Solutions
-1. Yomichan shows it's connected but I can't see the green plus arrow to create cards - By default Yomichan has duplicate checks enabled, go into the advanced settings and disable it
-2. Forvo audio won't load - Make sure you've copy pasted the EXACT URL from above (any small changes will likely cause it to stop working, the URL is different from the one on your PC)
-3. App crashes - Each version of Android has many API changes to handle, these can sometimes cause crashes, the newest release contains an Android 12 fix
+If you're experiencing any of these problems:
+1. Yomichan shows it's connected but I can't see the green plus arrow to create cards
+2. Forvo audio won't load
+3. App crashes
+
+Check that:
+* Latest [app release](https://github.com/KamWithK/AnkiconnectAndroid/releases) is installed
+* `Check for card duplicates` is disabled under advanced options on Yomichan
+* `http://localhost:8765/?term={term}&reading={reading}` is added as `Custom URL (JSON)` as a Yomichan audio source
 
 If you've gone through the instructions and are still having trouble, feel free to create an issue here on GitHub or @/dm me on Discord.
 
