@@ -4,6 +4,7 @@ import android.content.Context;
 import com.ichi2.anki.api.AddContentApi;
 
 import java.util.Map;
+import java.util.Set;
 
 public class NoteAPI {
     private final AddContentApi api;
@@ -16,7 +17,7 @@ public class NoteAPI {
      * Add flashcards to AnkiDroid through instant add API
      * @param data Map of (field name, field value) pairs
      */
-    public Long addNote(final Map<String, String> data, Long deck_id, Long model_id) throws Exception {
+    public Long addNote(final Map<String, String> data, Long deck_id, Long model_id, Set<String> tags) throws Exception {
         String[] all_field_names = api.getFieldList(model_id);
         if (all_field_names == null) {
             throw new Exception("Couldn't get fields");
@@ -28,6 +29,6 @@ public class NoteAPI {
             fields[i] = data.get(all_field_names[i]);
         }
 
-        return api.addNote(model_id, deck_id, fields, null);
+        return api.addNote(model_id, deck_id, fields, tags);
     }
 }

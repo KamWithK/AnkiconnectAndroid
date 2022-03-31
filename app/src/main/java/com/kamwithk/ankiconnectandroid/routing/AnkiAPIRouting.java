@@ -136,7 +136,8 @@ public class AnkiAPIRouting {
         return String.valueOf(integratedAPI.addNote(
                 Parser.getNoteValues(raw_json),
                 Parser.getDeckName(raw_json),
-                Parser.getModelName(raw_json)
+                Parser.getModelName(raw_json),
+                Parser.getNoteTags(raw_json)
         ));
     }
 

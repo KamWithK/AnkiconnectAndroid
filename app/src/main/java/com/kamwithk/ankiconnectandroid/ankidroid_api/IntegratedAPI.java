@@ -49,7 +49,7 @@ public class IntegratedAPI {
         data.put("Front", "日の出");
 
         try {
-            addNote(data, "Temporary", "Basic");
+            addNote(data, "Temporary", "Basic", null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -59,7 +59,7 @@ public class IntegratedAPI {
      * Add flashcards to AnkiDroid through instant add API
      * @param data Map of (field name, field value) pairs
      */
-    public Long addNote(final Map<String, String> data, String deck_name, String model_name) throws Exception {
+    public Long addNote(final Map<String, String> data, String deck_name, String model_name, Set<String> tags) throws Exception {
         for (Map.Entry<String, String> entry : data.entrySet()) {
             for (Map.Entry<String, String> nameMap : pathFixes.entrySet()) {
                 String replaced = entry.getValue().replaceAll(nameMap.getKey(), nameMap.getValue());
@@ -69,7 +69,7 @@ public class IntegratedAPI {
 
         Long deck_id = deckAPI.getDeckID(deck_name);
         Long model_id = modelAPI.getModelID(model_name, data.size());
-        Long note_id = noteAPI.addNote(data, deck_id, model_id);
+        Long note_id = noteAPI.addNote(data, deck_id, model_id, tags);
 
         if (note_id != null) {
             new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, "Card added", Toast.LENGTH_LONG).show());

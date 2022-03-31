@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 
 public class Parser {
     public static Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -34,6 +35,11 @@ public class Parser {
     public static Map<String, String> getNoteValues(JsonObject raw_data) {
         Type fieldType = new TypeToken<Map<String, String>>() {}.getType();
         return gson.fromJson(raw_data.get("params").getAsJsonObject().get("note").getAsJsonObject().get("fields"), fieldType);
+    }
+
+    public static Set<String> getNoteTags(JsonObject raw_data) {
+        Type fieldType = new TypeToken<Set<String>>() {}.getType();
+        return gson.fromJson(raw_data.get("params").getAsJsonObject().get("note").getAsJsonObject().get("tags"), fieldType);
     }
 
     public static boolean[] getNoteTrues(JsonObject raw_data) {
