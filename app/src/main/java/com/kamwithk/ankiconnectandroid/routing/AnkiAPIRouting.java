@@ -3,6 +3,7 @@ package com.kamwithk.ankiconnectandroid.routing;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.kamwithk.ankiconnectandroid.ankidroid_api.DeckAPI;
 import com.kamwithk.ankiconnectandroid.ankidroid_api.IntegratedAPI;
 import com.kamwithk.ankiconnectandroid.ankidroid_api.MediaAPI;
@@ -52,13 +53,22 @@ public class AnkiAPIRouting {
                 return storeMediaFile(raw_json);
             case "multi":
                 JsonArray actions = Parser.getMultiActions(raw_json);
+                Map<String, JsonArray> responses = new HashMap<>();
                 JsonArray results = new JsonArray();
 
                 for (JsonElement jsonElement : actions) {
-                    results.add(Parser.parse(findRoute(jsonElement.getAsJsonObject())));
+                    JsonObject response = new JsonObject();
+                    response.add(
+                            "result",
+                            JsonParser.parseString(findRoute(jsonElement.getAsJsonObject()))
+                    );
+                    results.add(response);
                 }
 
-                return Parser.gson.toJson(results);
+                responses.put("result", results);
+                responses.put("error", null);
+
+                return Parser.gson.toJson(responses);
             default:
                 return default_version();
         }
