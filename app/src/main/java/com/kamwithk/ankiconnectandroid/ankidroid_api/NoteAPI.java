@@ -1,15 +1,18 @@
 package com.kamwithk.ankiconnectandroid.ankidroid_api;
 
 import android.content.Context;
+import android.database.Cursor;
+import com.ichi2.anki.FlashCardsContract;
 import com.ichi2.anki.api.AddContentApi;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class NoteAPI {
+    private Context context;
     private final AddContentApi api;
 
     public NoteAPI(Context context) {
+        this.context = context;
         api = new AddContentApi(context);
     }
 
@@ -30,5 +33,23 @@ public class NoteAPI {
         }
 
         return api.addNote(model_id, deck_id, fields, tags);
+    }
+
+    public ArrayList<Boolean> canAddNotes(ArrayList<HashMap<String, String>> notes_to_test) {
+        ArrayList<Boolean> note_exists = new ArrayList<>();
+
+        for (HashMap<String, String> field : notes_to_test) {
+            final Cursor cursor = context.getContentResolver().query(
+                    FlashCardsContract.Note.CONTENT_URI,
+                    null,
+                    field.get("field") + ":" + field.get("value"),
+                    null,
+                    null
+            );
+
+            note_exists.add(cursor == null || !cursor.moveToFirst());
+        }
+
+        return note_exists;
     }
 }

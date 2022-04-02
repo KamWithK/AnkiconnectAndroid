@@ -133,10 +133,9 @@ public class AnkiAPIRouting {
         return jsonArray.toString();
     }
 
-//    TODO: Implement
     private String canAddNotes(JsonObject raw_json) {
         ArrayList<HashMap<String, String>> notes_to_test = Parser.getNoteFront(raw_json);
-        return Parser.gson.toJson(Parser.getNoteTrues(raw_json));
+        return Parser.gson.toJson(integratedAPI.noteAPI.canAddNotes(notes_to_test));
     }
 
     private String addNote(JsonObject raw_json) throws Exception {
