@@ -24,7 +24,6 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
 5. Set up Yomichan for sentence mining:
     * Toggle `Enable Anki integration` on, under `Anki`
     * Click on `Configure Anki card format` and choose the deck, model and field/values you desire
-    * **Ensure `Check for card duplicates` has been disabled** (only visible under `Advanced` options)
     * For further custamisation you can write/modify the script under `Configure Anki card templates`
 6. Set up Forvo audio
     * Click on `Configure audio playback sources` and under the `Audio` section
@@ -37,18 +36,19 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
 
 ## Common Errors and Solutions
 If you're experiencing any of these problems:
-1. Yomichan shows it's connected but I can't see the green plus arrow to create cards
-2. Forvo audio won't load
-3. App crashes
+1. Forvo audio won't load
+2. App crashes
 
 Check that:
 * Latest [app release](https://github.com/KamWithK/AnkiconnectAndroid/releases) is installed
-* `Check for card duplicates` is disabled under advanced options on Yomichan
 * `http://localhost:8765/?term={term}&reading={reading}` is added as `Custom URL (JSON)` as a Yomichan audio source
 
 If you've gone through the instructions and are still having trouble, feel free to create an issue here on GitHub or @/dm me on Discord.
 
 ## Limitations
 Because Ankiconnect Android is a small project with a limited scope, not all API queries/cases are implemented/considered.
-The only currently known breaking example is when duplicate card checks are enabled.
-Features like this with limited scope and which are easy to disable/avoid have been ignored for now (even though enabled in Yomichan by default).
+Currently every known essential feature has been added into the app, however some niche edge cases have been ignored.
+
+The two big examples:
+1. Duplicate checks always occur across the full Anki collection instead of whatever deck is selected (no matter what options are selected, assuming this feature is left enabled)
+2. Show card button in Yomichan isn't functional and isn't always displayed
