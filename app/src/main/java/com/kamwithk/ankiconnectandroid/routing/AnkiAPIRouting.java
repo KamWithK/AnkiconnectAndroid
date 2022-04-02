@@ -53,7 +53,6 @@ public class AnkiAPIRouting {
                 return storeMediaFile(raw_json);
             case "multi":
                 JsonArray actions = Parser.getMultiActions(raw_json);
-                Map<String, JsonArray> responses = new HashMap<>();
                 JsonArray results = new JsonArray();
 
                 for (JsonElement jsonElement : actions) {
@@ -65,10 +64,7 @@ public class AnkiAPIRouting {
                     results.add(response);
                 }
 
-                responses.put("result", results);
-                responses.put("error", null);
-
-                return Parser.gson.toJson(responses);
+                return Parser.gson.toJson(results);
             default:
                 return default_version();
         }
@@ -130,16 +126,13 @@ public class AnkiAPIRouting {
     }
 
     private String findNotes() {
-        return "[]";
+        JsonArray jsonArray = new JsonArray();
+        return jsonArray.toString();
     }
 
 //    TODO: Implement
-    private String canAddNotes(JsonObject raw_json) throws Exception {
-        Map<String, boolean[]> response = new HashMap<>();
-        response.put("result", Parser.getNoteTrues(raw_json));
-        response.put("error", null);
-
-        return Parser.gson.toJson(response);
+    private String canAddNotes(JsonObject raw_json) {
+        return Parser.gson.toJson(Parser.getNoteTrues(raw_json));
     }
 
     private String addNote(JsonObject raw_json) throws Exception {
