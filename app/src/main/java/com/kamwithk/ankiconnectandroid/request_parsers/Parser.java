@@ -5,9 +5,7 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Parser {
     public static Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -40,6 +38,30 @@ public class Parser {
     public static Set<String> getNoteTags(JsonObject raw_data) {
         Type fieldType = new TypeToken<Set<String>>() {}.getType();
         return gson.fromJson(raw_data.get("params").getAsJsonObject().get("note").getAsJsonObject().get("tags"), fieldType);
+    }
+
+    public static String getNoteQuery(JsonObject raw_data) {
+        return raw_data.get("params").getAsJsonObject().get("query").getAsString();
+    }
+
+    public static ArrayList<HashMap<String, String>> getNoteFront(JsonObject raw_data) {
+        JsonArray notes = raw_data.get("params").getAsJsonObject().get("notes").getAsJsonArray();
+        ArrayList<HashMap<String, String>> first_fields = new ArrayList<>();
+
+        for (JsonElement jsonElement : notes) {
+            JsonObject jsonObject = jsonElement.getAsJsonObject().get("fields").getAsJsonObject();
+
+            String field = jsonObject.keySet().toArray()[0].toString();
+            String value = jsonObject.get(field).getAsString();
+
+            HashMap<String, String> fields = new HashMap<>();
+            fields.put("field", field);
+            fields.put("value", value);
+
+            first_fields.add(fields);
+        }
+
+        return first_fields;
     }
 
     public static boolean[] getNoteTrues(JsonObject raw_data) {

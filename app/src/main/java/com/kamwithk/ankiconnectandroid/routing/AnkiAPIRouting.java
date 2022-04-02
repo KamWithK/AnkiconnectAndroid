@@ -11,6 +11,7 @@ import com.kamwithk.ankiconnectandroid.ankidroid_api.ModelAPI;
 import com.kamwithk.ankiconnectandroid.request_parsers.Parser;
 import fi.iki.elonen.NanoHTTPD;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class AnkiAPIRouting {
             case "modelFieldNames":
                 return modelFieldNames(raw_json);
             case "findNotes":
-                return findNotes();
+                return findNotes(raw_json);
             case "canAddNotes":
                 return canAddNotes(raw_json);
             case "addNote":
@@ -125,13 +126,16 @@ public class AnkiAPIRouting {
         }
     }
 
-    private String findNotes() {
+//    TODO: Implement
+    private String findNotes(JsonObject raw_json) {
+//        integratedAPI.noteAPI.findNotes(Parser.getNoteQuery(raw_json));
         JsonArray jsonArray = new JsonArray();
         return jsonArray.toString();
     }
 
 //    TODO: Implement
     private String canAddNotes(JsonObject raw_json) {
+        ArrayList<HashMap<String, String>> notes_to_test = Parser.getNoteFront(raw_json);
         return Parser.gson.toJson(Parser.getNoteTrues(raw_json));
     }
 
