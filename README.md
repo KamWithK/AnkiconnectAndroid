@@ -38,10 +38,13 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
 If you're experiencing any of these problems:
 1. Forvo audio won't load
 2. App crashes
+3. Yomichan cannot connect
 
 Check that:
 * Latest [app release](https://github.com/KamWithK/AnkiconnectAndroid/releases) is installed
 * `http://localhost:8765/?term={term}&reading={reading}` is added as `Custom URL (JSON)` as a Yomichan audio source
+* If you import Yomichan's settings that the URLs default or as-specified and card/deck options right (when in doubt import the sanitised version in-case)
+* Battery saving/automatic optimisation is turned off for Ankidroid, Ankiconnect Android and optionally (but recommended) Kiwi browser
 
 If you've gone through the instructions and are still having trouble, feel free to create an issue here on GitHub or @/dm me on Discord.
 
