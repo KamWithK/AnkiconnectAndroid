@@ -39,7 +39,7 @@ public class Scraper {
 
     private ArrayList<HashMap<String, String>> scrapeWord(String word) throws IOException {
         Document document = Jsoup.connect(SERVER_HOST + "/word/" + strip(word) + "/").get();
-        Elements elements = document.select("#language-container-ja>article>ul.show-all-pronunciations>li:not(.li-ad)");
+        Elements elements = document.select("#language-container-" + LANGUAGE + ">article>ul.show-all-pronunciations>li:not(.li-ad)");
 
         ArrayList<HashMap<String, String>> audio_sources = new ArrayList<>();
 
