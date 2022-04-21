@@ -22,8 +22,6 @@ public class IntegratedAPI {
     public final NoteAPI noteAPI;
     public final MediaAPI mediaAPI;
 
-    private static HashMap<String, String> pathFixes = new HashMap<>();
-
     public IntegratedAPI(Context context) {
         this.context = context;
 
@@ -60,13 +58,6 @@ public class IntegratedAPI {
      * @param data Map of (field name, field value) pairs
      */
     public Long addNote(final Map<String, String> data, String deck_name, String model_name, Set<String> tags) throws Exception {
-        for (Map.Entry<String, String> entry : data.entrySet()) {
-            for (Map.Entry<String, String> nameMap : pathFixes.entrySet()) {
-                String replaced = entry.getValue().replaceAll(nameMap.getKey(), nameMap.getValue());
-                data.put(entry.getKey(), replaced);
-            }
-        }
-
         Long deck_id = deckAPI.getDeckID(deck_name);
         Long model_id = modelAPI.getModelID(model_name, data.size());
         Long note_id = noteAPI.addNote(data, deck_id, model_id, tags);
@@ -81,8 +72,6 @@ public class IntegratedAPI {
     }
 
     public String storeMediaFile(String filename, byte[] data) throws IOException {
-        String ankidroid_path = mediaAPI.storeMediaFile(filename, data);
-        pathFixes.put(filename, ankidroid_path);
-        return ankidroid_path;
+        return mediaAPI.storeMediaFile(filename, data);
     }
 }
