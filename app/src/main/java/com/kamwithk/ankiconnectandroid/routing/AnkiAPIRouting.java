@@ -148,14 +148,6 @@ public class AnkiAPIRouting {
     }
 
     private String storeMediaFile(JsonObject raw_json) throws Exception {
-        Map<String, String> response = new HashMap<>();
-
-        response.put("result", integratedAPI.storeMediaFile(
-                Parser.getMediaFilename(raw_json),
-                Parser.getMediaData(raw_json)
-        ));
-        response.put("error", null);
-
-        return Parser.gson.toJson(response);
+        return Parser.gson.toJson(Parser.getMediaFilename(raw_json));
     }
 }
