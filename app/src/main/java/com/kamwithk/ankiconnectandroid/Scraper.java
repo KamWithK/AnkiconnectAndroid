@@ -39,12 +39,13 @@ public class Scraper {
 
     private ArrayList<HashMap<String, String>> scrapeWord(String word) throws IOException {
         Document document = Jsoup.connect(SERVER_HOST + "/word/" + strip(word) + "/").get();
-        Elements elements = document.select("#language-container-" + LANGUAGE + ">article>ul.show-all-pronunciations>li:not(.li-ad)");
+        Elements elements = document.select("#language-container-" + LANGUAGE + ">article>ul>li:not(.li-ad)");
 
         ArrayList<HashMap<String, String>> audio_sources = new ArrayList<>();
 
         for (Element element : elements) {
-            String url = extractURL(Objects.requireNonNull(element.selectFirst("span")));
+            System.out.println(element);
+            String url = extractURL(Objects.requireNonNull(element.selectFirst(".play")));
 
             HashMap<String, String> user_details = new HashMap<>();
             user_details.put("name", "Forvo (" + extractUsername(element.text()) + ")");
@@ -57,7 +58,7 @@ public class Scraper {
 
     private ArrayList<HashMap<String, String>> scrapeSearch(String input) throws IOException {
         Document document = Jsoup.connect(SERVER_HOST + "/search/" + strip(input) + "/" + LANGUAGE + "/").get();
-        Elements elements = document.select("ul.word-play-list-icon-size-l>li>span.play");
+        Elements elements = document.select("ul.word-play-list-icon-size-l>li>.play");
 
         ArrayList<HashMap<String, String>> audio_sources = new ArrayList<>();
 
