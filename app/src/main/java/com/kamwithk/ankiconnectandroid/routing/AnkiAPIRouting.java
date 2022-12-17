@@ -57,11 +57,11 @@ public class AnkiAPIRouting {
                 JsonArray results = new JsonArray();
 
                 for (JsonElement jsonElement : actions) {
-                    JsonObject response = new JsonObject();
-                    response.add(
-                            "result",
-                            JsonParser.parseString(findRoute(jsonElement.getAsJsonObject()))
-                    );
+                    int version = Parser.get_version(jsonElement.getAsJsonObject(), 4);
+                    String routeResult = findRoute(jsonElement.getAsJsonObject());
+
+                    JsonElement routeResultJson = JsonParser.parseString(routeResult);
+                    JsonElement response = formatSuccessReply(routeResultJson, version);
                     results.add(response);
                 }
 
@@ -70,10 +70,23 @@ public class AnkiAPIRouting {
                 return default_version();
         }
     }
+    /* taken from anki-connect's web.py: format_success_reply */
+    public JsonElement formatSuccessReply(JsonElement raw_json, int version) {
+        if (version <= 4) {
+            return raw_json;
+        } else {
+            JsonObject reply = new JsonObject();
+            reply.add("result", raw_json);
+            reply.add("error", null);
+            return reply;
+        }
+    }
 
     public NanoHTTPD.Response findRouteHandleError(JsonObject raw_json) {
         try {
-            return returnResponse(findRoute(raw_json));
+            int version = Parser.get_version(raw_json, 4);
+            String response = formatSuccessReply(JsonParser.parseString(findRoute(raw_json)), version).toString();
+            return returnResponse(response);
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
             response.put("result", null);

@@ -10,7 +10,7 @@ Ankiconnect Android is a from scratch unofficial reimplementation of the [deskto
 It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://github.com/ankidroid/Anki-Android/).
 
 ## Instructions
-Here's how to set everything up from scratch (if you've already got Yomichan working then skip to step 5):
+Here's how to set everything up from scratch (if you've already got Yomichan working, then skip to step 5):
 
 1. Install [Kiwi Browser](https://play.google.com/store/apps/details?id=com.kiwibrowser.browser) and [Ankidroid](https://play.google.com/store/apps/details?id=com.ichi2.anki)
 2. Install Ankiconnect Android - [Download](https://github.com/KamWithK/AnkiconnectAndroid/releases)
@@ -20,6 +20,7 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
     * `Import` 1+ dictionaries by clicking `Configure installed and enabled dictionaries` and then `Import` under `Dictionaries` section ([external resources](https://learnjapanese.moe/resources/#dictionaries))
     * **`Scan modifier key` under the `Scanning` section should be "No Key" (unless using mouse/keyboard, advanced options contains more config options)**
     * `Scan delay` under the `Scanning` section can feel laggy and so can be set to `0`
+    * It is recommended to lower the value of `Maximum number of results` (under `General`) to prevent unnecessary lag. A sane value would be `8`.
 
 5. Set up Yomichan for sentence mining:
     * Toggle `Enable Anki integration` on, under `Anki`
