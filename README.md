@@ -13,7 +13,7 @@ It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://
 Here's how to set everything up from scratch (if you've already got Yomichan working, then skip to step 5):
 
 1. Install [Kiwi Browser](https://play.google.com/store/apps/details?id=com.kiwibrowser.browser) and [Ankidroid](https://play.google.com/store/apps/details?id=com.ichi2.anki)
-2. Install Ankiconnect Android - [Download](https://github.com/KamWithK/AnkiconnectAndroid/releases)
+2. Install Ankiconnect Android - Download from the [Releases Section](https://github.com/KamWithK/AnkiconnectAndroid/releases/latest) or from [IzzyOnDroid repo](https://apt.izzysoft.de/fdroid/index/apk/com.kamwithk.ankiconnectandroid)
 3. Start the Ankiconnect Android app, accept the permissions and hit start service
 4. Set up the [Yomichan extension](https://chrome.google.com/webstore/detail/yomichan/ogmnaimimemjmbakcfefmnahgdfhfami) in Kiwi Browser to your liking:
 
@@ -42,7 +42,7 @@ If you're experiencing any of these problems:
 3. Yomichan cannot connect
 
 Check that:
-* Latest [app release](https://github.com/KamWithK/AnkiconnectAndroid/releases) is installed
+* Latest [app release](https://github.com/KamWithK/AnkiconnectAndroid/releases/latest) is installed
 * `http://localhost:8765/?term={term}&reading={reading}` is added as `Custom URL (JSON)` as a Yomichan audio source
 * If you import Yomichan's settings that the URLs default or as-specified and card/deck options right (when in doubt import the sanitised version in-case)
 * Battery saving/automatic optimisation is turned off for Ankidroid, Ankiconnect Android and optionally (but recommended) Kiwi browser
