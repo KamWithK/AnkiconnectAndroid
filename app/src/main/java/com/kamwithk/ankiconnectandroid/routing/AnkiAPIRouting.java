@@ -17,6 +17,9 @@ import java.util.Map;
 
 import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 
+import android.util.Log;
+
+
 public class AnkiAPIRouting {
     private final IntegratedAPI integratedAPI;
     private final DeckAPI deckAPI;
@@ -46,6 +49,8 @@ public class AnkiAPIRouting {
                 return modelFieldNames(raw_json);
             case "findNotes":
                 return findNotes(raw_json);
+            case "guiBrowse":
+                return guiBrowse(raw_json);
             case "canAddNotes":
                 return canAddNotes(raw_json);
             case "addNote":
@@ -86,6 +91,7 @@ public class AnkiAPIRouting {
         try {
             int version = Parser.get_version(raw_json, 4);
             String response = formatSuccessReply(JsonParser.parseString(findRoute(raw_json)), version).toString();
+            Log.d("AnkiConnectAndroid", "response json: " + response);
             return returnResponse(response);
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
@@ -139,11 +145,13 @@ public class AnkiAPIRouting {
         }
     }
 
-//    TODO: Implement
     private String findNotes(JsonObject raw_json) {
-//        integratedAPI.noteAPI.findNotes(Parser.getNoteQuery(raw_json));
-        JsonArray jsonArray = new JsonArray();
-        return jsonArray.toString();
+        return Parser.gson.toJson(integratedAPI.noteAPI.findNotes(Parser.getNoteQuery(raw_json)));
+    }
+
+    private String guiBrowse(JsonObject raw_json) {
+        String query = Parser.getNoteQuery(raw_json);
+        return Parser.gson.toJson(integratedAPI.guiBrowse(query));
     }
 
     private String canAddNotes(JsonObject raw_json) {

@@ -1,11 +1,17 @@
 package com.kamwithk.ankiconnectandroid.ankidroid_api;
 
+import static android.Manifest.permission.SYSTEM_ALERT_WINDOW;
+
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -38,6 +44,12 @@ public class IntegratedAPI {
             if (permission != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions((Activity)context, new String[]{READ_WRITE_PERMISSION}, 0);
             }
+
+            // TODO this needs a good interface!
+//            if (!Settings.canDrawOverlays(context)) {
+//                Intent permIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+//                context.startActivity(permIntent);
+//            }
         }
     }
 
@@ -73,5 +85,19 @@ public class IntegratedAPI {
 
     public String storeMediaFile(String filename, byte[] data) throws IOException {
         return mediaAPI.storeMediaFile(filename, data);
+    }
+
+    public ArrayList<Long> guiBrowse(String query) {
+        // https://github.com/ankidroid/Anki-Android/pull/11899
+        Uri webpage = Uri.parse("anki://x-callback-url/browser?search=" + query);
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, webpage);
+        webIntent.setPackage("com.ichi2.anki");
+        // might need FLAG_ACTIVITY_CLEAR_TOP?
+        // see: https://stackoverflow.com/a/23874622
+        webIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(webIntent);
+
+        // I don't think the result is used in yomichan at all, so it can be safely ignored?
+        return new ArrayList<>();
     }
 }
