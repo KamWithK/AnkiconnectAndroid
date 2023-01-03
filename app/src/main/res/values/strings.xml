@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Ankiconnect Android</string>
+
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="settings_overlay_permissions_title">Access Overlay Permissions</string>
+    <string name="settings_permissions_header">Permissions</string>
+    <string name="settings_overlay_permissions_summary">Allow AnkiConnectAndroid to open AnkiDroid to view the card</string>
 </resources>
