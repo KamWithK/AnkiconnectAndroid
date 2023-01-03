@@ -35,6 +35,18 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
 
 > Easier Yomichan setup: If you import settings from a computer, ensure that the bolded steps are still followed
 
+### Additional Instructions: Show Card Button
+By default, the show card button will not work.
+To make it properly function, do the following steps:
+
+1. Download and install the most recent
+    [alpha/beta version of Ankidroid](https://github.com/ankidroid/Anki-Android/releases).
+    Opening Ankidroid's search card screen requires
+    a version of Ankidroid that was released after
+    [July 2022](https://github.com/ankidroid/Anki-Android/pull/11899),
+    and as of writing this, the latest stable release was released on July 2021.
+1. (TODO) settings button -> open permissions screen -> enable
+
 ## Common Errors and Solutions
 If you're experiencing any of these problems:
 1. Forvo audio won't load
@@ -55,4 +67,3 @@ Currently every known essential feature has been added into the app, however som
 
 The two big examples:
 1. Duplicate checks always occur across the full Anki collection instead of whatever deck is selected (no matter what options are selected, assuming this feature is left enabled)
-2. Show card button in Yomichan isn't functional and isn't always displayed
