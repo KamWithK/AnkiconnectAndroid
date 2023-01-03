@@ -36,18 +36,22 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
 > Easier Yomichan setup: If you import settings from a computer, ensure that the bolded steps are still followed
 
 ### Additional Instructions: Show Card Button
-By default, the show card button will not work.
+By default, the show card button **will not work**.
 To make it properly function, do the following steps:
 
-1. Download and install the most recent
-    [alpha/beta version of Ankidroid](https://github.com/ankidroid/Anki-Android/releases).
-    Opening Ankidroid's search card screen requires
-    a version of Ankidroid that was released after
-    [July 2022](https://github.com/ankidroid/Anki-Android/pull/11899),
-    and as of writing this, the latest stable release was released on July 2021.
+1. As of writing this (2023/01/03), the stable release of AnkiDroid
+    (i.e. the released version on Google Play) does not support the feature of
+    [opening the card browser window](https://github.com/ankidroid/Anki-Android/pull/11899)
+    from another app.
+    Therefore, the first step is to manually download and install
+    the most recent alpha version of AnkiDroid from their
+    [releases page](https://github.com/ankidroid/Anki-Android/releases).
 2. Under Ankiconnect Android, tap on the settings gear at the top right corner.
 3. Allow Ankiconnect Android to access the overlay
-    by tapping on the `Access Overlay Permissions` option.
+    by tapping on the `Access Overlay Permissions` option,
+    and by activating the switch within Android's permissions screen.
+
+From here, you should be able to use the show card button as normal.
 
 ## Common Errors and Solutions
 If you're experiencing any of these problems:
