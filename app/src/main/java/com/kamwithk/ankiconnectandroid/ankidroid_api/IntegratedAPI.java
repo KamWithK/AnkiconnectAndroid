@@ -44,12 +44,6 @@ public class IntegratedAPI {
             if (permission != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions((Activity)context, new String[]{READ_WRITE_PERMISSION}, 0);
             }
-
-            // TODO this needs a good interface!
-//            if (!Settings.canDrawOverlays(context)) {
-//                Intent permIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-//                context.startActivity(permIntent);
-//            }
         }
     }
 
@@ -97,7 +91,9 @@ public class IntegratedAPI {
         webIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(webIntent);
 
-        // I don't think the result is used in yomichan at all, so it can be safely ignored?
+        // The result doesn't seem to be used by Yomichan at all, so it can be safely ignored.
+        // If we want to get the results, calling the findNotes() method will likely cause
+        // unwanted delay.
         return new ArrayList<>();
     }
 }

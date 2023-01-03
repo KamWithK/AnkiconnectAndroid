@@ -45,7 +45,9 @@ To make it properly function, do the following steps:
     a version of Ankidroid that was released after
     [July 2022](https://github.com/ankidroid/Anki-Android/pull/11899),
     and as of writing this, the latest stable release was released on July 2021.
-1. (TODO) settings button -> open permissions screen -> enable
+2. Under Ankiconnect Android, tap on the settings gear at the top right corner.
+3. Allow Ankiconnect Android to access the overlay
+    by tapping on the `Access Overlay Permissions` option.
 
 ## Common Errors and Solutions
 If you're experiencing any of these problems:
@@ -67,3 +69,4 @@ Currently every known essential feature has been added into the app, however som
 
 The two big examples:
 1. Duplicate checks always occur across the full Anki collection instead of whatever deck is selected (no matter what options are selected, assuming this feature is left enabled)
+2. When viewing the note, the note cannot be viewed directly within card editor. Instead, the note is shown from the card browser.

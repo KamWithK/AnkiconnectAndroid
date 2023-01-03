@@ -26,7 +26,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.materialToolbar);
+        // toolbar support
+        Toolbar toolbar = findViewById(R.id.materialToolbar);
         setSupportActionBar(toolbar);
 
         IntegratedAPI.authenticate(this);
@@ -45,12 +46,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_settings:
+            case R.id.action_settings: // open settings
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
-//                Intent permIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-//                startActivity(permIntent);
-//                return true;
 
             default:
                 // If we got here, the user's action was not recognized.
@@ -59,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
 
     public void startService(View view) {
         Intent serviceIntent = new Intent(this, Service.class);

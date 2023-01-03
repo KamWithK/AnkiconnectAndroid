@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -26,14 +25,12 @@ public class SettingsActivity extends AppCompatActivity {
                     .commit();
         }
 
-        // my_child_toolbar is defined in the layout file
-        Toolbar settingsToolbar =
-                (Toolbar) findViewById(R.id.settingsToolbar);
+        Toolbar settingsToolbar = findViewById(R.id.settingsToolbar);
         setSupportActionBar(settingsToolbar);
-
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            // adds back button
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
@@ -45,12 +42,13 @@ public class SettingsActivity extends AppCompatActivity {
 
             Preference preference = findPreference("access_overlay_perms");
             if (preference != null) {
+                // custom handler of preference: open permissions screen
                 preference.setOnPreferenceClickListener(p -> {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         Intent permIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                         startActivity(permIntent);
                     } else {
-                        Toast.makeText(getContext(), "Android SDK is less than 23. No permissions must be set.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Android SDK version is less than 23. No permissions have to be set.", Toast.LENGTH_LONG).show();
                     }
                     return true;
                 });
