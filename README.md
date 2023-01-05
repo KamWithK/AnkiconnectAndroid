@@ -79,6 +79,6 @@ If you've gone through the instructions and are still having trouble, feel free 
 Because Ankiconnect Android is a small project with a limited scope, not all API queries/cases are implemented/considered.
 Currently every known essential feature has been added into the app, however some niche edge cases have been ignored.
 
-The two big examples:
+Two small examples:
 1. Duplicate checks always occur across the full Anki collection instead of whatever deck is selected (no matter what options are selected, assuming this feature is left enabled)
 2. When viewing the note, the note cannot be viewed directly within card editor. Instead, the note is shown from the card browser.
