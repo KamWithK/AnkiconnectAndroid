@@ -45,6 +45,9 @@ To make it properly function, do the following steps:
         [opening the card browser window](https://github.com/ankidroid/Anki-Android/pull/11899)
         from another app. Therefore, the first step is to manually download and install
         the most recent alpha version of AnkiDroid.
+    * This carries all the risks of using a pre-release version! Only download it
+        if you know what you are doing.
+
 2. After installing Ankidroid, you must allow Ankiconnect Android to open apps in the background.
     * Under Ankiconnect Android, tap on the settings gear at the top right corner.
     * Tap on the `Access Overlay Permissions` option. This should lead you to Android's settings page.
