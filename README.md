@@ -53,6 +53,12 @@ To make it properly function, do the following steps:
 
 From here, you should be able to use the show card button as normal.
 
+> **Warning**
+>
+> Make sure you save your note changes if you edit your note! If you do not
+> save and click on the "show card" button from Kiwi Browser, you will
+> lose all your current note changes!
+
 ## Common Errors and Solutions
 If you're experiencing any of these problems:
 1. Forvo audio won't load
