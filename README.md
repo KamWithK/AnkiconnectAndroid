@@ -20,7 +20,7 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
     * `Import` 1+ dictionaries by clicking `Configure installed and enabled dictionaries` and then `Import` under `Dictionaries` section ([external resources](https://learnjapanese.moe/resources/#dictionaries))
     * **`Scan modifier key` under the `Scanning` section should be "No Key" (unless using mouse/keyboard, advanced options contains more config options)**
     * `Scan delay` under the `Scanning` section can feel laggy and so can be set to `0`
-    * It is recommended to lower the value of `Maximum number of results` (under `General`) to prevent unnecessary lag. A sane value would be `8`.
+    * It is recommended to lower the value of `Maximum number of results` (under `General`) to prevent unnecessary lag. A sane value would be `8`
 
 5. Set up Yomichan for sentence mining:
     * Toggle `Enable Anki integration` on, under `Anki`
@@ -39,24 +39,23 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
 By default, the show card button **will not work**.
 To make it properly function, do the following steps:
 
-1. As of writing this (2023/01/03), the stable release of AnkiDroid
-    (i.e. the released version on Google Play) does not support the feature of
-    [opening the card browser window](https://github.com/ankidroid/Anki-Android/pull/11899)
-    from another app.
-    Therefore, the first step is to manually download and install
-    the most recent alpha version of AnkiDroid from their
-    [releases page](https://github.com/ankidroid/Anki-Android/releases).
-2. Under Ankiconnect Android, tap on the settings gear at the top right corner.
-3. Allow Ankiconnect Android to access the overlay
-    by tapping on the `Access Overlay Permissions` option,
-    and by activating the switch within Android's permissions screen.
+1. Install a **pre-release (alpha) version** of Ankidroid from their [releases page](https://github.com/ankidroid/Anki-Android/releases).
+    * As of writing this (2023/01/03), the stable release of AnkiDroid
+        (i.e. the released version on Google Play) does not support the feature of
+        [opening the card browser window](https://github.com/ankidroid/Anki-Android/pull/11899)
+        from another app. Therefore, the first step is to manually download and install
+        the most recent alpha version of AnkiDroid.
+2. After installing Ankidroid, you must allow Ankiconnect Android to open apps in the background.
+    * Under Ankiconnect Android, tap on the settings gear at the top right corner.
+    * Tap on the `Access Overlay Permissions` option. This should lead you to Android's settings page.
+    * Activate the switch for `Ankiconnect Android` within this settings page.
 
 From here, you should be able to use the show card button as normal.
 
 > **Warning**
 >
 > Make sure you save your note changes if you edit your note! If you do not
-> save and click on the "show card" button from Kiwi Browser, you will
+> save your changes and re-click on the "show card" button from Kiwi Browser, you will
 > lose all your current note changes!
 
 ## Common Errors and Solutions
