@@ -9,7 +9,7 @@ android {
         applicationId "com.kamwithk.ankiconnectandroid"
         minSdk 21
         targetSdk 32
-        versionCode 7
+        versionCode 8
         versionName "1.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
