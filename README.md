@@ -39,7 +39,7 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
 By default, the show card button **will not work**.
 To make it properly function, do the following steps:
 
-1. Install a **pre-release (alpha) version** of Ankidroid from their [releases page](https://github.com/ankidroid/Anki-Android/releases).
+1. Install a **pre-release (alpha) version** of AnkiDroid from their [releases page](https://github.com/ankidroid/Anki-Android/releases).
     * As of writing this (2023/01/03), the stable release of AnkiDroid
         (i.e. the released version on Google Play) does not support the feature of
         [opening the card browser window](https://github.com/ankidroid/Anki-Android/pull/11899)
@@ -48,7 +48,7 @@ To make it properly function, do the following steps:
     * This carries all the risks of using a pre-release version! Only download it
         if you know what you are doing.
 
-2. After installing Ankidroid, you must allow Ankiconnect Android to open apps in the background.
+2. After installing AnkiDroid, you must allow Ankiconnect Android to open apps in the background.
     * Under Ankiconnect Android, tap on the settings gear at the top right corner.
     * Tap on the `Access Overlay Permissions` option. This should lead you to Android's settings page.
     * Activate the switch for `Ankiconnect Android` within this settings page.
@@ -79,6 +79,7 @@ If you've gone through the instructions and are still having trouble, feel free 
 Because Ankiconnect Android is a small project with a limited scope, not all API queries/cases are implemented/considered.
 Currently every known essential feature has been added into the app, however some niche edge cases have been ignored.
 
-Two small examples:
+Some examples:
 1. Duplicate checks always occur across the full Anki collection instead of whatever deck is selected (no matter what options are selected, assuming this feature is left enabled)
-2. When viewing the note, the note cannot be viewed directly within card editor. Instead, the note is shown from the card browser.
+2. The show card button will not work on the latest stable release of AnkiDroid. Instead, you must **manually install a pre-release version** for it to work. Please see [these instructions](#additional-instructions-show-card-button) for more details on how to make the show card button work.
+3. When viewing the note, the note cannot be viewed directly within card editor. Instead, the note is shown from the card browser.
