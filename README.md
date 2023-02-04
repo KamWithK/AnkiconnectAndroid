@@ -39,7 +39,7 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
 By default, the show card button **will not work**.
 To make it properly function, do the following steps:
 
-1. Install a **pre-release (alpha) version** of AnkiDroid from their [releases page](https://github.com/ankidroid/Anki-Android/releases).
+1. Install a **pre-release (alpha) version** of AnkiDroid from their [releases page](https://github.com/ankidroid/Anki-Android/releases). This cannot be a parallel build.
     * As of writing this (2023/01/03), the stable release of AnkiDroid
         (i.e. the released version on Google Play) does not support the feature of
         [opening the card browser window](https://github.com/ankidroid/Anki-Android/pull/11899)
