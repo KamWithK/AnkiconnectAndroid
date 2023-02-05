@@ -46,6 +46,7 @@ Check that:
 * `http://localhost:8765/?term={term}&reading={reading}` is added as `Custom URL (JSON)` as a Yomichan audio source
 * If you import Yomichan's settings that the URLs default or as-specified and card/deck options right (when in doubt import the sanitised version in-case)
 * Battery saving/automatic optimisation is turned off for Ankidroid, Ankiconnect Android and optionally (but recommended) Kiwi browser
+* You allowed Ankiconnect Android to be running in the background (if this option is available on your device)
 
 If you've gone through the instructions and are still having trouble, feel free to create an issue here on GitHub or @/dm me on Discord.
 
