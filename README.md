@@ -37,7 +37,7 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
 
 ### Additional Instructions: Show Card Button
 By default, the show card button **will not work**.
-To make it properly function, do the following steps:
+The following is a *completely optional* set of instructions for getting the show card button to work:
 
 1. Install a **pre-release (alpha) version** of AnkiDroid from their [releases page](https://github.com/ankidroid/Anki-Android/releases). This cannot be a parallel build.
     * As of writing this (2023/01/03), the stable release of AnkiDroid
