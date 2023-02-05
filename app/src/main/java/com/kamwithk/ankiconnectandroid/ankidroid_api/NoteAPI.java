@@ -2,6 +2,7 @@ package com.kamwithk.ankiconnectandroid.ankidroid_api;
 
 import android.content.Context;
 import android.database.Cursor;
+
 import com.ichi2.anki.FlashCardsContract;
 import com.ichi2.anki.api.AddContentApi;
 
@@ -18,6 +19,7 @@ public class NoteAPI {
 
     /**
      * Add flashcards to AnkiDroid through instant add API
+     *
      * @param data Map of (field name, field value) pairs
      */
     public Long addNote(final Map<String, String> data, Long deck_id, Long model_id, Set<String> tags) throws Exception {
@@ -36,7 +38,7 @@ public class NoteAPI {
     }
 
     public ArrayList<Boolean> canAddNotes(ArrayList<HashMap<String, String>> notes_to_test) {
-        ArrayList<Boolean> note_exists = new ArrayList<>();
+        ArrayList<Boolean> note_does_not_exist = new ArrayList<>();
 
         for (HashMap<String, String> field : notes_to_test) {
             final Cursor cursor = context.getContentResolver().query(
@@ -47,9 +49,36 @@ public class NoteAPI {
                     null
             );
 
-            note_exists.add(cursor == null || !cursor.moveToFirst());
+            note_does_not_exist.add(cursor == null || !cursor.moveToFirst());
+
         }
 
-        return note_exists;
+        return note_does_not_exist;
+    }
+
+    public ArrayList<Long> findNotes(String query) {
+        ArrayList<Long> noteIds = new ArrayList<>();
+
+        final Cursor cursor = context.getContentResolver().query(
+                FlashCardsContract.Note.CONTENT_URI,
+                null,
+                query,
+                null,
+                null
+        );
+
+        if (cursor != null) {
+            if (!cursor.moveToFirst()) {
+                return noteIds;
+            }
+            for (int i = 0; i < cursor.getCount(); i++) {
+                long id = cursor.getLong(0);
+                noteIds.add(id);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+
+        return noteIds;
     }
 }

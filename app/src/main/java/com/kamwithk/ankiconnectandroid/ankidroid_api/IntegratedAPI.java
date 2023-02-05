@@ -1,11 +1,17 @@
 package com.kamwithk.ankiconnectandroid.ankidroid_api;
 
+import static android.Manifest.permission.SYSTEM_ALERT_WINDOW;
+
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
+import android.util.Log;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -73,5 +79,26 @@ public class IntegratedAPI {
 
     public String storeMediaFile(String filename, byte[] data) throws IOException {
         return mediaAPI.storeMediaFile(filename, data);
+    }
+
+    public ArrayList<Long> guiBrowse(String query) {
+        // https://github.com/ankidroid/Anki-Android/pull/11899
+        Uri webpage = Uri.parse("anki://x-callback-url/browser?search=" + query);
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, webpage);
+        webIntent.setPackage("com.ichi2.anki");
+        // FLAG_ACTIVITY_NEW_TASK is needed in order to display the intent from a different app
+        // FLAG_ACTIVITY_CLEAR_TOP and Intent.FLAG_ACTIVITY_TASK_ON_HOME is needed in order to not
+        // cause a long chain of activities within Ankidroid
+        // (i.e. browser <- word <- browser <- word <- browser <- word)
+        // FLAG_ACTIVITY_CLEAR_TOP also allows the browser window to refresh with the new word
+        // if AnkiDroid was already on the card browser activity.
+        // see: https://stackoverflow.com/a/23874622
+        webIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+        context.startActivity(webIntent);
+
+        // The result doesn't seem to be used by Yomichan at all, so it can be safely ignored.
+        // If we want to get the results, calling the findNotes() method will likely cause
+        // unwanted delay.
+        return new ArrayList<>();
     }
 }

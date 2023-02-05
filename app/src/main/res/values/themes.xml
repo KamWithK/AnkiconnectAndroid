@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.AnkiconnectAndroid" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.AnkiconnectAndroid" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -12,5 +12,12 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+    </style>
+    <style name="MyToolbar">
+        <item name="titleTextColor">@color/white</item>
+        <!-- trying to change the back button on light mode to black: neither work??? -->
+        <!--item name="colorControlNormal">@color/white</item>-->
+        <!--android:homeAsUpIndicator="@drawable/ic_baseline_arrow_back_24"-->
     </style>
 </resources>

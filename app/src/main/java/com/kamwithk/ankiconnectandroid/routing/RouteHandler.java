@@ -1,7 +1,7 @@
 package com.kamwithk.ankiconnectandroid.routing;
 
 import android.content.Context;
-import android.util.Log;
+
 import com.kamwithk.ankiconnectandroid.ankidroid_api.IntegratedAPI;
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.router.RouterNanoHTTPD;
@@ -52,6 +52,10 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
             e.printStackTrace();
         }
 
-        return apiHandler.chooseAPI(files.get("postData"), session.getParameters());
+        NanoHTTPD.Response rep = apiHandler.chooseAPI(files.get("postData"), session.getParameters());
+
+        // TODO CORS based on settings
+        // rep.addHeader("Access-Control-Allow-Origin", "http://localhost");
+        return rep;
     }
 }
