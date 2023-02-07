@@ -73,11 +73,15 @@ local audio desktop vs android:
  *     android: http://localhost:8765/localaudio/?type=SOURCE&path=FILE_PATH_TO_AUDIO_FILE
 ```
 
+
 local audio folder (user can verify by settings -> `Print Local Audio Directory`
 ```
 (phone)/Android/data/com.kamwithk.ankiconnectandroid/files/
 /storage/emulated/0/Android/data/com.kamwithk.ankiconnectandroid/files/
 ```
+
+- when moving audio files: might want to spread this out over a few nights (android's file system is very slow and can easily take many hours to transfer files)
+
 
 
 expected file directory (`user_files` be the exact same as original):
