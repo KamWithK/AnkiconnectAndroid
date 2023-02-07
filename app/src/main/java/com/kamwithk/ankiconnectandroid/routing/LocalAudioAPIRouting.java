@@ -10,8 +10,14 @@ import com.kamwithk.ankiconnectandroid.request_parsers.Parser;
 import com.kamwithk.ankiconnectandroid.routing.localaudiosource.JPodAudioSource;
 import com.kamwithk.ankiconnectandroid.routing.localaudiosource.LocalAudioSource;
 
+
+import org.apache.commons.io.FileUtils;
+
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -96,18 +102,46 @@ public class LocalAudioAPIRouting {
         );
     }
 
+    private NanoHTTPD.Response audioError(String msg) {
+        Log.w("AnkiConnectAndroid", msg);
+        return newFixedLengthResponse(
+                NanoHTTPD.Response.Status.BAD_REQUEST, // 400, mimics python script
+                NanoHTTPD.MIME_PLAINTEXT, msg
+        );
+    }
+
     public NanoHTTPD.Response getAudioHandleError(String source, String path) {
 
-        if (sourceIdToSource.containsKey(source)) {
-            String mediaDir = Objects.requireNonNull(sourceIdToSource.get(source)).getMediaDir();
-            String fullPath = mediaDir + "/" + path;
-
-            Log.d("AnkiConnectAndroid", "getAudioHandleError full path: " + fullPath);
+        if (!sourceIdToSource.containsKey(source)) {
+            return audioError("Unknown source: " + source);
         }
 
-        return newFixedLengthResponse(
-            NanoHTTPD.Response.Status.BAD_REQUEST, // 400, mimics python script
-            NanoHTTPD.MIME_PLAINTEXT, "temp"
-        );
+        String mediaDir = Objects.requireNonNull(sourceIdToSource.get(source)).getMediaDir();
+        String fullPath = externalFilesDir + "/" + mediaDir + "/" + path;
+
+        File f = new File(fullPath);
+        if (!f.exists()) {
+            return audioError("File does not exist: " + fullPath);
+        }
+
+        try {
+            // https://stackoverflow.com/questions/858980/file-to-byte-in-java
+            // Files.readAllBytes(Path) does not work! error:
+            //   Call requires API level 26 (current min is 21): java.nio.file.Files#readAllBytes
+            byte[] data = FileUtils.readFileToByteArray(f);
+
+            // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+            if (f.toString().endsWith(".mp3")) {
+                return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "audio/mpeg", new ByteArrayInputStream(data), data.length);
+            } else if (f.toString().endsWith(".aac")) {
+                return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "audio/aac", new ByteArrayInputStream(data), data.length);
+            } else {
+                return audioError("File is neither a .mp3 or .acc file: " + fullPath);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return audioError("File could not be read: " + fullPath);
+        }
     }
 }
