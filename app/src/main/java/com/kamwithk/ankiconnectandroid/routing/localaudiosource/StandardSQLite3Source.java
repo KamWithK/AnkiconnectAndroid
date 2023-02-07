@@ -24,7 +24,6 @@ public abstract class StandardSQLite3Source implements LocalAudioSource {
         this.mediaDir = mediaDir;
     }
 
-
     // named parameters cannot be used in vanilla jdbc:
     // https://stackoverflow.com/questions/2309970/named-parameters-in-jdbc
     // this is a hack around it in order to not download a huge dependency...

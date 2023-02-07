@@ -10,14 +10,12 @@ import com.kamwithk.ankiconnectandroid.request_parsers.Parser;
 import com.kamwithk.ankiconnectandroid.routing.localaudiosource.JPodAudioSource;
 import com.kamwithk.ankiconnectandroid.routing.localaudiosource.LocalAudioSource;
 
-
 import org.apache.commons.io.FileUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -50,7 +48,7 @@ import fi.iki.elonen.NanoHTTPD;
  */
 public class LocalAudioAPIRouting {
     private final File externalFilesDir;
-    private Map<String, LocalAudioSource> sourceIdToSource;
+    private final Map<String, LocalAudioSource> sourceIdToSource;
     public LocalAudioAPIRouting(File externalFilesDir) {
         this.externalFilesDir = externalFilesDir;
         this.sourceIdToSource = new HashMap<>();
