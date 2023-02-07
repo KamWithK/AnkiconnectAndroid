@@ -14,14 +14,12 @@ import java.util.Map;
 import java.util.Objects;
 
 public abstract class StandardSQLite3Source implements LocalAudioSource {
-    //protected final String query;
     protected final String sourceID;
 
     private final String NETLOC = "localhost:8765";
     private final String mediaDir;
 
     public StandardSQLite3Source(String sourceID, String mediaDir) {
-        //this.query = query;
         this.sourceID = sourceID;
         this.mediaDir = mediaDir;
     }

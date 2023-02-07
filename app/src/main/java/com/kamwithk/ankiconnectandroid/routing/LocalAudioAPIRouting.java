@@ -97,11 +97,12 @@ public class LocalAudioAPIRouting {
     }
 
     public NanoHTTPD.Response getAudioHandleError(String source, String path) {
-        Log.d("AnkiConnectAndroid", "getAudioHandleError: " + source + " | " + path);
 
         if (sourceIdToSource.containsKey(source)) {
             String mediaDir = Objects.requireNonNull(sourceIdToSource.get(source)).getMediaDir();
             String fullPath = mediaDir + "/" + path;
+
+            Log.d("AnkiConnectAndroid", "getAudioHandleError full path: " + fullPath);
         }
 
         return newFixedLengthResponse(

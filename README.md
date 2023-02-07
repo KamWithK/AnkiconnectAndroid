@@ -73,7 +73,7 @@ local audio desktop vs android:
  *     android: http://localhost:8765/localaudio/?type=SOURCE&path=FILE_PATH_TO_AUDIO_FILE
 ```
 
-local audio folder:
+local audio folder (user can verify by settings -> `Print Local Audio Directory`
 ```
 (phone)/Android/data/com.kamwithk.ankiconnectandroid/files/
 /storage/emulated/0/Android/data/com.kamwithk.ankiconnectandroid/files/
@@ -94,6 +94,18 @@ expected file directory (`user_files` be the exact same as original):
     └── nhk16_files
         └── ...
 ```
+
+
+developer notes:
+- when building, must populate the jniLibs folder in order for sqlite3 to work
+- to do this:
+
+1. download the release specified under gradle (currently: https://github.com/xerial/sqlite-jdbc/releases/tag/3.40.1.0)
+2. unzip
+3. follow instructions [here](https://github.com/xerial/sqlite-jdbc/blob/master/USAGE.md#how-to-use-with-android)
+    - `jniLibs` folder is exactly under `app/src/main/jniLibs`. It must be created.
+    - don't forget to rename `aarch64` -> `arm64-v8a` and `arm` to `armeabi`!
+
 
 fetching audio example
 ```
