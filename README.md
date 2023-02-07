@@ -63,14 +63,36 @@ From here, you should be able to use the show card button as normal.
 
 ### Additional Instructions: Setting up Local Audio
 
-local audio link desktop:
+local audio desktop vs android:
 ```
-http://localhost:5050/?sources=jpod,jpod_alternate,nhk16,forvo&term={term}&reading={reading}
+ *   - initial get:
+ *     python:  http://localhost:5050/?sources=jpod,jpod_alternate,nhk16,forvo&term={term}&reading={reading}
+ *     android: http://localhost:8765/localaudio/?type=getSources&sources=jpod,jpod_alternate,nhk16,forvo&term={term}&reading={reading}
+ *   - audio file get:
+ *     python:  http://localhost:5050/SOURCE/FILE_PATH_TO_AUDIO_FILE
+ *     android: http://localhost:8765/localaudio/?type=SOURCE&path=FILE_PATH_TO_AUDIO_FILE
 ```
 
-local audio link android:
+local audio folder:
 ```
-http://localhost:8765/localaudio/get?sources=jpod,jpod_alternate,nhk16,forvo&term={term}&reading={reading}
+(phone)/Android/data/com.kamwithk.ankiconnectandroid/files/
+/storage/emulated/0/Android/data/com.kamwithk.ankiconnectandroid/files/
+```
+
+
+expected file directory (`user_files` be the exact same as original):
+```
+(local audio folder)
+├── entries.db
+└── user_files
+    ├── forvo_files
+    │   └── ...
+    ├── jpod_alternate_files
+    │   └── ...
+    ├── jpod_files
+    │   └── ...
+    └── nhk16_files
+        └── ...
 ```
 
 fetching audio example

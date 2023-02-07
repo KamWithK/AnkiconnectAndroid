@@ -23,3 +23,4 @@ render.experimental.xml
 *.jks
 *.keystore
 *.hprof
+app/src/main/jniLibs/

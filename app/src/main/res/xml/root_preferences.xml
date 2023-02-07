@@ -9,4 +9,13 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/settings_other_header">
+
+        <Preference
+            app:key="get_dir_path"
+            app:title="@string/get_dir_path_title"
+            app:summary="@string/get_dir_path_title_summary" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

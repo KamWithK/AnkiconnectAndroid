@@ -17,7 +17,7 @@ public class APIHandler {
     public APIHandler(IntegratedAPI integratedAPI) {
         ankiAPIRouting = new AnkiAPIRouting(integratedAPI);
         forvoAPIRouting = new ForvoAPIRouting();
-        localAudioAPIRouting = new LocalAudioAPIRouting();
+        localAudioAPIRouting = new LocalAudioAPIRouting(integratedAPI.getExternalFilesDir());
     }
 
     public NanoHTTPD.Response chooseAPI(String json_string, String uri, Map<String, List<String>> parameters) {

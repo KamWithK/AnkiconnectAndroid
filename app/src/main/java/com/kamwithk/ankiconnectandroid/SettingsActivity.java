@@ -1,5 +1,6 @@
 package com.kamwithk.ankiconnectandroid;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -54,6 +56,30 @@ public class SettingsActivity extends AppCompatActivity {
                 });
 
             }
+
+            preference = findPreference("get_dir_path");
+            if (preference != null) {
+                // custom handler of preference: open permissions screen
+                preference.setOnPreferenceClickListener(p -> {
+
+                    Context context = getContext();
+                    if (context == null) {
+                        Toast.makeText(getContext(), "Cannot get local audio folder, as context is null.", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getContext(), "Local audio folder: " + context.getExternalFilesDir(null), Toast.LENGTH_LONG).show();
+                        // TODO snackbar?
+                        // getView() seems to be null...
+//                        Snackbar snackbar = Snackbar.make(getView().findViewById(R.id.settings),
+//                                "Local audio folder: " + context.getExternalFilesDir(null),
+//                                BaseTransientBottomBar.LENGTH_LONG);
+//                        snackbar.show();
+                    }
+                    return true;
+                });
+
+            }
+
+
 
         }
     }
