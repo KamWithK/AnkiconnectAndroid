@@ -61,6 +61,24 @@ From here, you should be able to use the show card button as normal.
 > save your changes and re-click on the "show card" button from Kiwi Browser, you will
 > lose all your current note changes!
 
+### Additional Instructions: Setting up Local Audio
+
+local audio link desktop:
+```
+http://localhost:5050/?sources=jpod,jpod_alternate,nhk16,forvo&term={term}&reading={reading}
+```
+
+local audio link android:
+```
+http://localhost:8765/localaudio/get?sources=jpod,jpod_alternate,nhk16,forvo&term={term}&reading={reading}
+```
+
+fetching audio example
+```
+http://localhost:8765/localaudio/forvo/FILE_PATH
+```
+
+
 ## Common Errors and Solutions
 If you're experiencing any of these problems:
 1. Forvo audio won't load

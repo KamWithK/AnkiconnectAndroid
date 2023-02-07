@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.kamwithk.ankiconnectandroid.routing.Router.contentType;
-import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 
 public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
 
@@ -20,6 +19,7 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
     public RouteHandler() {
         super();
     }
+
     @Override
     public String getText() {
         return null;
@@ -52,7 +52,7 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
             e.printStackTrace();
         }
 
-        NanoHTTPD.Response rep = apiHandler.chooseAPI(files.get("postData"), session.getParameters());
+        NanoHTTPD.Response rep = apiHandler.chooseAPI(files.get("postData"), session.getUri(), session.getParameters());
 
         // TODO CORS based on settings
         // rep.addHeader("Access-Control-Allow-Origin", "http://localhost");

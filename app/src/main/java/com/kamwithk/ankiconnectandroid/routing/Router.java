@@ -25,6 +25,8 @@ public class Router extends RouterNanoHTTPD {
 
     @Override
     public void addMappings() {
+        // TODO separate these into different classes?
         addRoute("/", RouteHandler.class, this.context);
+        addRoute("/localaudio/", RouteHandler.class, this.context);
     }
 }
