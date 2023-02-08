@@ -94,7 +94,6 @@ public class LocalAudioAPIRouting {
         response.addProperty("type", "audioSourceList");
         response.add("audioSources", Parser.gson.toJsonTree(audioSourcesResult, typeToken));
         Log.d("AnkiConnectAndroid", "audio sources json: " + Parser.gson.toJson(response));
-        Log.d("AnkiConnectAndroid", "audio sources len: " + audioSourcesResult.size());
 
         return newFixedLengthResponse(
                 NanoHTTPD.Response.Status.OK,

@@ -25,10 +25,11 @@ public class ForvoAudioSource extends StandardSQLite3Source {
                 questionMarksList.add("?");
             }
             String questionMarks = String.join("&", questionMarksList);
+
             String query = "SELECT speaker,file FROM forvo WHERE expression = ? and speaker IN (" + questionMarks + ") ORDER BY speaker";
             PreparedStatement pstmt = connection.prepareStatement(query);
             pstmt.setString(1, term);
-            for (int i = 2; i <= users.size(); i++) {
+            for (int i = 2; i < users.size()+2; i++) {
                 pstmt.setString(i, users.get(i-2));
             }
             return pstmt;
