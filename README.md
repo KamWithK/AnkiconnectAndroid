@@ -168,5 +168,5 @@ This is for the sqlite3 dependency to work as expected.
 2. Unzip the .jar file.
 3. Follow the instructions linked [here](https://github.com/xerial/sqlite-jdbc/blob/master/USAGE.md#how-to-use-with-android).
     * The `jniLibs` folder is located under `(project root)/app/src/main/jniLibs`. It must be created.
-    * Don't forget to rename the folders: `aarch64` -> `arm64-v8a` and `arm` to `armeabi`!
+    * Don't forget to rename the folders: `aarch64` -> `arm64-v8a` and `arm` -> `armeabi`!
 
