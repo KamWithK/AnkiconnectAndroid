@@ -9,6 +9,15 @@ Forvo and local audio is now supported!
 Ankiconnect Android is a from scratch unofficial reimplementation of the [desktop Ankiconnect extension](https://github.com/FooSoft/anki-connect), [desktop Forvo Server extension](https://github.com/jamesnicolas/yomichan-forvo-server) and [desktop Local Audio Server](https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio).
 It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://github.com/ankidroid/Anki-Android/).
 
+## Table of Contents
+* [Instructions](#Instructions)
+    * [Additional Instructions: Forvo Audio](#additional-instructions-forvo-audio)
+    * [Additional Instructions: Show Card Button](#additional-instructions-show-card-button)
+    * [Additional Instructions: Local Audio](#additional-instructions-local-audio)
+* [Common Errors and Solutions](#common-errors-and-solutions)
+* [Limitations](#limitations)
+* [Building](#building)
+
 ## Instructions
 Here's how to set everything up from scratch (if you've already got Yomichan working, then skip to step 5):
 
@@ -108,17 +117,21 @@ The advantages and disadvantages of setting up a local audio server can be found
         > (i.e. copy one folder per night)
 
         <details> <summary>Expected file structure <i>(click here)</i></summary>
-            (local audio folder)
-            ├── entries.db
-            └── user_files
-                ├── forvo_files
-                │   └── ...
-                ├── jpod_alternate_files
-                │   └── ...
-                ├── jpod_files
-                │   └── ...
-                └── nhk16_files
-                    └── ...
+
+        ```
+        (local audio folder)
+        ├── entries.db
+        └── user_files
+            ├── forvo_files
+            │   └── ...
+            ├── jpod_alternate_files
+            │   └── ...
+            ├── jpod_files
+            │   └── ...
+            └── nhk16_files
+                └── ...
+        ```
+
         </summary>
 
 3. Setup local audio on Kiwi Browser's Yomichan. (Warning: this URL is different than the one on desktop!)
