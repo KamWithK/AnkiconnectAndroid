@@ -48,9 +48,10 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
 
 ### Additional Instructions: Forvo Audio
 The default audio sources from Yomichan should already work.
-However, an extra Forvo audio source can be added.
-This is recommended to do because Forvo significantly extends the coverage of audio,
-compared to the default audio sources from Yomichan. 
+However, Forvo can be added as an audio source.
+It is recommended that you add this Forvo audio source
+because Forvo significantly extends the coverage of audio
+compared to the default audio sources from Yomichan.
 
 1. Click on `Configure audio playback sources` and under the `Audio` section
 2. Click the `Add` button (top right corner)
