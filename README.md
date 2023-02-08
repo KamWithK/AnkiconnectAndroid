@@ -133,21 +133,6 @@ The advantages and disadvantages of setting up a local audio server can be found
         Be sure to play all of the sources to ensure that the audio is properly fetched.
 
 
-<details> <summary>Developer Notes: Local Audio</summary>
-
-*   When building the app, you must populate the `jniLibs` with the correct `.so` files,
-    in order for the sqlite3 dependency to work as expected.
-    To do this:
-
-    1. Download the release specified under `(project root)/app/build.gradle` (currently: https://github.com/xerial/sqlite-jdbc/releases/tag/3.40.1.0)
-    2. Unzip the .jar file.
-    3. Follow the instructions linked [here](https://github.com/xerial/sqlite-jdbc/blob/master/USAGE.md#how-to-use-with-android).
-        * The `jniLibs` folder is located under `(project root)/app/src/main/jniLibs`. It must be created.
-        * Don't forget to rename the folders: `aarch64` -> `arm64-v8a` and `arm` to `armeabi`!
-
-</details>
-
-
 ## Common Errors and Solutions
 If you're experiencing any of these problems:
 1. Forvo audio won't load
@@ -171,3 +156,17 @@ Some examples:
 1. Duplicate checks always occur across the full Anki collection instead of whatever deck is selected (no matter what options are selected, assuming this feature is left enabled)
 2. The show card button will not work on the latest stable release of AnkiDroid. Instead, you must **manually install a pre-release version of AnkiDroid** for it to work. Please see [these instructions](#additional-instructions-show-card-button) for more details on how to make the show card button work.
 3. When viewing the note, the note cannot be viewed directly within card editor. Instead, the note is shown from the card search screen.
+
+## Building
+You should be able to build the app like a normal Android application through Android Studio.
+
+However, in order to support the local audio server,
+you must populate the `jniLibs` folder with the appropriate `.so` files.
+This is for the sqlite3 dependency to work as expected.
+
+1. Download the release specified under `(project root)/app/build.gradle` (currently: https://github.com/xerial/sqlite-jdbc/releases/tag/3.40.1.0)
+2. Unzip the .jar file.
+3. Follow the instructions linked [here](https://github.com/xerial/sqlite-jdbc/blob/master/USAGE.md#how-to-use-with-android).
+    * The `jniLibs` folder is located under `(project root)/app/src/main/jniLibs`. It must be created.
+    * Don't forget to rename the folders: `aarch64` -> `arm64-v8a` and `arm` to `armeabi`!
+
