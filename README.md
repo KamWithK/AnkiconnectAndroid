@@ -33,11 +33,13 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
     * Ensure `Scanning Inputs` is optimized for mobile (prevents lookups on scrolling):
         * Ensure advanced settings is enabled (button at the bottom right corner)
         * Navigate to `Scanning` → `Configure advanced scanning inputs`
-        * Ensure that advanced options within the `Scanning Inputs` window is enabled.
-            To do this, scroll to the right, and tap on the three dots.
-        *   <details> <summary>Match your settings to the this image: <i>(click here)</i></summary>
-            <a href="https://github.com/Aquafina-water-bottle/AnkiconnectAndroid/blob/local_audio/img/scanning_inputs.jpg"><img src="https://github.com/Aquafina-water-bottle/AnkiconnectAndroid/blob/local_audio/img/scanning_inputs.jpg" width="400" /></a>
-            </details>
+            * Ensure that advanced options within the `Scanning Inputs` window is enabled.
+                To do this, scroll to the right, and tap on the three dots.
+            *   <details> <summary>Match your settings to the this image: <i>(click here)</i></summary>
+                <a href="https://github.com/Aquafina-water-bottle/AnkiconnectAndroid/blob/local_audio/img/scanning_inputs.jpg"><img src="https://github.com/Aquafina-water-bottle/AnkiconnectAndroid/blob/local_audio/img/scanning_inputs.jpg" width="400" /></a>
+                </details>
+        * Navigate to `Scanning` → `Support inputs for devices with touch screens`
+            * Ensure that `Touch inputs` is checked, and `Pointer inputs` is NOT checked.
 6. Set up Yomichan for sentence mining:
     * Toggle `Enable Anki integration` on, under `Anki`
     * Click on `Configure Anki card format` and choose the deck, model and field/values you desire
