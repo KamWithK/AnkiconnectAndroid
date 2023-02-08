@@ -25,26 +25,22 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
 2. Install Ankiconnect Android - Download from the [Releases Section](https://github.com/KamWithK/AnkiconnectAndroid/releases/latest) or from [IzzyOnDroid repo](https://apt.izzysoft.de/fdroid/index/apk/com.kamwithk.ankiconnectandroid)
 3. Start the Ankiconnect Android app, accept the permissions and hit start service
 4. Set up the [Yomichan extension](https://chrome.google.com/webstore/detail/yomichan/ogmnaimimemjmbakcfefmnahgdfhfami) in Kiwi Browser to your liking:
-
     * `Import` 1+ dictionaries by clicking `Configure installed and enabled dictionaries` and then `Import` under `Dictionaries` section ([external resources](https://learnjapanese.moe/resources/#dictionaries))
     * **`Scan modifier key` under the `Scanning` section should be "No Key" (unless using mouse/keyboard, advanced options contains more config options)**
     * `Scan delay` under the `Scanning` section can feel laggy and so can be set to `0`
     * **It is recommended to lower the value of `Maximum number of results` (under `General`) to prevent unnecessary lag. A sane value would be `8`**
-    * **Ensure `Scanning Inputs` is optimized for mobile:**
+    * **Ensure `Scanning Inputs` is optimized for mobile** (prevents lookups on scrolling):
         * Ensure advanced settings is enabled (button at the bottom right corner)
         * Navigate to `Scanning` → `Configure advanced scanning inputs`
-        * Ensure that advanced options within this new Scanning Inputs window is enabled.
+        * Ensure that advanced options within the `Scanning Inputs` window is enabled.
             To do this, scroll to the right, and tap on the three dots.
-        * Match your settings to the following image:
-            <details> <summary>Scanning Input Settings <i>(click here)</i></summary>
-
-            ![image](./img/scanning_inputs.jpg)
-
+        *   <details> <summary>Match your settings to the this image: <i>(click here)</i></summary>
+            <a href="https://github.com/Aquafina-water-bottle/AnkiconnectAndroid/blob/local_audio/img/scanning_inputs.jpg"><img src="https://github.com/Aquafina-water-bottle/AnkiconnectAndroid/blob/local_audio/img/scanning_inputs.jpg" width="400" /></a>
             </details>
 5. Set up Yomichan for sentence mining:
     * Toggle `Enable Anki integration` on, under `Anki`
     * Click on `Configure Anki card format` and choose the deck, model and field/values you desire
-    * For further custamisation you can write/modify the script under `Configure Anki card templates`
+    * For further customisation you can write/modify the script under `Configure Anki card templates`
 ***Sections and Advanced options visible via the blue menu icon on the bottom right of the screen***
 
 > Easier Yomichan setup: If you import settings from a computer, ensure that the bolded steps are still followed
