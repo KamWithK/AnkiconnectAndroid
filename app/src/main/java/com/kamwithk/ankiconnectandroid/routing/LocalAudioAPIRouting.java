@@ -72,9 +72,6 @@ public class LocalAudioAPIRouting {
             // for this to not error on android, must add .so files manually
             // https://github.com/xerial/sqlite-jdbc/blob/master/USAGE.md#how-to-use-with-android
 
-            // TODO try to not use the registerDriver function
-            DriverManager.registerDriver((Driver) Class.forName(
-                    "org.sqlite.JDBC").newInstance());
             Connection connection = DriverManager.getConnection(connectionURI);
 
             String[] sources = Objects.requireNonNull(parameters.get("sources")).get(0).split(",");
@@ -89,8 +86,6 @@ public class LocalAudioAPIRouting {
             // if the error message is "out of memory",
             // it probably means no database file is found
             Log.e("AnkiConnectAndroid", e.getMessage());
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-            e.printStackTrace();
         }
 
         Type typeToken = new TypeToken<ArrayList<HashMap<String, String>>>() {}.getType();
