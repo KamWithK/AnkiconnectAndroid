@@ -3,10 +3,10 @@
 Ankiconnect Android allows you to utilize the standard Anki mining workflow on Android devices like phones and eReaders.
 Create Anki cards using [Yomichan](https://foosoft.net/projects/yomichan/) on [Kiwi Browser](https://kiwibrowser.com/) and add them straight into your Anki deck!
 Mine on the go in the same way as you mine on your desktop pc.
-Forvo and local audio is now supported!
+Forvo and local audio are now supported!
 
 
-Ankiconnect Android is a from scratch unofficial reimplementation of the [desktop Ankiconnect extension](https://github.com/FooSoft/anki-connect), [desktop Forvo Server extension](https://github.com/jamesnicolas/yomichan-forvo-server) and [desktop Local Audio Server](https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio).
+Ankiconnect Android is a from scratch unofficial reimplementation of the [desktop Ankiconnect extension](https://github.com/FooSoft/anki-connect), [desktop Forvo Server extension](https://github.com/jamesnicolas/yomichan-forvo-server) and [desktop Local Audio Server for Yomichan](https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio).
 It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://github.com/ankidroid/Anki-Android/).
 
 ## Table of Contents
@@ -29,8 +29,18 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
     * `Import` 1+ dictionaries by clicking `Configure installed and enabled dictionaries` and then `Import` under `Dictionaries` section ([external resources](https://learnjapanese.moe/resources/#dictionaries))
     * **`Scan modifier key` under the `Scanning` section should be "No Key" (unless using mouse/keyboard, advanced options contains more config options)**
     * `Scan delay` under the `Scanning` section can feel laggy and so can be set to `0`
-    * It is recommended to lower the value of `Maximum number of results` (under `General`) to prevent unnecessary lag. A sane value would be `8`
+    * **It is recommended to lower the value of `Maximum number of results` (under `General`) to prevent unnecessary lag. A sane value would be `8`**
+    * **Ensure `Scanning Inputs` is optimized for mobile:**
+        * Ensure advanced settings is enabled (button at the bottom right corner)
+        * Navigate to `Scanning` → `Configure advanced scanning inputs`
+        * Ensure that advanced options within this new Scanning Inputs window is enabled.
+            To do this, scroll to the right, and tap on the three dots.
+        * Match your settings to the following image:
+            <details> <summary>Scanning Input Settings <i>(click here)</i></summary>
 
+            ![image](./img/scanning_inputs.jpg)
+
+            </details>
 5. Set up Yomichan for sentence mining:
     * Toggle `Enable Anki integration` on, under `Anki`
     * Click on `Configure Anki card format` and choose the deck, model and field/values you desire
