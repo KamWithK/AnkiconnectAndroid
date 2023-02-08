@@ -27,9 +27,10 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
 4. Set up the [Yomichan extension](https://chrome.google.com/webstore/detail/yomichan/ogmnaimimemjmbakcfefmnahgdfhfami) in Kiwi Browser to your liking:
     * `Import` 1+ dictionaries by clicking `Configure installed and enabled dictionaries` and then `Import` under `Dictionaries` section ([external resources](https://learnjapanese.moe/resources/#dictionaries))
     * **`Scan modifier key` under the `Scanning` section should be "No Key" (unless using mouse/keyboard, advanced options contains more config options)**
+5. Optimize Yomichan for mobile usage:
     * `Scan delay` under the `Scanning` section can feel laggy and so can be set to `0`
-    * **It is recommended to lower the value of `Maximum number of results` (under `General`) to prevent unnecessary lag. A sane value would be `8`**
-    * **Ensure `Scanning Inputs` is optimized for mobile** (prevents lookups on scrolling):
+    * It is recommended to lower the value of `Maximum number of results` (under `General`) to prevent unnecessary lag. A sane value would be `8`
+    * Ensure `Scanning Inputs` is optimized for mobile (prevents lookups on scrolling):
         * Ensure advanced settings is enabled (button at the bottom right corner)
         * Navigate to `Scanning` → `Configure advanced scanning inputs`
         * Ensure that advanced options within the `Scanning Inputs` window is enabled.
@@ -37,7 +38,7 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
         *   <details> <summary>Match your settings to the this image: <i>(click here)</i></summary>
             <a href="https://github.com/Aquafina-water-bottle/AnkiconnectAndroid/blob/local_audio/img/scanning_inputs.jpg"><img src="https://github.com/Aquafina-water-bottle/AnkiconnectAndroid/blob/local_audio/img/scanning_inputs.jpg" width="400" /></a>
             </details>
-5. Set up Yomichan for sentence mining:
+6. Set up Yomichan for sentence mining:
     * Toggle `Enable Anki integration` on, under `Anki`
     * Click on `Configure Anki card format` and choose the deck, model and field/values you desire
     * For further customisation you can write/modify the script under `Configure Anki card templates`
