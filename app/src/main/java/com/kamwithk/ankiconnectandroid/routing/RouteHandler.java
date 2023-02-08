@@ -22,7 +22,7 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
 
     @Override
     public String getText() {
-        return null;
+        return "not implemented";
     }
 
     @Override
@@ -52,7 +52,7 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
             e.printStackTrace();
         }
 
-        NanoHTTPD.Response rep = apiHandler.chooseAPI(files.get("postData"), session.getUri(), session.getParameters());
+        NanoHTTPD.Response rep = apiHandler.chooseAPI(files.get("postData"), session.getParameters());
 
         // TODO CORS based on settings
         // rep.addHeader("Access-Control-Allow-Origin", "http://localhost");

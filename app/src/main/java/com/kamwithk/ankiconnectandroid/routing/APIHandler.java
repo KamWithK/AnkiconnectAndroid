@@ -20,16 +20,9 @@ public class APIHandler {
         localAudioAPIRouting = new LocalAudioAPIRouting(integratedAPI.getExternalFilesDir());
     }
 
-    public NanoHTTPD.Response chooseAPI(String json_string, String uri, Map<String, List<String>> parameters) {
-        if (uri.equals("/localaudio/")) {
-            String type = Objects.requireNonNull(parameters.get("type")).get(0);
-            if (type.equals("getSources")) {
-                return localAudioAPIRouting.getAudioSourcesHandleError(parameters);
-            }
-            String path = Objects.requireNonNull(parameters.get("path")).get(0);
-            return localAudioAPIRouting.getAudioHandleError(type, path);
+    public NanoHTTPD.Response chooseAPI(String json_string, Map<String, List<String>> parameters) {
 
-        } else if ((parameters.containsKey("term") || parameters.containsKey("expression")) && parameters.containsKey("reading")) {
+        if ((parameters.containsKey("term") || parameters.containsKey("expression")) && parameters.containsKey("reading")) {
             String reading = Objects.requireNonNull(parameters.get("reading")).get(0);
 
             return forvoAPIRouting.getAudioHandleError(parameters.get("term"), parameters.get("expression"), reading);

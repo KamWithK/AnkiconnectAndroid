@@ -27,6 +27,10 @@ public class Router extends RouterNanoHTTPD {
     public void addMappings() {
         // TODO separate these into different classes?
         addRoute("/", RouteHandler.class, this.context);
-        addRoute("/localaudio/", RouteHandler.class, this.context);
+        //addRoute("/localaudio/get/", LocalAudioRouteHandler.class, this.context);
+        addRoute("/localaudio/(.)+", LocalAudioRouteHandler.class, this.context);
+        // for some reason, none of these work:
+        // addRoute("/localaudio/:source/(.)+", LocalAudioRouteHandler.class, this.context);
+        // addRoute("/localaudio/:source/:file", LocalAudioRouteHandler.class, this.context);
     }
 }

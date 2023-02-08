@@ -44,10 +44,10 @@ import fi.iki.elonen.NanoHTTPD;
  * - The URIs are different:
  *   - initial get:
  *     python:  http://localhost:5050/?sources=jpod,jpod_alternate,nhk16,forvo&term={term}&reading={reading}
- *     android: http://localhost:8765/localaudio/?type=getSources&sources=jpod,jpod_alternate,nhk16,forvo&term={term}&reading={reading}
+ *     android: http://localhost:8765/localaudio/get/&sources=jpod,jpod_alternate,nhk16,forvo&term={term}&reading={reading}
  *   - audio file get:
  *     python:  http://localhost:5050/SOURCE/FILE_PATH_TO_AUDIO_FILE
- *     android: http://localhost:8765/localaudio/?type=SOURCE&path=FILE_PATH_TO_AUDIO_FILE
+ *     android: http://localhost:8765/localaudio/SOURCE/FILE_PATH_TO_AUDIO_FILE
  *  - NHK98 is not supported (because the audio files aren't available for the original anyways)
  */
 public class LocalAudioAPIRouting {

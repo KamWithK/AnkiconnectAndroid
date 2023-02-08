@@ -76,9 +76,9 @@ public abstract class StandardSQLite3Source implements LocalAudioSource {
                 Uri.Builder builder = new Uri.Builder();
                 builder.scheme("http")
                         .encodedAuthority(NETLOC) // encoded to not escape the : character
-                        .appendPath("localaudio/")
-                        .appendQueryParameter("type", sourceID)
-                        .appendQueryParameter("path", filePath);
+                        .appendPath("localaudio")
+                        .appendPath(sourceID)
+                        .appendPath(filePath);
                 String uri = builder.build().toString();
 
                 Map<String, String> map = new HashMap<>();
