@@ -3,10 +3,10 @@
 Ankiconnect Android allows you to utilize the standard Anki mining workflow on Android devices like phones and eReaders.
 Create Anki cards using [Yomichan](https://foosoft.net/projects/yomichan/) on [Kiwi Browser](https://kiwibrowser.com/) and add them straight into your Anki deck!
 Mine on the go in the same way as you mine on your desktop pc.
-Forvo audio is now supported!
+Forvo and local audio is now supported!
 
 
-Ankiconnect Android is a from scratch unofficial reimplementation of the [desktop Ankiconnect extension](https://github.com/FooSoft/anki-connect) and [desktop Forvo Server extension](https://github.com/jamesnicolas/yomichan-forvo-server).
+Ankiconnect Android is a from scratch unofficial reimplementation of the [desktop Ankiconnect extension](https://github.com/FooSoft/anki-connect), [desktop Forvo Server extension](https://github.com/jamesnicolas/yomichan-forvo-server) and [desktop Local Audio Server](https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio).
 It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://github.com/ankidroid/Anki-Android/).
 
 ## Instructions
@@ -26,14 +26,21 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
     * Toggle `Enable Anki integration` on, under `Anki`
     * Click on `Configure Anki card format` and choose the deck, model and field/values you desire
     * For further custamisation you can write/modify the script under `Configure Anki card templates`
-6. Set up Forvo audio
-    * Click on `Configure audio playback sources` and under the `Audio` section
-    * Click the `Add` button (top right corner)
-    * **Select `Custom URL (JSON)` and copy paste `http://localhost:8765/?term={term}&reading={reading}` into the `URL` box** (NOTE: This is NOT the same URL as from your PC, the port is different)
-
 ***Sections and Advanced options visible via the blue menu icon on the bottom right of the screen***
 
 > Easier Yomichan setup: If you import settings from a computer, ensure that the bolded steps are still followed
+
+### Additional Instructions: Forvo Audio
+The default audio sources from Yomichan should already work.
+However, an extra Forvo audio source can be added.
+This is recommended to do because Forvo significantly extends the coverage of audio,
+compared to the default audio sources from Yomichan. 
+
+1. Click on `Configure audio playback sources` and under the `Audio` section
+2. Click the `Add` button (top right corner)
+3. **Select `Custom URL (JSON)` and copy paste `http://localhost:8765/?term={term}&reading={reading}` into the `URL` box** (NOTE: This is NOT the same URL as from your PC, the port is different)
+
+
 
 ### Additional Instructions: Show Card Button
 By default, the show card button **will not work**.
