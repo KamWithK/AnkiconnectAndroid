@@ -79,8 +79,7 @@ The following is a *completely optional* set of instructions for getting the sho
 
 From here, you should be able to use the show card button as normal.
 
-> **Warning**
->
+> **Warning**:
 > Make sure you save your note changes if you edit your note! If you do not
 > save your changes and re-click on the "show card" button from Kiwi Browser, you will
 > lose all your current note changes!
@@ -116,18 +115,19 @@ The advantages and disadvantages of setting up a local audio server can be found
 
     * After locating the two folders,
         copy `entries.db` and all of `user_files` from the desktop's add-on folder
-        into Ankiconnect Android's local audio folder.
+        into Ankiconnect Android's data folder.
 
-        > **Warning**: `user_files` will have over 300,000 files in total!
+        > **Warning**:
+        > `user_files` will have over 300,000 files in total!
         > Android takes extremely long to create a large number of files on their filesystem,
-        > and copying the `user_files` folder can easily take 24 hours and over to do finish!
+        > and copying the `user_files` folder can easily take over 24 hours to do finish!
         > Make sure to plan out the times when you can copy the files over to your phone
-        > (i.e. copy one folder per night)
+        > (i.e. copy one folder at the start of each night, and leave it running overnight)
 
         <details> <summary>Expected file structure <i>(click here)</i></summary>
 
         ```
-        (local audio folder)
+        (AnkiConnect Android's data folder)
         ├── entries.db
         └── user_files
             ├── forvo_files
@@ -150,8 +150,7 @@ The advantages and disadvantages of setting up a local audio server can be found
         http://localhost:8765/localaudio/?type=getSources&sources=jpod,jpod_alternate,nhk16,forvo&term={term}&reading={reading}
         ```
 
-        Notice that the URL is slightly different. However, you should be able to edit the sources and user
-        parameter just like the desktop local audio plugin.
+        The `sources` and `user` parameters should behave exactly like the desktop local audio plugin.
 
 4. Ensure it works.
     * You can do the
