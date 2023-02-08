@@ -15,12 +15,12 @@ public class NHK16AudioSource extends StandardSQLite3Source {
     @Override
     protected PreparedStatement prepareQuery(Connection connection, Map<String, List<String>> parameters) throws SQLException {
         String query =
-                "SELECT display, file FROM nhk16 WHERE expression = ? AND reading = ?" +
-                " UNION" +
-                "SELECT display, file FROM nhk16 WHERE expression = ?" +
-                "   AND NOT EXISTS (SELECT display, file FROM nhk16 WHERE expression = ? AND reading = ?)" +
-                " UNION" +
-                "SELECT display, file FROM nhk16 WHERE reading = ?" +
+                "SELECT display, file FROM nhk16 WHERE expression = ? AND reading = ?\n" +
+                " UNION\n" +
+                "SELECT display, file FROM nhk16 WHERE expression = ?\n" +
+                "   AND NOT EXISTS (SELECT display, file FROM nhk16 WHERE expression = ? AND reading = ?)\n" +
+                " UNION\n" +
+                "SELECT display, file FROM nhk16 WHERE reading = ?\n" +
                 "   AND NOT EXISTS (SELECT display, file FROM nhk16 WHERE expression = ?)";
 
         String term = getTerm(parameters);
