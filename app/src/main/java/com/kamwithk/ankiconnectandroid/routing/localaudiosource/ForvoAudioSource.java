@@ -2,6 +2,7 @@ package com.kamwithk.ankiconnectandroid.routing.localaudiosource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,5 +39,10 @@ public class ForvoAudioSource extends StandardSQLite3Source {
             pstmt.setString(1, term);
             return pstmt;
         }
+    }
+
+    @Override
+    protected String getSourceName(ResultSet rs) throws SQLException {
+        return "Forvo " + rs.getString("speaker");
     }
 }

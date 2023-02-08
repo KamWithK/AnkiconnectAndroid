@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Base class for all audio sources that require the usage of entries.db
+ */
 public abstract class StandardSQLite3Source implements LocalAudioSource {
     protected final String sourceID;
 
@@ -29,7 +32,7 @@ public abstract class StandardSQLite3Source implements LocalAudioSource {
     // this is a hack around it in order to not download a huge dependency...
     protected abstract PreparedStatement prepareQuery(Connection connection, Map<String, List<String>> parameters) throws SQLException;
 
-    protected String getSourceName(ResultSet rs) {
+    protected String getSourceName(ResultSet rs) throws SQLException {
         return sourceID;
     }
 
@@ -72,7 +75,7 @@ public abstract class StandardSQLite3Source implements LocalAudioSource {
 
                 Uri.Builder builder = new Uri.Builder();
                 builder.scheme("http")
-                        .encodedAuthority(NETLOC)
+                        .encodedAuthority(NETLOC) // encoded to not escape the : character
                         .appendPath("localaudio/")
                         .appendQueryParameter("type", sourceID)
                         .appendQueryParameter("path", filePath);

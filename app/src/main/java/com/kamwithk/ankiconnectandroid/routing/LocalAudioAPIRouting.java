@@ -7,8 +7,11 @@ import android.util.Log;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.kamwithk.ankiconnectandroid.request_parsers.Parser;
+import com.kamwithk.ankiconnectandroid.routing.localaudiosource.ForvoAudioSource;
+import com.kamwithk.ankiconnectandroid.routing.localaudiosource.JPodAltAudioSource;
 import com.kamwithk.ankiconnectandroid.routing.localaudiosource.JPodAudioSource;
 import com.kamwithk.ankiconnectandroid.routing.localaudiosource.LocalAudioSource;
+import com.kamwithk.ankiconnectandroid.routing.localaudiosource.NHK16AudioSource;
 
 import org.apache.commons.io.FileUtils;
 
@@ -32,9 +35,9 @@ import fi.iki.elonen.NanoHTTPD;
  * Local audio in AnkidroidAndroid works similarly to the original python script found at
  * https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio
  *
- * Here are the differences:
+ * Here are the main differences:
  * - The memory-based version is not supported. Only the SQL version is supported.
- * - The sqlite3 database is NOT dynamically created. This means that the user must copy/paste
+ * - The SQLite3 database is *NOT* dynamically created. This means that the user must copy/paste
  *   the generated entries.db into the correct place within their Android device. The database
  *   is not created dynamically in order to make the process of implementing this feature
  *   as simple as possible.
@@ -45,6 +48,7 @@ import fi.iki.elonen.NanoHTTPD;
  *   - audio file get:
  *     python:  http://localhost:5050/SOURCE/FILE_PATH_TO_AUDIO_FILE
  *     android: http://localhost:8765/localaudio/?type=SOURCE&path=FILE_PATH_TO_AUDIO_FILE
+ *  - NHK98 is not supported (because the audio files aren't available for the original anyways)
  */
 public class LocalAudioAPIRouting {
     private final File externalFilesDir;
@@ -52,11 +56,14 @@ public class LocalAudioAPIRouting {
     public LocalAudioAPIRouting(File externalFilesDir) {
         this.externalFilesDir = externalFilesDir;
         this.sourceIdToSource = new HashMap<>();
+
         this.sourceIdToSource.put("jpod", new JPodAudioSource());
+        this.sourceIdToSource.put("jpod_alternate", new JPodAltAudioSource());
+        this.sourceIdToSource.put("nhk16", new NHK16AudioSource());
+        this.sourceIdToSource.put("forvo", new ForvoAudioSource());
     }
 
     public NanoHTTPD.Response getAudioSourcesHandleError(Map<String, List<String>> parameters) {
-
         List<Map<String, String>> audioSourcesResult = new ArrayList<>();
 
         // opens database
@@ -65,6 +72,7 @@ public class LocalAudioAPIRouting {
             // for this to not error on android, must add .so files manually
             // https://github.com/xerial/sqlite-jdbc/blob/master/USAGE.md#how-to-use-with-android
 
+            // TODO try to not use the registerDriver function
             DriverManager.registerDriver((Driver) Class.forName(
                     "org.sqlite.JDBC").newInstance());
             Connection connection = DriverManager.getConnection(connectionURI);
@@ -109,7 +117,6 @@ public class LocalAudioAPIRouting {
     }
 
     public NanoHTTPD.Response getAudioHandleError(String source, String path) {
-
         if (!sourceIdToSource.containsKey(source)) {
             return audioError("Unknown source: " + source);
         }

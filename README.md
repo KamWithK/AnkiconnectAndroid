@@ -61,60 +61,94 @@ From here, you should be able to use the show card button as normal.
 > save your changes and re-click on the "show card" button from Kiwi Browser, you will
 > lose all your current note changes!
 
-### Additional Instructions: Setting up Local Audio
+### Additional Instructions: Local Audio
+The [desktop local audio server](https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio)
+setup for Yomichan has been ported over to Ankiconnect Android, and can be used similarly.
+Again, this is *a completely optional* setup that does not need to be done.
+The advantages and disadvantages of setting up a local audio server can be found within the initial link.
 
-local audio desktop vs android:
-```
- *   - initial get:
- *     python:  http://localhost:5050/?sources=jpod,jpod_alternate,nhk16,forvo&term={term}&reading={reading}
- *     android: http://localhost:8765/localaudio/?type=getSources&sources=jpod,jpod_alternate,nhk16,forvo&term={term}&reading={reading}
- *   - audio file get:
- *     python:  http://localhost:5050/SOURCE/FILE_PATH_TO_AUDIO_FILE
- *     android: http://localhost:8765/localaudio/?type=SOURCE&path=FILE_PATH_TO_AUDIO_FILE
-```
+> **Warning**: Step 2 will likely take a long time (potentially over 24 hours!)
+> Be sure to schedule your day accordingly.
+
+1. Set up the [local audio server](https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio)
+    on desktop, if you haven't already.
+
+    Notes:
+    * You must use the SQL version.
+    * Make sure that local audio server works on desktop before going though with the steps below.
+
+2. Copy the files from desktop to Android.
+    * Locate the add-on folder on desktop. This should be `Anki2/addons21/955441350/user_files` by default.
+        If you don't know where `Anki2` is, see
+        [Anki's documentation](https://docs.ankiweb.net/files.html#file-locations)
+
+    * Locate AnkiConnect Android's data folder. By default, it is under:
+        ```
+        (phone)/Android/data/com.kamwithk.ankiconnectandroid/files/
+        ```
+
+        However, one can verify the location of the folder by going into the settings
+        (gear at the top right corner), and tapping on `Print Local Audio Directory`.
+        If the output is `/storage/emulated/0/Android/data/com.kamwithk.ankiconnectandroid/files/`,
+        then the folder is at the default position.
+
+    * After locating the two folders,
+        copy `entries.db` and all of `user_files` from the desktop's add-on folder
+        into Ankiconnect Android's local audio folder.
+
+        > **Warning**: `user_files` will have over 300 thousand files!
+        > Android takes extremely long to create a large number of files on their filesystem,
+        > and copying the `user_files` folder can easily take 24 hours and over to do finish!
+        > Make sure to plan out the times when you can copy the files over to your phone
+        > (i.e. copy one folder per night)
+
+        <details> <summary>Expected file structure <i>(click here)</i></summary>
+
+        ```
+        (local audio folder)
+        ├── entries.db
+        └── user_files
+            ├── forvo_files
+            │   └── ...
+            ├── jpod_alternate_files
+            │   └── ...
+            ├── jpod_files
+            │   └── ...
+            └── nhk16_files
+                └── ...
+        ```
+
+        </summary>
+
+3. Setup local audio on Yomichan. (Warning: this URL is different than the one on desktop!)
+    * Click on `Configure audio playback sources` and under the `Audio` section
+    * Click the `Add` button (top right corner)
+    * Select `Custom URL (JSON)` and copy paste the following into the `url` box:
+        ```
+        http://localhost:8765/localaudio/?type=getSources&sources=jpod,jpod_alternate,nhk16,forvo&term={term}&reading={reading}
+        ```
+
+    Notice that the URL is slightly different. However, you should be able to edit the sources and user
+    parameter just like the desktop local audio plugin.
+
+4. Ensure it works.
+    * You can do the
+    [exact same check](https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio#steps)
+    on the desktop audio add-on (the last step), by scanning 読む and checking that all sources appear.
 
 
-local audio folder (user can verify by settings -> `Print Local Audio Directory`
-```
-(phone)/Android/data/com.kamwithk.ankiconnectandroid/files/
-/storage/emulated/0/Android/data/com.kamwithk.ankiconnectandroid/files/
-```
+<details> <summary>Developer Notes: Local Audio</summary>
+    When building the app, you must populate the `jniLibs` with the correct `.so` files,
+    in order for the sqlite3 dependency to work as expected.
+    To do this:
 
-- when moving audio files: might want to spread this out over a few nights (android's file system is very slow and can easily take many hours to transfer files)
+    1. Download the release specified under `(project root)/app/build.gradle` (currently: https://github.com/xerial/sqlite-jdbc/releases/tag/3.40.1.0)
+    2. Unzip the .jar file.
+    3. Follow the instructions linked [here](https://github.com/xerial/sqlite-jdbc/blob/master/USAGE.md#how-to-use-with-android).
+        * The `jniLibs` folder is located under `(project root)/app/src/main/jniLibs`. It must be created.
+        * Don't forget to rename the folders: `aarch64` -> `arm64-v8a` and `arm` to `armeabi`!
 
-
-
-expected file directory (`user_files` be the exact same as original):
-```
-(local audio folder)
-├── entries.db
-└── user_files
-    ├── forvo_files
-    │   └── ...
-    ├── jpod_alternate_files
-    │   └── ...
-    ├── jpod_files
-    │   └── ...
-    └── nhk16_files
-        └── ...
-```
-
-
-developer notes:
-- when building, must populate the jniLibs folder in order for sqlite3 to work
-- to do this:
-
-1. download the release specified under gradle (currently: https://github.com/xerial/sqlite-jdbc/releases/tag/3.40.1.0)
-2. unzip
-3. follow instructions [here](https://github.com/xerial/sqlite-jdbc/blob/master/USAGE.md#how-to-use-with-android)
-    - `jniLibs` folder is exactly under `app/src/main/jniLibs`. It must be created.
-    - don't forget to rename `aarch64` -> `arm64-v8a` and `arm` to `armeabi`!
-
-
-fetching audio example
-```
-http://localhost:8765/localaudio/forvo/FILE_PATH
-```
+</details>
 
 
 ## Common Errors and Solutions

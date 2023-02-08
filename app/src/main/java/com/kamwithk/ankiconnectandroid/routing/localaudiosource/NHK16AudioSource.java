@@ -2,6 +2,7 @@ package com.kamwithk.ankiconnectandroid.routing.localaudiosource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -34,5 +35,10 @@ public class NHK16AudioSource extends StandardSQLite3Source {
         pstmt.setString(6, reading);
         pstmt.setString(7, term);
         return pstmt;
+    }
+
+    @Override
+    protected String getSourceName(ResultSet rs) throws SQLException {
+        return "NHK16 " + rs.getString("display");
     }
 }
