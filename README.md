@@ -62,65 +62,59 @@ From here, you should be able to use the show card button as normal.
 > lose all your current note changes!
 
 ### Additional Instructions: Local Audio
-The [desktop local audio server](https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio)
+The [(desktop) local audio server](https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio)
 setup for Yomichan has been ported over to Ankiconnect Android, and can be used similarly.
 Again, this is *a completely optional* setup that does not need to be done.
-The advantages and disadvantages of setting up a local audio server can be found within the initial link.
+The advantages and disadvantages of setting up a local audio server can be found within the above link.
 
 > **Warning**: Step 2 will likely take a long time (potentially over 24 hours!)
 > Be sure to schedule your day accordingly.
 
-1. Set up the [local audio server](https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio)
-    on desktop, if you haven't already.
+1. Ensure you have set up the latest version of the [desktop local audio server](https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio).
 
-    Notes:
-    * You must use the SQL version.
+    * You must use the SQL version, in order to generate the internal `entries.db` file.
     * Make sure that local audio server works on desktop before going though with the steps below.
 
 2. Copy the files from desktop to Android.
     * Locate the add-on folder on desktop. This should be `Anki2/addons21/955441350/user_files` by default.
         If you don't know where `Anki2` is, see
-        [Anki's documentation](https://docs.ankiweb.net/files.html#file-locations)
-
+        [Anki's documentation](https://docs.ankiweb.net/files.html#file-locations).
     * Locate AnkiConnect Android's data folder. By default, it is under:
         ```
         (phone)/Android/data/com.kamwithk.ankiconnectandroid/files/
         ```
-
         However, one can verify the location of the folder by going into the settings
         (gear at the top right corner), and tapping on `Print Local Audio Directory`.
-        If the output is `/storage/emulated/0/Android/data/com.kamwithk.ankiconnectandroid/files/`,
-        then the folder is at the default position.
+        The following output specifies that the folder is indeed in the default position:
+        ```
+        /storage/emulated/0/Android/data/com.kamwithk.ankiconnectandroid/files/
+        ```
 
     * After locating the two folders,
         copy `entries.db` and all of `user_files` from the desktop's add-on folder
         into Ankiconnect Android's local audio folder.
 
-        > **Warning**: `user_files` will have over 300 thousand files!
+        > **Warning**: `user_files` will have over 300,000 files in total!
         > Android takes extremely long to create a large number of files on their filesystem,
         > and copying the `user_files` folder can easily take 24 hours and over to do finish!
         > Make sure to plan out the times when you can copy the files over to your phone
         > (i.e. copy one folder per night)
 
         <details> <summary>Expected file structure <i>(click here)</i></summary>
-
-        ```
-        (local audio folder)
-        ├── entries.db
-        └── user_files
-            ├── forvo_files
-            │   └── ...
-            ├── jpod_alternate_files
-            │   └── ...
-            ├── jpod_files
-            │   └── ...
-            └── nhk16_files
-                └── ...
-        ```
-
+            (local audio folder)
+            ├── entries.db
+            └── user_files
+                ├── forvo_files
+                │   └── ...
+                ├── jpod_alternate_files
+                │   └── ...
+                ├── jpod_files
+                │   └── ...
+                └── nhk16_files
+                    └── ...
         </summary>
 
-3. Setup local audio on Yomichan. (Warning: this URL is different than the one on desktop!)
+3. Setup local audio on Kiwi Browser's Yomichan. (Warning: this URL is different than the one on desktop!)
     * Click on `Configure audio playback sources` and under the `Audio` section
     * Click the `Add` button (top right corner)
     * Select `Custom URL (JSON)` and copy paste the following into the `url` box:
@@ -128,17 +122,20 @@ The advantages and disadvantages of setting up a local audio server can be found
         http://localhost:8765/localaudio/?type=getSources&sources=jpod,jpod_alternate,nhk16,forvo&term={term}&reading={reading}
         ```
 
-    Notice that the URL is slightly different. However, you should be able to edit the sources and user
-    parameter just like the desktop local audio plugin.
+        Notice that the URL is slightly different. However, you should be able to edit the sources and user
+        parameter just like the desktop local audio plugin.
 
 4. Ensure it works.
     * You can do the
-    [exact same check](https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio#steps)
-    on the desktop audio add-on (the last step), by scanning 読む and checking that all sources appear.
+        [exact same check](https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio#steps)
+        as the desktop local audio server (the last step),
+        by scanning 読む and checking that all sources appear.
+        Be sure to play all of the sources to ensure that the audio is properly fetched.
 
 
 <details> <summary>Developer Notes: Local Audio</summary>
-    When building the app, you must populate the `jniLibs` with the correct `.so` files,
+
+*   When building the app, you must populate the `jniLibs` with the correct `.so` files,
     in order for the sqlite3 dependency to work as expected.
     To do this:
 
