@@ -90,7 +90,9 @@ From here, you should be able to use the show card button as normal.
 The [(desktop) local audio server](https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio)
 setup for Yomichan has been ported over to Ankiconnect Android, and can be used similarly.
 Again, this is *a completely optional* setup that does not need to be done.
-The advantages and disadvantages of setting up a local audio server can be found within the above link.
+
+General information about the setup, including its advantages and disadvantages,
+can be found within the above link.
 
 > **Warning**: Step 2 will likely take a long time (potentially over 24 hours!)
 > Be sure to schedule your day accordingly.
