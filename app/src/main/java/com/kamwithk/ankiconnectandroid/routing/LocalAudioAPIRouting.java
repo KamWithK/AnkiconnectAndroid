@@ -22,6 +22,8 @@ import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -115,32 +117,44 @@ public class LocalAudioAPIRouting {
             return audioError("Unknown source: " + source);
         }
 
-        String mediaDir = Objects.requireNonNull(sourceIdToSource.get(source)).getMediaDir();
-        String fullPath = externalFilesDir + "/" + mediaDir + "/" + path;
+//        String mediaDir = Objects.requireNonNull(sourceIdToSource.get(source)).getMediaDir();
+//        String fullPath = externalFilesDir + "/" + mediaDir + "/" + path;
 
-        File f = new File(fullPath);
-        if (!f.exists()) {
-            return audioError("File does not exist: " + fullPath);
-        }
+//        File f = new File(fullPath);
+//        if (!f.exists()) {
+//            return audioError("File does not exist: " + fullPath);
+//        }
+
+
+        String connectionURI = "jdbc:sqlite:" + externalFilesDir + "/android.db";
 
         try {
-            // https://stackoverflow.com/questions/858980/file-to-byte-in-java
-            // Files.readAllBytes(Path) does not work! error:
-            //   Call requires API level 26 (current min is 21): java.nio.file.Files#readAllBytes
-            byte[] data = FileUtils.readFileToByteArray(f);
+            Connection connection = DriverManager.getConnection(connectionURI);
+            String query = "SELECT data FROM android WHERE file = ? AND source = ?";
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            // indices start at 1
+            pstmt.setString(1, path);
+            pstmt.setString(2, source);
+
+            pstmt.setQueryTimeout(3);  // set timeout to 3 sec.
+            ResultSet rs = pstmt.executeQuery();
+            if (!rs.next()) {
+                return audioError("File not found in query: " + path);
+            }
+            byte[] data = rs.getBytes("data");
 
             // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
-            if (f.toString().endsWith(".mp3")) {
+            if (path.endsWith(".mp3")) {
                 return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "audio/mpeg", new ByteArrayInputStream(data), data.length);
-            } else if (f.toString().endsWith(".aac")) {
+            } else if (path.endsWith(".aac")) {
                 return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "audio/aac", new ByteArrayInputStream(data), data.length);
             } else {
-                return audioError("File is neither a .mp3 or .acc file: " + fullPath);
+                return audioError("File is neither a .mp3 or .acc file: " + path);
             }
 
-        } catch (IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-            return audioError("File could not be read: " + fullPath);
+            return audioError("File could not be read: " + path);
         }
     }
 }

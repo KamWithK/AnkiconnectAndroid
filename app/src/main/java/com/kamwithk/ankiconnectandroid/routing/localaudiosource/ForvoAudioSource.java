@@ -26,7 +26,7 @@ public class ForvoAudioSource extends StandardSQLite3Source {
             }
             String questionMarks = String.join("&", questionMarksList);
 
-            String query = "SELECT speaker,file FROM forvo WHERE expression = ? and speaker IN (" + questionMarks + ") ORDER BY speaker";
+            String query = "SELECT file,speaker FROM forvo WHERE expression = ? and speaker IN (" + questionMarks + ") ORDER BY speaker";
             PreparedStatement pstmt = connection.prepareStatement(query);
             pstmt.setString(1, term);
             for (int i = 2; i < users.size()+2; i++) {
@@ -35,7 +35,7 @@ public class ForvoAudioSource extends StandardSQLite3Source {
             return pstmt;
 
         } else {
-            String query = "SELECT speaker,file FROM forvo WHERE expression = ? ORDER BY speaker";
+            String query = "SELECT file,speaker FROM forvo WHERE expression = ? ORDER BY speaker";
             PreparedStatement pstmt = connection.prepareStatement(query);
             pstmt.setString(1, term);
             return pstmt;

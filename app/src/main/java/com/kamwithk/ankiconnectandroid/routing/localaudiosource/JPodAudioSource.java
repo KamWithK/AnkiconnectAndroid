@@ -14,13 +14,17 @@ public class JPodAudioSource extends StandardSQLite3Source {
 
     @Override
     protected PreparedStatement prepareQuery(Connection connection, Map<String, List<String>> parameters) throws SQLException {
-        String query = "SELECT DISTINCT file FROM jpod WHERE expression = ? AND reading = ?";
+        String query = "SELECT file FROM jpod WHERE (\n" +
+                "    (expression = ? AND reading = ?)\n" +
+                "    OR (expression = ? AND reading IS NULL)\n" +
+                ") ORDER BY priority DESC";
         String term = getTerm(parameters);
         String reading = getReading(parameters);
         PreparedStatement pstmt = connection.prepareStatement(query);
         // indices start at 1
         pstmt.setString(1, term);
         pstmt.setString(2, reading);
+        pstmt.setString(3, term);
         return pstmt;
     }
 
