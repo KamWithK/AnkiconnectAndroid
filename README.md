@@ -6,7 +6,7 @@ Mine on the go in the same way as you mine on your desktop pc.
 Forvo and local audio are now supported!
 
 
-Ankiconnect Android is a from scratch unofficial reimplementation of the [desktop Ankiconnect extension](https://github.com/FooSoft/anki-connect), [desktop Forvo Server extension](https://github.com/jamesnicolas/yomichan-forvo-server) and [desktop Local Audio Server for Yomichan](https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio).
+Ankiconnect Android is a from scratch unofficial reimplementation of the [desktop Ankiconnect extension](https://github.com/FooSoft/anki-connect), [desktop Forvo Server extension](https://github.com/jamesnicolas/yomichan-forvo-server) and [desktop Local Audio Server for Yomichan](https://github.com/Aquafina-water-bottle/local-audio-yomichan).
 It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://github.com/ankidroid/Anki-Android/).
 
 ## Table of Contents
@@ -87,22 +87,19 @@ From here, you should be able to use the show card button as normal.
 > lose all your current note changes!
 
 ### Additional Instructions: Local Audio
-The [(desktop) local audio server](https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio)
+The [(desktop) local audio server](https://github.com/Aquafina-water-bottle/local-audio-yomichan)
 setup for Yomichan has been ported over to Ankiconnect Android, and can be used similarly.
 Again, this is *a completely optional* setup that does not need to be done.
 
-General information about the setup, including its advantages and disadvantages,
+General information about the setup, including reasons for and against using the setup,
 can be found within the above link.
 
-> **Warning**: Step 2 will likely take a long time (potentially over 24 hours!)
-> Be sure to schedule your day accordingly.
+1. Ensure you have set up the latest version of the [desktop local audio server](https://github.com/Aquafina-water-bottle/local-audio-yomichan) setup.
 
-1. Ensure you have set up the latest version of the [desktop local audio server](https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio).
+2. Generate the Android database.
+    To do this, navigate to (Anki) → `Tools` (top left corner) → `Generate Android database`. Expect this to take a while.
 
-    * You must use the SQL version, in order to generate the internal `entries.db` file.
-    * Make sure that local audio server works on desktop before going though with the steps below.
-
-2. Copy the files from desktop to Android.
+3. Copy the files from desktop to Android.
     * Locate the add-on folder on desktop. This should be `Anki2/addons21/955441350/user_files` by default.
         If you don't know where `Anki2` is, see
         [Anki's documentation](https://docs.ankiweb.net/files.html#file-locations).
@@ -118,15 +115,8 @@ can be found within the above link.
         ```
 
     * After locating the two folders,
-        copy `entries.db` and all of `user_files` from the desktop's add-on folder
+        copy `entries.db` and `android.db` from the desktop's add-on folder
         into Ankiconnect Android's data folder.
-
-        > **Warning**:
-        > `user_files` will have over 300,000 files in total!
-        > Android takes extremely long to create a large number of files on their filesystem,
-        > and copying the `user_files` folder can easily take over 24 hours to do finish!
-        > Make sure to plan out the times when you can copy the files over to your phone
-        > (i.e. copy one folder at the start of each night, and leave it running overnight)
 
         <details> <summary>Expected file structure <i>(click here)</i></summary>
 
@@ -146,7 +136,7 @@ can be found within the above link.
 
         </summary>
 
-3. Setup local audio on Kiwi Browser's Yomichan. (Warning: this URL is different than the one on desktop!)
+4. Setup local audio on Kiwi Browser's Yomichan. (Warning: this URL is different than the one on desktop!)
     * Click on `Configure audio playback sources` and under the `Audio` section
     * Click the `Add` button (top right corner)
     * Select `Custom URL (JSON)` and copy paste the following into the `url` box:
@@ -156,9 +146,9 @@ can be found within the above link.
 
         The `sources` and `user` parameters should behave exactly like the desktop local audio plugin.
 
-4. Ensure it works.
+5. Ensure it works.
     * You can do the
-        [exact same check](https://github.com/Aquafina-water-bottle/jmdict-english-yomichan/tree/master/local_audio#steps)
+        [exact same check](https://github.com/Aquafina-water-bottle/local-audio-yomichan#steps)
         as the desktop local audio server (the last step),
         by scanning 読む and checking that all sources appear.
         Be sure to play all of the sources to ensure that the audio is properly fetched.
