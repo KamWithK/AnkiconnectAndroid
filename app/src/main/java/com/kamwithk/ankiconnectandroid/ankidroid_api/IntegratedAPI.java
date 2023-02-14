@@ -44,9 +44,9 @@ public class IntegratedAPI {
         }
     }
 
-    public File getExternalFilesDir() {
-        return context.getExternalFilesDir(null);
-    }
+    //public File getExternalFilesDir() {
+    //    return context.getExternalFilesDir(null);
+    //}
 
     public void addSampleCard() {
         Map<String, String> data = new HashMap<>();

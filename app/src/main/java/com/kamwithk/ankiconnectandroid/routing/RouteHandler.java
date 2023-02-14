@@ -39,7 +39,7 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
 //        Setup
         if (apiHandler == null) {
             Context context = uriResource.initParameter(0, Context.class);
-            apiHandler = new APIHandler(new IntegratedAPI(context));
+            apiHandler = new APIHandler(new IntegratedAPI(context), context);
         }
 
 //        Enforce UTF-8 encoding (response doesn't always contain by default)

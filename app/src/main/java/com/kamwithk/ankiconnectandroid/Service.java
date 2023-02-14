@@ -15,7 +15,7 @@ import java.io.IOException;
 import static com.kamwithk.ankiconnectandroid.MainActivity.CHANNEL_ID;
 
 public class Service extends android.app.Service {
-    private static final int PORT = 8765;
+    public static final int PORT = 8765;
 
     private Router server;
 

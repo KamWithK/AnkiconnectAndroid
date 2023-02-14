@@ -42,9 +42,9 @@ public class LocalAudioRouteHandler extends RouterNanoHTTPD.DefaultHandler {
         // TODO this looks like a hack (same with the main handler!)
         if (routing == null) {
             Context context = uriResource.initParameter(0, Context.class); // ???
-            IntegratedAPI integratedAPI = new IntegratedAPI(context);
-            File externalFilesDir = integratedAPI.getExternalFilesDir();
-            routing = new LocalAudioAPIRouting(externalFilesDir);
+            //IntegratedAPI integratedAPI = new IntegratedAPI(context);
+            //File externalFilesDir = integratedAPI.getExternalFilesDir();
+            routing = new LocalAudioAPIRouting(context);
         }
 
         String uri = session.getUri();

@@ -2,6 +2,9 @@ package com.kamwithk.ankiconnectandroid.routing;
 
 import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
@@ -13,18 +16,8 @@ import com.kamwithk.ankiconnectandroid.routing.localaudiosource.JPodAudioSource;
 import com.kamwithk.ankiconnectandroid.routing.localaudiosource.LocalAudioSource;
 import com.kamwithk.ankiconnectandroid.routing.localaudiosource.NHK16AudioSource;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Type;
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,10 +46,15 @@ import fi.iki.elonen.NanoHTTPD;
  *  - NHK98 is not supported (because the audio files aren't available for the original anyways)
  */
 public class LocalAudioAPIRouting {
-    private final File externalFilesDir;
+    //private final File externalFilesDir;
+    private final EntriesDbOpenHelper entriesDbHelper;
+    private final AndroidDbOpenHelper androidDbHelper;
     private final Map<String, LocalAudioSource> sourceIdToSource;
-    public LocalAudioAPIRouting(File externalFilesDir) {
-        this.externalFilesDir = externalFilesDir;
+    public LocalAudioAPIRouting(Context context) {
+        //this.externalFilesDir = externalFilesDir;
+        this.entriesDbHelper = new EntriesDbOpenHelper(context);
+        this.androidDbHelper = new AndroidDbOpenHelper(context);
+
         this.sourceIdToSource = new HashMap<>();
 
         this.sourceIdToSource.put("jpod", new JPodAudioSource());
@@ -68,27 +66,79 @@ public class LocalAudioAPIRouting {
     public NanoHTTPD.Response getAudioSourcesHandleError(Map<String, List<String>> parameters) {
         List<Map<String, String>> audioSourcesResult = new ArrayList<>();
 
+        SQLiteDatabase db = entriesDbHelper.getReadableDatabase();
+
+        // Filter results WHERE "title" = 'My Title'
+        String selection = "expression = ?\n" +
+                "AND (reading IS NULL OR reading = ?)\n";
+
+        // TODO filters by sources if necessary
+
+        // TODO filters by speakers if necessary
+
+        String[] selectionArgs = { getTerm(parameters), getReading(parameters) };
+
+        // How you want the results sorted in the resulting Cursor
+        // TODO order by source
+        // TODO order by speakers if necessary
+        String sortOrder = null;
+
+        Cursor cursor = db.query(
+                "entries",        // The table to query
+                null,                   // The array of columns to return (pass null to get all)
+                selection,              // The columns for the WHERE clause
+                selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                sortOrder               // The sort order
+        );
+
+        while (cursor.moveToNext()) {
+            String source = cursor.getString(cursor.getColumnIndexOrThrow("source"));
+            String file = cursor.getString(cursor.getColumnIndexOrThrow("file"));
+
+            LocalAudioSource audioSource = sourceIdToSource.get(source);
+            if (audioSource == null) {
+                Log.w("AnkiConnectAndroid", "Unknown audio source: " + source);
+                continue;
+            }
+
+            String name = audioSource.getSourceName(cursor);
+            String url = audioSource.constructFileURL(file);
+
+            Map<String, String> audioSourceEntry = new HashMap<>();
+            audioSourceEntry.put("name", name);
+            audioSourceEntry.put("url", url);
+
+            audioSourcesResult.add(audioSourceEntry);
+        }
+
+        cursor.close();
+
         // opens database
-        try {
-            String connectionURI = "jdbc:sqlite:" + externalFilesDir + "/entries.db";
+//        try {
+
+
+
+            //String connectionURI = "jdbc:sqlite:" + externalFilesDir + "/entries.db";
             // for this to not error on android, must add .so files manually
             // https://github.com/xerial/sqlite-jdbc/blob/master/USAGE.md#how-to-use-with-android
 
-            Connection connection = DriverManager.getConnection(connectionURI);
+            //Connection connection = DriverManager.getConnection(connectionURI);
 
-            String[] sources = Objects.requireNonNull(parameters.get("sources")).get(0).split(",");
-            for (String source : sources) {
-                //Log.d("AnkiConnectAndroid", source + " | " + sourceIdToSource.containsKey(source));
-                if (sourceIdToSource.containsKey(source)) {
-                    List<Map<String, String>> audioSources = Objects.requireNonNull(sourceIdToSource.get(source)).getSources(connection, parameters);
-                    audioSourcesResult.addAll(audioSources);
-                }
-            }
-        } catch (SQLException e) {
-            // if the error message is "out of memory",
-            // it probably means no database file is found
-            Log.e("AnkiConnectAndroid", e.getMessage());
-        }
+//            String[] sources = Objects.requireNonNull(parameters.get("sources")).get(0).split(",");
+//            for (String source : sources) {
+//                //Log.d("AnkiConnectAndroid", source + " | " + sourceIdToSource.containsKey(source));
+//                if (sourceIdToSource.containsKey(source)) {
+//                    List<Map<String, String>> audioSources = Objects.requireNonNull(sourceIdToSource.get(source)).getSources(connection, parameters);
+//                    audioSourcesResult.addAll(audioSources);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            // if the error message is "out of memory",
+//            // it probably means no database file is found
+//            Log.e("AnkiConnectAndroid", e.getMessage());
+//        }
 
         Type typeToken = new TypeToken<ArrayList<HashMap<String, String>>>() {}.getType();
 
@@ -112,10 +162,54 @@ public class LocalAudioAPIRouting {
         );
     }
 
+    private String getTerm(Map<String, List<String>> parameters) {
+        try {
+            return parameters.get("term").get(0);
+        } catch (NullPointerException e) {
+            return parameters.get("expression").get(0);
+        }
+    }
+
+    private String getReading(Map<String, List<String>> parameters) {
+        return Objects.requireNonNull(parameters.get("reading")).get(0);
+    }
+
     public NanoHTTPD.Response getAudioHandleError(String source, String path) {
         if (!sourceIdToSource.containsKey(source)) {
             return audioError("Unknown source: " + source);
         }
+
+        SQLiteDatabase db = androidDbHelper.getReadableDatabase();
+
+        String selection = "file = ? AND source = ?";
+        String[] selectionArgs = { path, source };
+
+        Cursor cursor = db.query(
+                "android",        // The table to query
+                null,                   // The array of columns to return (pass null to get all)
+                selection,              // The columns for the WHERE clause
+                selectionArgs,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                null                    // The sort order
+        );
+
+        if (!cursor.moveToNext()) {
+            return audioError("File not found in query: " + path);
+        }
+        byte[] data = cursor.getBlob(cursor.getColumnIndexOrThrow("data"));
+        cursor.close();
+
+        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+        if (path.endsWith(".mp3")) {
+            return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "audio/mpeg", new ByteArrayInputStream(data), data.length);
+        } else if (path.endsWith(".aac")) {
+            return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "audio/aac", new ByteArrayInputStream(data), data.length);
+        } else {
+            return audioError("File is neither a .mp3 or .acc file: " + path);
+        }
+
+
 
 //        String mediaDir = Objects.requireNonNull(sourceIdToSource.get(source)).getMediaDir();
 //        String fullPath = externalFilesDir + "/" + mediaDir + "/" + path;
@@ -126,35 +220,35 @@ public class LocalAudioAPIRouting {
 //        }
 
 
-        String connectionURI = "jdbc:sqlite:" + externalFilesDir + "/android.db";
-
-        try {
-            Connection connection = DriverManager.getConnection(connectionURI);
-            String query = "SELECT data FROM android WHERE file = ? AND source = ?";
-            PreparedStatement pstmt = connection.prepareStatement(query);
-            // indices start at 1
-            pstmt.setString(1, path);
-            pstmt.setString(2, source);
-
-            pstmt.setQueryTimeout(3);  // set timeout to 3 sec.
-            ResultSet rs = pstmt.executeQuery();
-            if (!rs.next()) {
-                return audioError("File not found in query: " + path);
-            }
-            byte[] data = rs.getBytes("data");
-
-            // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
-            if (path.endsWith(".mp3")) {
-                return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "audio/mpeg", new ByteArrayInputStream(data), data.length);
-            } else if (path.endsWith(".aac")) {
-                return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "audio/aac", new ByteArrayInputStream(data), data.length);
-            } else {
-                return audioError("File is neither a .mp3 or .acc file: " + path);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return audioError("File could not be read: " + path);
-        }
+//        String connectionURI = "jdbc:sqlite:" + externalFilesDir + "/android.db";
+//
+//        try {
+//            Connection connection = DriverManager.getConnection(connectionURI);
+//            String query = "SELECT data FROM android WHERE file = ? AND source = ?";
+//            PreparedStatement pstmt = connection.prepareStatement(query);
+//            // indices start at 1
+//            pstmt.setString(1, path);
+//            pstmt.setString(2, source);
+//
+//            pstmt.setQueryTimeout(3);  // set timeout to 3 sec.
+//            ResultSet rs = pstmt.executeQuery();
+//            if (!rs.next()) {
+//                return audioError("File not found in query: " + path);
+//            }
+//            byte[] data = rs.getBytes("data");
+//
+//            // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+//            if (path.endsWith(".mp3")) {
+//                return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "audio/mpeg", new ByteArrayInputStream(data), data.length);
+//            } else if (path.endsWith(".aac")) {
+//                return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "audio/aac", new ByteArrayInputStream(data), data.length);
+//            } else {
+//                return audioError("File is neither a .mp3 or .acc file: " + path);
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            return audioError("File could not be read: " + path);
+//        }
     }
 }

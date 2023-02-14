@@ -1,5 +1,6 @@
 package com.kamwithk.ankiconnectandroid.routing;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.JsonObject;
@@ -14,10 +15,10 @@ public class APIHandler {
     private final ForvoAPIRouting forvoAPIRouting;
     private final LocalAudioAPIRouting localAudioAPIRouting;
 
-    public APIHandler(IntegratedAPI integratedAPI) {
+    public APIHandler(IntegratedAPI integratedAPI, Context context) {
         ankiAPIRouting = new AnkiAPIRouting(integratedAPI);
         forvoAPIRouting = new ForvoAPIRouting();
-        localAudioAPIRouting = new LocalAudioAPIRouting(integratedAPI.getExternalFilesDir());
+        localAudioAPIRouting = new LocalAudioAPIRouting(context);
     }
 
     public NanoHTTPD.Response chooseAPI(String json_string, Map<String, List<String>> parameters) {
