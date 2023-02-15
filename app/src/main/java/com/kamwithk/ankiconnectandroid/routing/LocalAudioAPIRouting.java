@@ -7,9 +7,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import androidx.room.Room;
+
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.kamwithk.ankiconnectandroid.request_parsers.Parser;
+import com.kamwithk.ankiconnectandroid.routing.database.EntriesDatabase;
 import com.kamwithk.ankiconnectandroid.routing.localaudiosource.ForvoAudioSource;
 import com.kamwithk.ankiconnectandroid.routing.localaudiosource.JPodAltAudioSource;
 import com.kamwithk.ankiconnectandroid.routing.localaudiosource.JPodAudioSource;
@@ -17,6 +20,7 @@ import com.kamwithk.ankiconnectandroid.routing.localaudiosource.LocalAudioSource
 import com.kamwithk.ankiconnectandroid.routing.localaudiosource.NHK16AudioSource;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,13 +51,16 @@ import fi.iki.elonen.NanoHTTPD;
  */
 public class LocalAudioAPIRouting {
     //private final File externalFilesDir;
-    private final EntriesDbOpenHelper entriesDbHelper;
-    private final AndroidDbOpenHelper androidDbHelper;
+//    private final EntriesDbOpenHelper entriesDbHelper;
+//    private final AndroidDbOpenHelper androidDbHelper;
+    private final Context context;
+
     private final Map<String, LocalAudioSource> sourceIdToSource;
     public LocalAudioAPIRouting(Context context) {
         //this.externalFilesDir = externalFilesDir;
-        this.entriesDbHelper = new EntriesDbOpenHelper(context);
-        this.androidDbHelper = new AndroidDbOpenHelper(context);
+//        this.entriesDbHelper = new EntriesDbOpenHelper(context);
+//        this.androidDbHelper = new AndroidDbOpenHelper(context);
+        this.context = context;
 
         this.sourceIdToSource = new HashMap<>();
 
@@ -66,7 +73,10 @@ public class LocalAudioAPIRouting {
     public NanoHTTPD.Response getAudioSourcesHandleError(Map<String, List<String>> parameters) {
         List<Map<String, String>> audioSourcesResult = new ArrayList<>();
 
-        SQLiteDatabase db = entriesDbHelper.getReadableDatabase();
+        // opens database (creates if doesn't exist)
+        File databasePath = new File(context.getExternalFilesDir(null), "android.db");
+        EntriesDatabase db = Room.databaseBuilder(context,
+                EntriesDatabase.class, databasePath.toString()).build();
 
         // Filter results WHERE "title" = 'My Title'
         String selection = "expression = ?\n" +
@@ -83,15 +93,15 @@ public class LocalAudioAPIRouting {
         // TODO order by speakers if necessary
         String sortOrder = null;
 
-        Cursor cursor = db.query(
-                "entries",        // The table to query
-                null,                   // The array of columns to return (pass null to get all)
-                selection,              // The columns for the WHERE clause
-                selectionArgs,          // The values for the WHERE clause
-                null,                   // don't group the rows
-                null,                   // don't filter by row groups
-                sortOrder               // The sort order
-        );
+//        Cursor cursor = db.query(
+//                "entries",        // The table to query
+//                null,                   // The array of columns to return (pass null to get all)
+//                selection,              // The columns for the WHERE clause
+//                selectionArgs,          // The values for the WHERE clause
+//                null,                   // don't group the rows
+//                null,                   // don't filter by row groups
+//                sortOrder               // The sort order
+//        );
 
         while (cursor.moveToNext()) {
             String source = cursor.getString(cursor.getColumnIndexOrThrow("source"));
