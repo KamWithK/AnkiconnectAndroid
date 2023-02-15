@@ -1,16 +1,9 @@
 package com.kamwithk.ankiconnectandroid.routing.localaudiosource;
 
-import android.database.Cursor;
 import android.net.Uri;
 
 import com.kamwithk.ankiconnectandroid.Service;
 import com.kamwithk.ankiconnectandroid.routing.database.Entry;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
 
 public class LocalAudioSource {
     private final String sourceID;

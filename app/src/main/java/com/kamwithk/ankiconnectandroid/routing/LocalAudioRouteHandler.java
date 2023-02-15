@@ -4,11 +4,7 @@ import static fi.iki.elonen.NanoHTTPD.MIME_PLAINTEXT;
 import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.kamwithk.ankiconnectandroid.ankidroid_api.IntegratedAPI;
-
-import java.io.File;
 import java.util.Map;
 
 import fi.iki.elonen.NanoHTTPD;
@@ -42,8 +38,6 @@ public class LocalAudioRouteHandler extends RouterNanoHTTPD.DefaultHandler {
         // TODO this looks like a hack (same with the main handler!)
         if (routing == null) {
             Context context = uriResource.initParameter(0, Context.class); // ???
-            //IntegratedAPI integratedAPI = new IntegratedAPI(context);
-            //File externalFilesDir = integratedAPI.getExternalFilesDir();
             routing = new LocalAudioAPIRouting(context);
         }
 
