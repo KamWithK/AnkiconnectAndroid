@@ -2,6 +2,8 @@ package com.kamwithk.ankiconnectandroid.routing.localaudiosource;
 
 import android.database.Cursor;
 
+import com.kamwithk.ankiconnectandroid.routing.database.Entry;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,7 +33,7 @@ public class JPodAudioSource extends LocalAudioSource {
 //    }
 
     @Override
-    public String getSourceName(Cursor cursor) {
+    public String getSourceName(Entry entry) {
         return "JPod101";
     }
 }

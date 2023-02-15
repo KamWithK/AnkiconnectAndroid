@@ -8,11 +8,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import androidx.room.Room;
+import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.kamwithk.ankiconnectandroid.request_parsers.Parser;
+import com.kamwithk.ankiconnectandroid.routing.database.AudioFileEntryDao;
 import com.kamwithk.ankiconnectandroid.routing.database.EntriesDatabase;
+import com.kamwithk.ankiconnectandroid.routing.database.Entry;
+import com.kamwithk.ankiconnectandroid.routing.database.EntryDao;
 import com.kamwithk.ankiconnectandroid.routing.localaudiosource.ForvoAudioSource;
 import com.kamwithk.ankiconnectandroid.routing.localaudiosource.JPodAltAudioSource;
 import com.kamwithk.ankiconnectandroid.routing.localaudiosource.JPodAudioSource;
@@ -23,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,50 +75,89 @@ public class LocalAudioAPIRouting {
         this.sourceIdToSource.put("forvo", new ForvoAudioSource());
     }
 
-    public NanoHTTPD.Response getAudioSourcesHandleError(Map<String, List<String>> parameters) {
-        List<Map<String, String>> audioSourcesResult = new ArrayList<>();
-
-        // opens database (creates if doesn't exist)
-        File databasePath = new File(context.getExternalFilesDir(null), "android.db");
+    private EntriesDatabase getDB(String fileName) {
+        // TODO global instance?
+        File databasePath = new File(context.getExternalFilesDir(null), fileName);
         EntriesDatabase db = Room.databaseBuilder(context,
                 EntriesDatabase.class, databasePath.toString()).build();
+        return db;
+    }
+
+    public NanoHTTPD.Response getAudioSourcesHandleError(Map<String, List<String>> parameters) {
+
+        String term = getTerm(parameters);
+        String reading = getReading(parameters);
+        List<String> sources = getSources(parameters);
+        List<String> users = getUser(parameters);
+
+        List<Map<String, String>> audioSourcesResult = new ArrayList<>();
+        List<String> args = new ArrayList<>();
+
+
+        // opens database (creates if doesn't exist)
+        EntriesDatabase db = getDB("entries.db");
+        EntryDao entryDao = db.entryDao();
 
         // Filter results WHERE "title" = 'My Title'
         String selection = "expression = ?\n" +
                 "AND (reading IS NULL OR reading = ?)\n";
+        args.add(term);
+        args.add(reading);
 
-        // TODO filters by sources if necessary
+        // filters by sources if necessary
+        if (sources.size() != sourceIdToSource.size()) {
+            String nQuestionMarks = String.join(",", Collections.nCopies(sources.size(), "?"));
+            selection += "AND (source in (" + nQuestionMarks + "))\n";
+            args.addAll(sources);
+        }
 
-        // TODO filters by speakers if necessary
+        // filters by speakers if necessary
+        if (users.size() > 0) {
+            String nQuestionMarks = String.join(",", Collections.nCopies(users.size(), "?"));
+            selection += "AND (speaker IS NULL or speaker in (" + nQuestionMarks + "))\n";
+            args.addAll(users);
+        }
 
-        String[] selectionArgs = { getTerm(parameters), getReading(parameters) };
+        //String[] selectionArgs = { };
 
         // How you want the results sorted in the resulting Cursor
-        // TODO order by source
-        // TODO order by speakers if necessary
-        String sortOrder = null;
+        // order by source
+        StringBuilder sortOrder = new StringBuilder("(CASE source ");
+        for (int i = 0; i < sources.size(); i++) {
+            sortOrder.append("WHEN ? THEN ").append(i).append("\n");
+            args.add(sources.get(i));
+        }
+        sortOrder.append(" END)\n");
 
-//        Cursor cursor = db.query(
-//                "entries",        // The table to query
-//                null,                   // The array of columns to return (pass null to get all)
-//                selection,              // The columns for the WHERE clause
-//                selectionArgs,          // The values for the WHERE clause
-//                null,                   // don't group the rows
-//                null,                   // don't filter by row groups
-//                sortOrder               // The sort order
-//        );
+        // order by speakers if necessary
+        if (users.size() > 0) {
+            sortOrder.append(", (CASE speaker ");
+            for (int i = 0; i < users.size(); i++) {
+                sortOrder.append("WHEN ? THEN ").append(i).append("\n");
+                args.add(users.get(i));
+            }
+            sortOrder.append(" END)\n");
+        }
 
-        while (cursor.moveToNext()) {
-            String source = cursor.getString(cursor.getColumnIndexOrThrow("source"));
-            String file = cursor.getString(cursor.getColumnIndexOrThrow("file"));
+        String queryString = "\n" +
+                "SELECT * FROM entries WHERE (" + selection + ")\n" +
+                "ORDER BY " + sortOrder + ", reading;";
 
-            LocalAudioSource audioSource = sourceIdToSource.get(source);
+        SimpleSQLiteQuery query = new SimpleSQLiteQuery(queryString, args.toArray());
+        List<Entry> entries = entryDao.getSources(query);
+
+        //while (cursor.moveToNext()) {
+        for (Entry entry : entries) {
+            String source = entry.source;
+            String file = entry.file;
+
+            LocalAudioSource audioSource = sourceIdToSource.get(entry.source);
             if (audioSource == null) {
                 Log.w("AnkiConnectAndroid", "Unknown audio source: " + source);
                 continue;
             }
 
-            String name = audioSource.getSourceName(cursor);
+            String name = audioSource.getSourceName(entry);
             String url = audioSource.constructFileURL(file);
 
             Map<String, String> audioSourceEntry = new HashMap<>();
@@ -123,7 +167,7 @@ public class LocalAudioAPIRouting {
             audioSourcesResult.add(audioSourceEntry);
         }
 
-        cursor.close();
+        //cursor.close();
 
         // opens database
 //        try {
@@ -184,31 +228,50 @@ public class LocalAudioAPIRouting {
         return Objects.requireNonNull(parameters.get("reading")).get(0);
     }
 
+    private List<String> getUser(Map<String, List<String>> parameters) {
+        List<String> _user = parameters.get("user");
+        List<String> users = new ArrayList<>();
+        if (_user != null && _user.size() > 0) {
+            users = List.of(_user.get(0).split(","));
+        }
+        return users;
+    }
+
+    private List<String> getSources(Map<String, List<String>> parameters) {
+        String[] sources = Objects.requireNonNull(parameters.get("sources")).get(0).split(",");
+        return List.of(sources);
+    }
+
+
     public NanoHTTPD.Response getAudioHandleError(String source, String path) {
         if (!sourceIdToSource.containsKey(source)) {
             return audioError("Unknown source: " + source);
         }
 
-        SQLiteDatabase db = androidDbHelper.getReadableDatabase();
+        EntriesDatabase db = getDB("android.db");
+        AudioFileEntryDao audioFileEntryDao = db.audioFileEntryDao();
+        byte[] data = audioFileEntryDao.getData(path, source);
 
-        String selection = "file = ? AND source = ?";
-        String[] selectionArgs = { path, source };
+        //SQLiteDatabase db = androidDbHelper.getReadableDatabase();
 
-        Cursor cursor = db.query(
-                "android",        // The table to query
-                null,                   // The array of columns to return (pass null to get all)
-                selection,              // The columns for the WHERE clause
-                selectionArgs,          // The values for the WHERE clause
-                null,                   // don't group the rows
-                null,                   // don't filter by row groups
-                null                    // The sort order
-        );
+//        String selection = "file = ? AND source = ?";
+//        String[] selectionArgs = { path, source };
 
-        if (!cursor.moveToNext()) {
-            return audioError("File not found in query: " + path);
-        }
-        byte[] data = cursor.getBlob(cursor.getColumnIndexOrThrow("data"));
-        cursor.close();
+//        Cursor cursor = db.query(
+//                "android",        // The table to query
+//                null,                   // The array of columns to return (pass null to get all)
+//                selection,              // The columns for the WHERE clause
+//                selectionArgs,          // The values for the WHERE clause
+//                null,                   // don't group the rows
+//                null,                   // don't filter by row groups
+//                null                    // The sort order
+//        );
+
+//        if (!cursor.moveToNext()) {
+//            return audioError("File not found in query: " + path);
+//        }
+//        byte[] data = cursor.getBlob(cursor.getColumnIndexOrThrow("data"));
+//        cursor.close();
 
         // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
         if (path.endsWith(".mp3")) {

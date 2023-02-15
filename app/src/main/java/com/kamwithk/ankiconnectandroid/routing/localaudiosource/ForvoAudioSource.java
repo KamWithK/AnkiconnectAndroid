@@ -2,6 +2,8 @@ package com.kamwithk.ankiconnectandroid.routing.localaudiosource;
 
 import android.database.Cursor;
 
+import com.kamwithk.ankiconnectandroid.routing.database.Entry;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -45,7 +47,7 @@ public class ForvoAudioSource extends LocalAudioSource {
 //    }
 
     @Override
-    public String getSourceName(Cursor cursor)  {
-        return "Forvo (" + cursor.getString(cursor.getColumnIndexOrThrow("speaker")) + ")";
+    public String getSourceName(Entry entry)  {
+        return "Forvo (" + entry.speaker + ")";
     }
 }

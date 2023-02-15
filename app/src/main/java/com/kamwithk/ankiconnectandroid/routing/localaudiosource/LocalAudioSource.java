@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.kamwithk.ankiconnectandroid.Service;
+import com.kamwithk.ankiconnectandroid.routing.database.Entry;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -20,7 +21,7 @@ public class LocalAudioSource {
         this.mediaDir = mediaDir;
     }
 
-    public String getSourceName(Cursor cursor) {
+    public String getSourceName(Entry entry) {
         return sourceID;
     }
 

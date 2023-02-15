@@ -2,6 +2,8 @@ package com.kamwithk.ankiconnectandroid.routing.localaudiosource;
 
 import android.database.Cursor;
 
+import com.kamwithk.ankiconnectandroid.routing.database.Entry;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,7 +34,7 @@ public class NHK16AudioSource extends LocalAudioSource {
 //    }
 
     @Override
-    public String getSourceName(Cursor cursor) {
-        return "NHK16 " + cursor.getString(cursor.getColumnIndexOrThrow("display"));
+    public String getSourceName(Entry entry) {
+        return "NHK16 " + entry.display;
     }
 }
