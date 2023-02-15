@@ -95,14 +95,18 @@ General information about the setup, including reasons for and against using the
 can be found within the above link.
 
 1. Ensure you have set up the latest version of the [desktop local audio server](https://github.com/Aquafina-water-bottle/local-audio-yomichan) setup.
+    If you already have the add-on installed, check for updates by navigating to `Tools` → `Add-ons` → (select "Local Audio Server for Yomichan") → `Check for Updates`.
 
 2. Generate the Android database.
-    To do this, navigate to (Anki) → `Tools` (top left corner) → `Generate Android database`. Expect this to take a while.
+    To do this, navigate to (Anki) → `Tools` (top left corner) → `Local Audio Server` → `Generate Android database`. Expect this to take a while.
+
+    This database stores all the audio files into one large file, in order to make file transfer to Android much faster.
 
 3. Copy the files from desktop to Android.
-    * Locate the add-on folder on desktop. This should be `Anki2/addons21/955441350/user_files` by default.
-        If you don't know where `Anki2` is, see
-        [Anki's documentation](https://docs.ankiweb.net/files.html#file-locations).
+    * Locate the add-on folder on desktop.
+        To do this, navigate to `Tools` → `Add-ons` → (select "Local Audio Server for Yomichan") → `View Files`.
+        When you are here
+
     * Locate AnkiConnect Android's data folder. By default, it is under:
         ```
         (phone)/Android/data/com.kamwithk.ankiconnectandroid/files/
@@ -114,27 +118,14 @@ can be found within the above link.
         /storage/emulated/0/Android/data/com.kamwithk.ankiconnectandroid/files/
         ```
 
-    * After locating the two folders,
-        copy `entries.db` and `android.db` from the desktop's add-on folder
+    * After locating the two folders, copy `android.db` from the desktop's add-on folder
         into Ankiconnect Android's data folder.
+        Note that `android.db` will appear in the `user_files` folder.
 
-        <details> <summary>Expected file structure <i>(click here)</i></summary>
-
+        This should result in the following:
         ```
-        (AnkiConnect Android's data folder)
-        ├── entries.db
-        └── user_files
-            ├── forvo_files
-            │   └── ...
-            ├── jpod_alternate_files
-            │   └── ...
-            ├── jpod_files
-            │   └── ...
-            └── nhk16_files
-                └── ...
+        /storage/emulated/0/Android/data/com.kamwithk.ankiconnectandroid/files/android.db
         ```
-
-        </summary>
 
 4. Setup local audio on Kiwi Browser's Yomichan. (Warning: this URL is different than the one on desktop!)
     * Click on `Configure audio playback sources` and under the `Audio` section
@@ -177,17 +168,3 @@ Some examples:
 1. Duplicate checks always occur across the full Anki collection instead of whatever deck is selected (no matter what options are selected, assuming this feature is left enabled)
 2. The show card button will not work on the latest stable release of AnkiDroid. Instead, you must **manually install a pre-release version of AnkiDroid** for it to work. Please see [these instructions](#additional-instructions-show-card-button) for more details on how to make the show card button work.
 3. When viewing the note, the note cannot be viewed directly within card editor. Instead, the note is shown from the card search screen.
-
-## Building
-You should be able to build the app like a normal Android application through Android Studio.
-
-However, in order to support the local audio server,
-you must populate the `jniLibs` folder with the appropriate `.so` files.
-This is for the sqlite3 dependency to work as expected.
-
-1. Download the release specified under `(project root)/app/build.gradle` (currently: https://github.com/xerial/sqlite-jdbc/releases/tag/3.40.1.0)
-2. Unzip the .jar file.
-3. Follow the instructions linked [here](https://github.com/xerial/sqlite-jdbc/blob/master/USAGE.md#how-to-use-with-android).
-    * The `jniLibs` folder is located under `(project root)/app/src/main/jniLibs`. It must be created.
-    * Don't forget to rename the folders: `aarch64` -> `arm64-v8a` and `arm` -> `armeabi`!
-
