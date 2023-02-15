@@ -77,7 +77,7 @@ public class LocalAudioAPIRouting {
 
     private EntriesDatabase getDB(String fileName) {
         // TODO global instance?
-        File databasePath = new File(context.getExternalFilesDir(null), fileName);
+        File databasePath = new File(context.getExternalFilesDir(null), "android.db");
         EntriesDatabase db = Room.databaseBuilder(context,
                 EntriesDatabase.class, databasePath.toString()).build();
         return db;
