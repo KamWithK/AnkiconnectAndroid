@@ -105,7 +105,7 @@ can be found within the above link.
 3. Copy the files from desktop to Android.
     * Locate the add-on folder on desktop.
         To do this, navigate to `Tools` → `Add-ons` → (select "Local Audio Server for Yomichan") → `View Files`.
-        When you are here
+        When you are here, navigate to `user_files`.
 
     * Locate AnkiConnect Android's data folder. By default, it is under:
         ```
@@ -120,7 +120,7 @@ can be found within the above link.
 
     * After locating the two folders, copy `android.db` from the desktop's add-on folder
         into Ankiconnect Android's data folder.
-        Note that `android.db` will appear in the `user_files` folder.
+        Do NOT copy the entire `user_files` folder.
 
         This should result in the following:
         ```
