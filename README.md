@@ -158,7 +158,7 @@ Check that:
 * Battery saving/automatic optimisation is turned off for Ankidroid, Ankiconnect Android and optionally (but recommended) Kiwi browser
 * You allowed Ankiconnect Android to be running in the background (if this option is available on your device)
 
-If you've gone through the instructions and are still having trouble, feel free to create an issue here on GitHub or @/dm me on Discord.
+If you've gone through the instructions and are still having trouble, feel free to create an issue here on GitHub or @/dm me on Discord (`@KamWithK#0634` on [The Moe Way](https://learnjapanese.moe/join/)).
 
 ## Limitations
 Because Ankiconnect Android is a small project with a limited scope, not all API queries/cases are implemented/considered.
