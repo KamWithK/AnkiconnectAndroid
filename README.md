@@ -94,6 +94,9 @@ Again, this is *a completely optional* setup that does not need to be done.
 General information about the setup, including reasons for and against using the setup,
 can be found within the above link.
 
+> **Warning**:
+> This setup takes up about 5gb of space on your Android device! Ensure you have enough space before setting this up.
+
 1. Ensure you have set up the latest version of the [desktop local audio server](https://github.com/Aquafina-water-bottle/local-audio-yomichan) setup.
     If you already have the add-on installed, check for updates by navigating to `Tools` → `Add-ons` → (select "Local Audio Server for Yomichan") → `Check for Updates`.
 
