@@ -16,7 +16,6 @@ It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://
     * [Additional Instructions: Local Audio](#additional-instructions-local-audio)
 * [Common Errors and Solutions](#common-errors-and-solutions)
 * [Limitations](#limitations)
-* [Building](#building)
 
 ## Instructions
 Here's how to set everything up from scratch (if you've already got Yomichan working, then skip to step 5):
