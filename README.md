@@ -134,7 +134,7 @@ can be found within the above link.
     * Click the `Add` button (top right corner)
     * Select `Custom URL (JSON)` and copy paste the following into the `url` box:
         ```
-        http://localhost:8765/localaudio/get/&sources=jpod,jpod_alternate,nhk16,forvo&term={term}&reading={reading}
+        http://localhost:8765/localaudio/get/?sources=jpod,jpod_alternate,nhk16,forvo&term={term}&reading={reading}
         ```
 
         The `sources` and `user` parameters should behave exactly like the desktop local audio plugin.
