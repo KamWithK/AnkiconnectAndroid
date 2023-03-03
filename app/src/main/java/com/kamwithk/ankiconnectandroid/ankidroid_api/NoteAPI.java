@@ -17,6 +17,15 @@ public class NoteAPI {
         api = new AddContentApi(context);
     }
 
+    private String escapeQueryStr(String s) {
+      // first replace: \ -> \\
+      // - this looks like it's doing nothing, but note that the first string is a regex string!
+      //   the regex to search \ is \\, and writing the string literal in java requires that all
+      //   backslashes are escaped with a backslash, so the result is \\\\
+      // second replace: " -> \"
+      return s.replaceAll("\\\\", "\\\\").replaceAll("\"", "\\\"");
+    }
+
     /**
      * Add flashcards to AnkiDroid through instant add API
      *
@@ -41,16 +50,19 @@ public class NoteAPI {
         ArrayList<Boolean> note_does_not_exist = new ArrayList<>();
 
         for (HashMap<String, String> field : notes_to_test) {
+            String escapedQuery = "\"" + escapeQueryStr(field.get("field") + ":" + field.get("value")) + "\"";
             final Cursor cursor = context.getContentResolver().query(
                     FlashCardsContract.Note.CONTENT_URI,
                     null,
-                    field.get("field") + ":" + field.get("value"),
+                    escapedQuery,
                     null,
                     null
             );
 
             note_does_not_exist.add(cursor == null || !cursor.moveToFirst());
-
+            if (cursor != null) {
+                cursor.close();
+            }
         }
 
         return note_does_not_exist;
