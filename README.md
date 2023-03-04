@@ -15,6 +15,7 @@ It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://
     * [Additional Instructions: Show Card Button](#additional-instructions-show-card-button)
     * [Additional Instructions: Local Audio](#additional-instructions-local-audio)
 * [Common Errors and Solutions](#common-errors-and-solutions)
+    * Problem: Duplicate checks aren't working!
 * [Limitations](#limitations)
 
 ## Instructions
@@ -161,6 +162,20 @@ Check that:
 * You allowed Ankiconnect Android to be running in the background (if this option is available on your device)
 
 If you've gone through the instructions and are still having trouble, feel free to create an issue here on GitHub or @/dm me on Discord (`@KamWithK#0634` on [The Moe Way](https://learnjapanese.moe/join/)).
+
+### Problem: Duplicate checks aren't working!
+To determine that duplicate checks aren't working:
+- Enable duplicate checks in the Yomichan settings (under `Anki` → `Check for card duplicates`),
+- Select a word and add a card
+- Tap outside of the popup, and re-select the word. Ideally, you should not be able to add a card here.
+
+If you are able to add a card, then duplicate checks are indeed not working.
+Check that your first field name does not include spaces,
+and your first field contents do not include quotes (`"`) or spaces.
+If it does, the only way to solve it is by using the Alpha version of AnkiDroid, and
+[enable the new backend](https://github.com/ankidroid/Anki-Android/issues/13399)
+under the advanced settings.
+
 
 ## Limitations
 Because Ankiconnect Android is a small project with a limited scope, not all API queries/cases are implemented/considered.
