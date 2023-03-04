@@ -15,7 +15,7 @@ It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://
     * [Additional Instructions: Show Card Button](#additional-instructions-show-card-button)
     * [Additional Instructions: Local Audio](#additional-instructions-local-audio)
 * [Common Errors and Solutions](#common-errors-and-solutions)
-    * Problem: Duplicate checks aren't working!
+    * [Problem: Duplicate checks aren't working!](#problem-duplicate-checks-arent-working)
 * [Limitations](#limitations)
 
 ## Instructions
