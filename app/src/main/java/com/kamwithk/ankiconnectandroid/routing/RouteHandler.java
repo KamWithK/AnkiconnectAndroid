@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.kamwithk.ankiconnectandroid.routing.Router.contentType;
-import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 
 public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
 
@@ -20,9 +19,10 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
     public RouteHandler() {
         super();
     }
+
     @Override
     public String getText() {
-        return null;
+        return "not implemented";
     }
 
     @Override
@@ -39,7 +39,7 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
 //        Setup
         if (apiHandler == null) {
             Context context = uriResource.initParameter(0, Context.class);
-            apiHandler = new APIHandler(new IntegratedAPI(context));
+            apiHandler = new APIHandler(new IntegratedAPI(context), context);
         }
 
 //        Enforce UTF-8 encoding (response doesn't always contain by default)

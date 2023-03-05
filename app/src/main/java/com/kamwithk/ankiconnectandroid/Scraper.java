@@ -44,7 +44,7 @@ public class Scraper {
         ArrayList<HashMap<String, String>> audio_sources = new ArrayList<>();
 
         for (Element element : elements) {
-            System.out.println(element);
+            //System.out.println(element);
             String url = extractURL(Objects.requireNonNull(element.selectFirst(".play")));
 
             HashMap<String, String> user_details = new HashMap<>();

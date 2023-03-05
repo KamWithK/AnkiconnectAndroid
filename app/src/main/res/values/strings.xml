@@ -5,4 +5,7 @@
     <string name="settings_overlay_permissions_title">Access Overlay Permissions</string>
     <string name="settings_permissions_header">Permissions</string>
     <string name="settings_overlay_permissions_summary">Allows Ankiconnect Android to open AnkiDroid\'s card browser.</string>
+    <string name="settings_other_header">Other</string>
+    <string name="get_dir_path_title">Print Local Audio Directory</string>
+    <string name="get_dir_path_title_summary">Prints the expected directory path where the local audio is searched in.</string>
 </resources>
