@@ -19,7 +19,7 @@ It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://
     * [Problem: The add button is always greyed out](#problem-the-add-button-is-always-greyed-out)
     * [Problem: Duplicate checks aren't working](#problem-duplicate-checks-arent-working)
     * [Problem: Forvo audio won't load](#problem-forvo-audio-wont-load)
-    * [Problem: Problem: On card add, I get `Incorrect flds argument`](#problem-on-card-add-i-get-incorrect-flds-argument)
+    * [Problem: On card add, I get `Incorrect flds argument`](#problem-on-card-add-i-get-incorrect-flds-argument)
     * [Problem: The Yomichan popup appears on scroll](#problem-the-yomichan-popup-appears-on-scroll)
     * [I still have a problem](#i-still-have-a-problem)
 * [Limitations](#limitations)
