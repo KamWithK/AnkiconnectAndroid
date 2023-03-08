@@ -204,7 +204,7 @@ This URL is different from the one on PC.
 
 > **Note**:
 > There is always a chance that Forvo has changed the layout of their website,
-> which would mean the audio cannot be fetched properly.
+> which can lead to AnkiConnect Android improperly fetching the audio.
 > If you suspect this is the case, please create an issue on Github.
 
 
