@@ -15,7 +15,11 @@ It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://
     * [Additional Instructions: Show Card Button](#additional-instructions-show-card-button)
     * [Additional Instructions: Local Audio](#additional-instructions-local-audio)
 * [Common Errors and Solutions](#common-errors-and-solutions)
-    * [Problem: Duplicate checks aren't working!](#problem-duplicate-checks-arent-working)
+    * [First Steps](#first-steps)
+    * [Problem: The add button is always greyed out](#problem-the-add-button-is-always-greyed-out)
+    * [Problem: Duplicate checks aren't working](#problem-duplicate-checks-arent-working)
+    * [Problem: Forvo audio won't load](#problem-forvo-audio-wont-load)
+    * [I still have a problem](#i-still-have-a-problem)
 * [Limitations](#limitations)
 
 ## Instructions
@@ -149,21 +153,28 @@ can be found within the above link.
 
 
 ## Common Errors and Solutions
-If you're experiencing any of these problems:
-1. Forvo audio won't load
-2. App crashes
-3. Yomichan cannot connect
 
-Check that:
-* Latest [app release](https://github.com/KamWithK/AnkiconnectAndroid/releases/latest) is installed
-* `http://localhost:8765/?term={term}&reading={reading}` is added as `Custom URL (JSON)` as a Yomichan audio source
-* If you import Yomichan's settings that the URLs default or as-specified and card/deck options right (when in doubt import the sanitised version in-case)
+### First Steps
+If you are having issues with anything, please ensure all these steps are followed before continuing:
+
+* Make sure the latest [app release](https://github.com/KamWithK/AnkiconnectAndroid/releases/latest) is installed
+* Sometimes, settings exported from the computer and imported into your Android device may not work. Instead, try to reset Yomichan's settings and redo it from scratch
+<!--* If you import Yomichan's settings that the URLs default or as-specified and card/deck options right (when in doubt import the sanitised version in-case) TODO what does this mean?-->
 * Battery saving/automatic optimisation is turned off for Ankidroid, Ankiconnect Android and optionally (but recommended) Kiwi browser
 * You allowed Ankiconnect Android to be running in the background (if this option is available on your device)
 
-If you've gone through the instructions and are still having trouble, feel free to create an issue here on GitHub or @/dm me on Discord (`@KamWithK#0634` on [The Moe Way](https://learnjapanese.moe/join/)).
+### Problem: The add button is always greyed out
+This usually happens if `Enable Content Scanning` is switched off.
+To fix this, simply switch it on (under `Yomichan Settings` → `General` → `Enable content scanning`).
 
-### Problem: Duplicate checks aren't working!
+> **Note**:
+> If you have this switched off in the first place, it is also very likely that the popup is
+> showing up at unwanted times, i.e. while scrolling through a page.
+> To solve this, try going through step 5 of the [instructions](#instructions).
+> In particular, see the step that says
+> **Ensure `Scanning Inputs` is optimized for mobile (prevents lookups on scrolling)**.
+
+### Problem: Duplicate checks aren't working
 To determine that duplicate checks aren't working:
 - Enable duplicate checks in the Yomichan settings (under `Anki` → `Check for card duplicates`),
 - Select a word and add a card
@@ -175,6 +186,20 @@ and your first field contents do not include quotes (`"`) or spaces.
 If it does, the only way to solve it is by using the Alpha version of AnkiDroid, and
 [enable the new backend](https://github.com/ankidroid/Anki-Android/issues/13399)
 under the advanced settings.
+
+### Problem: Forvo audio won't load
+Please make sure that this exact URL under
+[Additional Instructions: Forvo Audio](#additional-instructions-forvo-audio) is used.
+This URL is different from the one on PC.
+
+> **Note**:
+> There is always a chance that Forvo has changed the layout of their website,
+> which would mean the audio cannot be fetched properly.
+> If you suspect this is the case, please create an issue on Github.
+
+### I still have a problem
+If you've gone through the instructions and are still having trouble, feel free to create an issue here on GitHub or @/dm me on Discord (`@KamWithK#0634` on [TheMoeWay](https://learnjapanese.moe/join/)).
+
 
 
 ## Limitations
