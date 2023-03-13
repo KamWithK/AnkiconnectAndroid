@@ -6,7 +6,7 @@ Mine on the go in the same way as you mine on your desktop pc.
 Forvo and local audio are now supported!
 
 
-Ankiconnect Android is a from scratch unofficial reimplementation of the [desktop Ankiconnect extension](https://github.com/FooSoft/anki-connect), [desktop Forvo Server extension](https://github.com/jamesnicolas/yomichan-forvo-server) and [desktop Local Audio Server for Yomichan](https://github.com/Aquafina-water-bottle/local-audio-yomichan).
+Ankiconnect Android is a from scratch unofficial reimplementation of the [desktop Ankiconnect extension](https://github.com/FooSoft/anki-connect), [desktop Forvo Server extension](https://github.com/jamesnicolas/yomichan-forvo-server) and [desktop Local Audio Server for Yomichan](https://github.com/themoeway/local-audio-yomichan).
 It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://github.com/ankidroid/Anki-Android/).
 
 ## Table of Contents
@@ -42,7 +42,7 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
             * Ensure that advanced options within the `Scanning Inputs` window is enabled.
                 To do this, scroll to the right, and tap on the three dots.
             *   <details> <summary>Match your settings to the this image: <i>(click here)</i></summary>
-                <a href="https://github.com/Aquafina-water-bottle/AnkiconnectAndroid/blob/local_audio/img/scanning_inputs.jpg"><img src="https://github.com/Aquafina-water-bottle/AnkiconnectAndroid/blob/local_audio/img/scanning_inputs.jpg" width="400" /></a>
+                <a href="https://github.com/KamWithK/AnkiconnectAndroid/blob/master/img/scanning_inputs.jpg"><img src="https://github.com/KamWithK/AnkiconnectAndroid/blob/master/img/scanning_inputs.jpg" width="400" /></a>
                 </details>
         * Navigate to `Scanning` → `Support inputs for devices with touch screens`
             * Ensure that `Touch inputs` is checked, and `Pointer inputs` is NOT checked.
@@ -93,7 +93,7 @@ From here, you should be able to use the show card button as normal.
 > lose all your current note changes!
 
 ### Additional Instructions: Local Audio
-The [(desktop) local audio server](https://github.com/Aquafina-water-bottle/local-audio-yomichan)
+The [(desktop) local audio server](https://github.com/themoeway/local-audio-yomichan)
 setup for Yomichan has been ported over to Ankiconnect Android, and can be used similarly.
 Again, this is *a completely optional* setup that does not need to be done.
 
@@ -103,7 +103,7 @@ can be found within the above link.
 > **Warning**:
 > This setup takes up about 5gb of space on your Android device! Ensure you have enough space before setting this up.
 
-1. Ensure you have set up the latest version of the [desktop local audio server](https://github.com/Aquafina-water-bottle/local-audio-yomichan) setup.
+1. Ensure you have set up the latest version of the [desktop local audio server](https://github.com/themoeway/local-audio-yomichan) setup.
     If you already have the add-on installed, check for updates by navigating to `Tools` → `Add-ons` → (select "Local Audio Server for Yomichan") → `Check for Updates`.
 
 2. Generate the Android database.
@@ -148,7 +148,7 @@ can be found within the above link.
 
 5. Ensure it works.
     * You can do the
-        [exact same check](https://github.com/Aquafina-water-bottle/local-audio-yomichan#steps)
+        [exact same check](https://github.com/themoeway/local-audio-yomichan#steps)
         as the desktop local audio server (the last step),
         by scanning 読む and checking that all sources appear.
         Be sure to play all of the sources to ensure that the audio is properly fetched.
