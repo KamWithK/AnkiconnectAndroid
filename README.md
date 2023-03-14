@@ -107,9 +107,14 @@ can be found within the above link.
     If you already have the add-on installed, check for updates by navigating to `Tools` → `Add-ons` → (select "Local Audio Server for Yomichan") → `Check for Updates`.
 
 2. Generate the Android database.
-    To do this, navigate to (Anki) → `Tools` (top left corner) → `Local Audio Server` → `Generate Android database`.
 
-    Expect this to take a while (potentially **over 30 minutes!**). You will **not be able to use Anki** during this time.
+    > **Note**:
+    > For Windows users, please temporarily disable Windows defender before doing this step.
+    > It seems like this generating the Android database with Windows Defender enabled can slow it
+    > down by a factor of 6, meaning a step that should only take 5 minutes
+    > can easily take over half an hour.
+
+    To generate the database, navigate to (Anki) → `Tools` (top left corner) → `Local Audio Server` → `Generate Android database`. Expect this to take a while (at least a few minutes).
 
     This database stores all the audio files into one large file, in order to make file transfer to Android much faster (transferring the folder took about 24 hours, while transferring the large file took less than 3 minutes).
 
