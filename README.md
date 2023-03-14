@@ -107,7 +107,7 @@ can be found within the above link.
     If you already have the add-on installed, check for updates by navigating to `Tools` → `Add-ons` → (select "Local Audio Server for Yomichan") → `Check for Updates`.
 
 2. Generate the Android database.
-    To do this, navigate to (Anki) → `Tools` (top left corner) → `Local Audio Server` → `Generate Android database`. Expect this to take a while.
+    To do this, navigate to (Anki) → `Tools` (top left corner) → `Local Audio Server` → `Generate Android database`. Expect this to take a while (up to 20 minutes on slow computers without an SSD).
 
     This database stores all the audio files into one large file, in order to make file transfer to Android much faster.
 
@@ -139,7 +139,7 @@ can be found within the above link.
 4. Setup local audio on Kiwi Browser's Yomichan. (Warning: this URL is different than the one on desktop!)
     * Click on `Configure audio playback sources` and under the `Audio` section
     * Click the `Add` button (top right corner)
-    * Select `Custom URL (JSON)` and copy paste the following into the `url` box:
+    * Select `Custom URL (JSON)` and copy paste the following into the `url` box (tap the code box, and then tap the button to the right to copy the text to the clipboard):
         ```
         http://localhost:8765/localaudio/get/?sources=jpod,jpod_alternate,nhk16,forvo&term={term}&reading={reading}
         ```
