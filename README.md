@@ -109,7 +109,7 @@ can be found within the above link.
 2. Generate the Android database.
     To do this, navigate to (Anki) → `Tools` (top left corner) → `Local Audio Server` → `Generate Android database`.
 
-    Expect this to take a while (potentially 30 minutes or over!). You will not be able to use Anki during this time.
+    Expect this to take a while (potentially **over 30 minutes!**). You will **not be able to use Anki** during this time.
 
     This database stores all the audio files into one large file, in order to make file transfer to Android much faster (transferring the folder took about 24 hours, while transferring the large file took less than 3 minutes).
 
