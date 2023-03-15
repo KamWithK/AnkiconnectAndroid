@@ -110,7 +110,7 @@ can be found within the above link.
 
     > **Note**:
     > For Windows users, please temporarily disable Windows defender before doing this step.
-    > It seems like this generating the Android database with Windows Defender enabled can slow it
+    > It seems like generating the Android database with Windows Defender enabled can slow it
     > down by a factor of 6, meaning a step that should only take 5 minutes
     > can easily take over half an hour.
 
