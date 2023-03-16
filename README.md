@@ -18,6 +18,7 @@ It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://
     * [First Steps](#first-steps)
     * [Problem: The Yomichan popup appears upon scrolling](#problem-the-yomichan-popup-appears-upon-scrolling)
     * [Problem: The add button is always greyed out](#problem-the-add-button-is-always-greyed-out)
+    * [Problem: The add card button does not show](#problem-the-add-card-button-does-not-show)
     * [Problem: Duplicate checks aren't working](#problem-duplicate-checks-arent-working)
     * [Problem: Forvo audio won't load](#problem-forvo-audio-wont-load)
     * [Problem: On card add, I get `Incorrect flds argument`](#problem-on-card-add-i-get-incorrect-flds-argument)
@@ -186,7 +187,7 @@ To fix this, simply switch it on (under `Yomichan Settings` → `General` → `E
 > To solve this, try going through step 5 of the [instructions](#instructions).
 
 
-### Problem: The add card button does not show.
+### Problem: The add card button does not show
 - Check that the `Enable Anki integration` setting in Yomichan is indeed enabled, and properly connected.
 - Under `Anki` → `Configure Anki card format`, ensure that the Deck and Model at the top right corner
     are not highlighted in red. If they are, please select the correct deck and/or model.
