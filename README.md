@@ -239,3 +239,4 @@ Some examples:
 1. Duplicate checks always occur across the full Anki collection instead of whatever deck is selected (no matter what options are selected, assuming this feature is left enabled)
 2. The show card button will not work on the latest stable release of AnkiDroid. Instead, you must **manually install a pre-release version of AnkiDroid** for it to work. Please see [these instructions](#additional-instructions-show-card-button) for more details on how to make the show card button work.
 3. When viewing the note, the note cannot be viewed directly within card editor. Instead, the note is shown from the card search screen.
+4. You are unable to view the note tags on duplicate notes.
