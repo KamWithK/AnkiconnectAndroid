@@ -18,6 +18,7 @@ It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://
     * [First Steps](#first-steps)
     * [Problem: The Yomichan popup appears upon scrolling](#problem-the-yomichan-popup-appears-upon-scrolling)
     * [Problem: The add button is always greyed out](#problem-the-add-button-is-always-greyed-out)
+    * [Problem: The add card button does not appear](#problem-the-add-card-button-does-not-appear)
     * [Problem: Duplicate checks aren't working](#problem-duplicate-checks-arent-working)
     * [Problem: Forvo audio won't load](#problem-forvo-audio-wont-load)
     * [Problem: On card add, I get `Incorrect flds argument`](#problem-on-card-add-i-get-incorrect-flds-argument)
@@ -33,7 +34,8 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
 4. Set up the [Yomichan extension](https://chrome.google.com/webstore/detail/yomichan/ogmnaimimemjmbakcfefmnahgdfhfami) in Kiwi Browser to your liking:
     * `Import` 1+ dictionaries by clicking `Configure installed and enabled dictionaries` and then `Import` under `Dictionaries` section ([external resources](https://learnjapanese.moe/resources/#dictionaries))
     * **`Scan modifier key` under the `Scanning` section should be "No Key" (unless using mouse/keyboard, advanced options contains more config options)**
-5. Optimize Yomichan for mobile usage:
+    * **Ensure `Anki` → `Show Card Tags` is set to "Never"**
+5. **Optimize Yomichan for mobile usage:**
     * `Scan delay` under the `Scanning` section can feel laggy and so can be set to `0`
     * It is recommended to lower the value of `Maximum number of results` (under `General`) to prevent unnecessary lag. A sane value would be `8`
     * Ensure `Scanning Inputs` is optimized for mobile (prevents lookups on scrolling):
@@ -185,13 +187,20 @@ To fix this, simply switch it on (under `Yomichan Settings` → `General` → `E
 > To solve this, try going through step 5 of the [instructions](#instructions).
 
 
+### Problem: The add card button does not appear
+- Check that the `Enable Anki integration` setting in Yomichan is indeed enabled, and properly connected.
+- Under `Anki` → `Configure Anki card format`, ensure that the Deck and Model at the top right corner
+    are not highlighted in red. If they are, please select the correct deck and/or model.
+- Under `Anki` → `Show card tags`, make sure this is set to `Never`.
+
+
 ### Problem: Duplicate checks aren't working
 To determine that duplicate checks aren't working:
 - Enable duplicate checks in the Yomichan settings (under `Anki` → `Check for card duplicates`),
 - Select a word and add a card
 - Tap outside of the popup, and re-select the word. Normally, you should not be able to add a card here.
 
-If you are able to add a card, then duplicate checks are indeed not working.
+If you are able to add a card (i.e. you see the plus button), then duplicate checks are indeed not working.
 Check that your first field name does not include spaces,
 and your first field contents do not include quotes (`"`) or spaces.
 If either of those are true, the only way to solve it is by using the Alpha version of AnkiDroid, and
@@ -230,3 +239,4 @@ Some examples:
 1. Duplicate checks always occur across the full Anki collection instead of whatever deck is selected (no matter what options are selected, assuming this feature is left enabled)
 2. The show card button will not work on the latest stable release of AnkiDroid. Instead, you must **manually install a pre-release version of AnkiDroid** for it to work. Please see [these instructions](#additional-instructions-show-card-button) for more details on how to make the show card button work.
 3. When viewing the note, the note cannot be viewed directly within card editor. Instead, the note is shown from the card search screen.
+4. You are unable to view the note tags on duplicate notes.
