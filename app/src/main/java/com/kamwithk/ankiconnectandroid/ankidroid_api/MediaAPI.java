@@ -11,6 +11,7 @@ import androidx.core.content.FileProvider;
 import com.kamwithk.ankiconnectandroid.BuildConfig;
 import com.ichi2.anki.FlashCardsContract;
 import com.ichi2.anki.api.AddContentApi;
+import com.kamwithk.ankiconnectandroid.request_parsers.DownloadMediaRequest;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -60,6 +61,20 @@ public class MediaAPI {
         file.deleteOnExit();
 
         return new File(returnUri.getPath()).toString().substring(1);
+    }
+
+    /**
+     * Download the requested audio file from the internet and store it on the disk.
+     * @return The path to the audio file.
+     */
+    public String downloadAndStoreAudioFile(DownloadMediaRequest audioRequest) throws IOException {
+        byte[] data = downloadMediaFile(audioRequest.getUrl());
+        BinaryFile binaryFile = new BinaryFile();
+        binaryFile.setFilename(audioRequest.getFilename());
+        binaryFile.setData(data);
+
+        String filePath = storeMediaFile(binaryFile.getFilename(), binaryFile.getData());
+        return filePath;
     }
 
     public byte[] downloadMediaFile(String audioUri) throws IOException {

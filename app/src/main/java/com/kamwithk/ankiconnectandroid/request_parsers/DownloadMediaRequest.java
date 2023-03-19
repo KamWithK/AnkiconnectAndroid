@@ -6,8 +6,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-/** Represents the request for downloading a single audio file */
-public class DownloadAudioRequest {
+/**
+ * Represents the request for downloading a single media file. The media can be e.g. audio or an image.
+ */
+public class DownloadMediaRequest {
     private String url;
     private String filename;
     private String[] fields;
@@ -36,10 +38,9 @@ public class DownloadAudioRequest {
         this.filename = filename;
     }
 
-
     @NonNull
-    public static DownloadAudioRequest fromJson(JsonElement audioFile) {
-        // This is the expected format of the audioFile:
+    public static DownloadMediaRequest fromJson(JsonElement mediaFile) {
+        // This is the expected format of the mediaFile:
         // {
         //  "url": "https://www.example.com/audio.mp3",
         //  "filename": "audio_自転車_2023-03-24T15:39:17.151Z",
@@ -47,10 +48,10 @@ public class DownloadAudioRequest {
         //    "Audio"
         //  ]
         // }
-        JsonObject audioObject = audioFile.getAsJsonObject();
-        String url = audioObject.get("url").getAsString();
-        String filename = audioObject.get("filename").getAsString();
-        JsonArray fields = audioObject.get("fields").getAsJsonArray();
+        JsonObject mediaObject = mediaFile.getAsJsonObject();
+        String url = mediaObject.get("url").getAsString();
+        String filename = mediaObject.get("filename").getAsString();
+        JsonArray fields = mediaObject.get("fields").getAsJsonArray();
 
         // convert fields to String[]
         String[] fieldsArray = new String[fields.size()];
@@ -58,11 +59,11 @@ public class DownloadAudioRequest {
             fieldsArray[i] = fields.get(i).getAsString();
         }
 
-        DownloadAudioRequest audio = new DownloadAudioRequest();
-        audio.setUrl(url);
-        audio.setFilename(filename);
-        audio.setFields(fieldsArray);
-        return audio;
+        DownloadMediaRequest request = new DownloadMediaRequest();
+        request.setUrl(url);
+        request.setFilename(filename);
+        request.setFields(fieldsArray);
+        return request;
     }
 
 }

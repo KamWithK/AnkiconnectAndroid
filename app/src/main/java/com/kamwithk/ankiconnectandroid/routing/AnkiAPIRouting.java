@@ -4,12 +4,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.kamwithk.ankiconnectandroid.ankidroid_api.AudioFile;
+import com.kamwithk.ankiconnectandroid.ankidroid_api.BinaryFile;
 import com.kamwithk.ankiconnectandroid.ankidroid_api.DeckAPI;
 import com.kamwithk.ankiconnectandroid.ankidroid_api.IntegratedAPI;
 import com.kamwithk.ankiconnectandroid.ankidroid_api.MediaAPI;
 import com.kamwithk.ankiconnectandroid.ankidroid_api.ModelAPI;
-import com.kamwithk.ankiconnectandroid.request_parsers.DownloadAudioRequest;
+import com.kamwithk.ankiconnectandroid.request_parsers.DownloadMediaRequest;
 import com.kamwithk.ankiconnectandroid.request_parsers.Parser;
 import fi.iki.elonen.NanoHTTPD;
 
@@ -179,21 +179,25 @@ public class AnkiAPIRouting {
 
     /**
      * Add a new note to Anki.
-     * The note can include audio files, which will be downloaded. Only downloadable audio files are currently supported.
+     * The note can include media files, which will be downloaded.
+     * AnkiConnect desktop also supports other formats, but this method only supports downloadable media files.
      */
     private String addNote(JsonObject raw_json) throws Exception {
         Map<String, String> noteValues = Parser.getNoteValues(raw_json);
 
-        List<DownloadAudioRequest> audioRequests = Parser.getDownloadAudioRequests(raw_json);
-        for (DownloadAudioRequest audioRequest : audioRequests) {
+        List<DownloadMediaRequest> audioRequests = Parser.getDownloadAudioRequests(raw_json);
+        for (DownloadMediaRequest audioRequest : audioRequests) {
             // download the requested audio file to the media folder
-            String filePath = integratedAPI.downloadAndStoreAudioFile(audioRequest);
+            String filePath = mediaAPI.downloadAndStoreAudioFile(audioRequest);
 
-            // attach this audio to the note.
-            // Note that the field contents are replaced with just the audio.
+            // Attach this audio to the note.
+            // Note that the audio will be appended to the field contents.
             String[] fields = audioRequest.getFields();
             for (String field : fields) {
-                noteValues.put(field, "[sound:" + filePath + "]");
+                String existingValue = noteValues.get(field);
+                String sound = String.format("[sound:%s]", filePath);
+                String newValue = (existingValue == null) ? sound : existingValue + sound;
+                noteValues.put(field, newValue);
             }
         }
 
@@ -208,10 +212,10 @@ public class AnkiAPIRouting {
     }
 
     private String storeMediaFile(JsonObject raw_json) throws Exception {
-        AudioFile audioFile = new AudioFile();
-        audioFile.setFilename(Parser.getMediaFilename(raw_json));
-        audioFile.setData(Parser.getMediaData(raw_json));
+        BinaryFile binaryFile = new BinaryFile();
+        binaryFile.setFilename(Parser.getMediaFilename(raw_json));
+        binaryFile.setData(Parser.getMediaData(raw_json));
 
-        return Parser.gson.toJson(integratedAPI.storeMediaFile(audioFile));
+        return Parser.gson.toJson(integratedAPI.storeMediaFile(binaryFile));
     }
 }

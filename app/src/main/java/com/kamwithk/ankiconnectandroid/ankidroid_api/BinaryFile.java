@@ -1,7 +1,7 @@
 package com.kamwithk.ankiconnectandroid.ankidroid_api;
 
-/** An audio file whose contents have been read into memory */
-public class AudioFile {
+/** A binary file whose contents have been read into memory */
+public class BinaryFile {
     private String filename;
     private byte[] data;
 

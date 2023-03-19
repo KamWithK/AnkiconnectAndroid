@@ -95,20 +95,20 @@ public class Parser {
     }
 
     /**
-     * Returns a list of {@link DownloadAudioRequest} objects from the raw_data.
+     * Returns a list of {@link DownloadMediaRequest} objects for audio from the raw_data.
      * They are used to download audio files so that they can be attached into notes.
      * If they are not available in the request, an empty list is returned.
      */
-    public static List<DownloadAudioRequest> getDownloadAudioRequests(JsonObject raw_data) {
+    public static List<DownloadMediaRequest> getDownloadAudioRequests(JsonObject raw_data) {
         try {
             JsonArray jsonAudioFiles = raw_data
                     .get("params").getAsJsonObject()
                     .get("note").getAsJsonObject()
                     .get("audio").getAsJsonArray();
 
-            ArrayList<DownloadAudioRequest> audioRequests = new ArrayList<>();
+            ArrayList<DownloadMediaRequest> audioRequests = new ArrayList<>();
             for (JsonElement audioFile : jsonAudioFiles) {
-                DownloadAudioRequest audioRequest = DownloadAudioRequest.fromJson(audioFile);
+                DownloadMediaRequest audioRequest = DownloadMediaRequest.fromJson(audioFile);
                 audioRequests.add(audioRequest);
             }
             return audioRequests;

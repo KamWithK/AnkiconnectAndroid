@@ -17,8 +17,6 @@ import java.util.*;
 
 import static com.ichi2.anki.api.AddContentApi.READ_WRITE_PERMISSION;
 
-import com.kamwithk.ankiconnectandroid.request_parsers.DownloadAudioRequest;
-
 public class IntegratedAPI {
     private Context context;
     public final DeckAPI deckAPI;
@@ -78,22 +76,8 @@ public class IntegratedAPI {
         }
     }
 
-    public String storeMediaFile(AudioFile audioFile) throws IOException {
-        return mediaAPI.storeMediaFile(audioFile.getFilename(), audioFile.getData());
-    }
-
-    /**
-     * Download the requested audio file from the internet and store it on the disk.
-     * @return The path to the audio file.
-     */
-    public String downloadAndStoreAudioFile(DownloadAudioRequest audioRequest) throws IOException {
-        byte[] data = mediaAPI.downloadMediaFile(audioRequest.getUrl());
-        AudioFile audioFile = new AudioFile();
-        audioFile.setFilename(audioRequest.getFilename());
-        audioFile.setData(data);
-
-        String filePath = storeMediaFile(audioFile);
-        return filePath;
+    public String storeMediaFile(BinaryFile binaryFile) throws IOException {
+        return mediaAPI.storeMediaFile(binaryFile.getFilename(), binaryFile.getData());
     }
 
     public ArrayList<Long> guiBrowse(String query) {
