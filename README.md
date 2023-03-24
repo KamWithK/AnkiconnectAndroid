@@ -118,6 +118,8 @@ can be found within the above link.
 
     To generate the database, navigate to (Anki) → `Tools` (top left corner) → `Local Audio Server` → `Generate Android database`. Expect this to take a while (at least a few minutes).
 
+    ![generate android database](./img/gen_android_db.png)
+
     This database stores all the audio files into one large file, in order to make file transfer to Android much faster (transferring the folder took about 24 hours, while transferring the large file took less than 3 minutes).
 
 3. Copy the files from desktop to Android.
