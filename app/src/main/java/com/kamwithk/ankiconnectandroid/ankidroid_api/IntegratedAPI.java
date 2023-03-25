@@ -12,11 +12,12 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
 import static com.ichi2.anki.api.AddContentApi.READ_WRITE_PERMISSION;
+
+import com.kamwithk.ankiconnectandroid.request_parsers.DownloadAudioRequest;
 
 public class IntegratedAPI {
     private Context context;
@@ -61,6 +62,7 @@ public class IntegratedAPI {
     /**
      * Add flashcards to AnkiDroid through instant add API
      * @param data Map of (field name, field value) pairs
+     * @return The id of the note added
      */
     public Long addNote(final Map<String, String> data, String deck_name, String model_name, Set<String> tags) throws Exception {
         Long deck_id = deckAPI.getDeckID(deck_name);
@@ -76,8 +78,22 @@ public class IntegratedAPI {
         }
     }
 
-    public String storeMediaFile(String filename, byte[] data) throws IOException {
-        return mediaAPI.storeMediaFile(filename, data);
+    public String storeMediaFile(AudioFile audioFile) throws IOException {
+        return mediaAPI.storeMediaFile(audioFile.getFilename(), audioFile.getData());
+    }
+
+    /**
+     * Download the requested audio file from the internet and store it on the disk.
+     * @return The path to the audio file.
+     */
+    public String downloadAndStoreAudioFile(DownloadAudioRequest audioRequest) throws IOException {
+        byte[] data = mediaAPI.downloadMediaFile(audioRequest.getUrl());
+        AudioFile audioFile = new AudioFile();
+        audioFile.setFilename(audioRequest.getFilename());
+        audioFile.setData(data);
+
+        String filePath = storeMediaFile(audioFile);
+        return filePath;
     }
 
     public ArrayList<Long> guiBrowse(String query) {
@@ -101,3 +117,4 @@ public class IntegratedAPI {
         return new ArrayList<>();
     }
 }
+

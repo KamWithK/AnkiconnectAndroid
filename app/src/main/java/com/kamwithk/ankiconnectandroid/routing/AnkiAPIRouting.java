@@ -4,15 +4,21 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.kamwithk.ankiconnectandroid.ankidroid_api.AudioFile;
 import com.kamwithk.ankiconnectandroid.ankidroid_api.DeckAPI;
 import com.kamwithk.ankiconnectandroid.ankidroid_api.IntegratedAPI;
 import com.kamwithk.ankiconnectandroid.ankidroid_api.MediaAPI;
 import com.kamwithk.ankiconnectandroid.ankidroid_api.ModelAPI;
+import com.kamwithk.ankiconnectandroid.request_parsers.DownloadAudioRequest;
 import com.kamwithk.ankiconnectandroid.request_parsers.Parser;
 import fi.iki.elonen.NanoHTTPD;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
@@ -96,8 +102,20 @@ public class AnkiAPIRouting {
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
             response.put("result", null);
-            response.put("error", e.toString());
 
+            StringWriter sw = new StringWriter();
+            try {
+                try (PrintWriter pw = new PrintWriter(sw)) {
+                    e.printStackTrace(pw);
+                }
+                response.put("error", e.getMessage() + sw);
+            } finally {
+                try {
+                    sw.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
             return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/json", Parser.gson.toJson(response));
         }
     }
@@ -159,19 +177,41 @@ public class AnkiAPIRouting {
         return Parser.gson.toJson(integratedAPI.noteAPI.canAddNotes(notes_to_test));
     }
 
+    /**
+     * Add a new note to Anki.
+     * The note can include audio files, which will be downloaded. Only downloadable audio files are currently supported.
+     */
     private String addNote(JsonObject raw_json) throws Exception {
-        return String.valueOf(integratedAPI.addNote(
-                Parser.getNoteValues(raw_json),
+        Map<String, String> noteValues = Parser.getNoteValues(raw_json);
+
+        List<DownloadAudioRequest> audioRequests = Parser.getDownloadAudioRequests(raw_json);
+        for (DownloadAudioRequest audioRequest : audioRequests) {
+            // download the requested audio file to the media folder
+            String filePath = integratedAPI.downloadAndStoreAudioFile(audioRequest);
+
+            // attach this audio to the note.
+            // Note that the field contents are replaced with just the audio.
+            String[] fields = audioRequest.getFields();
+            for (String field : fields) {
+                noteValues.put(field, "[sound:" + filePath + "]");
+            }
+        }
+
+        String noteId = String.valueOf(integratedAPI.addNote(
+                noteValues,
                 Parser.getDeckName(raw_json),
                 Parser.getModelName(raw_json),
                 Parser.getNoteTags(raw_json)
         ));
+
+        return noteId;
     }
 
     private String storeMediaFile(JsonObject raw_json) throws Exception {
-        return Parser.gson.toJson(integratedAPI.storeMediaFile(
-                Parser.getMediaFilename(raw_json),
-                Parser.getMediaData(raw_json)
-        ));
+        AudioFile audioFile = new AudioFile();
+        audioFile.setFilename(Parser.getMediaFilename(raw_json));
+        audioFile.setData(Parser.getMediaData(raw_json));
+
+        return Parser.gson.toJson(integratedAPI.storeMediaFile(audioFile));
     }
 }
