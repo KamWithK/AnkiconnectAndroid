@@ -76,6 +76,55 @@ public class IntegratedAPI {
         }
     }
 
+    public boolean updateNoteFields(long note_id, Map<String, String> new_fields, final Map<String, byte[]> files_to_add, final Map<String, ArrayList<String>> field_to_filenames_img, final Map<String, ArrayList<String>> field_to_filenames_sound) throws Exception {
+        String[] model_field_names = modelAPI.modelFieldNames(noteAPI.getNoteModelId(note_id));
+        String[] card_fields = noteAPI.getNoteFields(note_id);
+        Map<String, String> stored_files = new HashMap<>();
+        for (int i = 0; i < model_field_names.length; i++) {
+            if (new_fields.get(model_field_names[i]) != null) {
+                // Update field to new value
+                card_fields[i] = new_fields.get(model_field_names[i]);
+
+                // Add image files
+                ArrayList<String> filenames = field_to_filenames_img.get(model_field_names[i]);
+                if (filenames != null) {
+                    for (String filename: filenames) {
+                        // See if file already stored, otherwise add it
+                        String stored_name = stored_files.get(filename);
+                        if (stored_name == null) {
+                            stored_name = mediaAPI.storeMediaFile(filename, files_to_add.get(filename));
+                            stored_files.put(filename, stored_name);
+                        }
+                        card_fields[i] += "<img src=\"" + stored_name + "\">";
+                    }
+                }
+
+                // Add sound and video files
+                filenames = field_to_filenames_sound.get(model_field_names[i]);
+                if (filenames != null) {
+                    for (String filename: filenames) {
+                        // See if file already stored, otherwise add it
+                        String stored_name = stored_files.get(filename);
+                        if (stored_name == null) {
+                            stored_name = mediaAPI.storeMediaFile(filename, files_to_add.get(filename));
+                            stored_files.put(filename, stored_name);
+                        }
+                        card_fields[i] += "[sound:" + stored_name + "]";
+                    }
+                }
+            }
+        }
+
+        boolean res =  noteAPI.updateNoteFields(note_id, card_fields);
+
+        if (res) {
+            new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, "Card updated", Toast.LENGTH_LONG).show());
+        } else {
+            new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, "Failed to update card", Toast.LENGTH_LONG).show());
+        }
+        return res;
+    }
+
     public String storeMediaFile(BinaryFile binaryFile) throws IOException {
         return mediaAPI.storeMediaFile(binaryFile.getFilename(), binaryFile.getData());
     }

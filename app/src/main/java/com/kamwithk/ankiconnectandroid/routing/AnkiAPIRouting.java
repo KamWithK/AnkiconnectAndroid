@@ -61,6 +61,8 @@ public class AnkiAPIRouting {
                 return canAddNotes(raw_json);
             case "addNote":
                 return addNote(raw_json);
+            case "updateNoteFields":
+                return updateNoteFields(raw_json);
             case "storeMediaFile":
                 return storeMediaFile(raw_json);
             case "multi":
@@ -209,6 +211,17 @@ public class AnkiAPIRouting {
         ));
 
         return noteId;
+    }
+    
+    private String updateNoteFields(JsonObject raw_json) throws Exception {
+        integratedAPI.updateNoteFields(
+                Parser.getNoteId(raw_json),
+                Parser.getUpdateNoteFieldsFields(raw_json),
+                Parser.getUpdateNoteFilesToAdd(raw_json),
+                Parser.getUpdateNoteMediaFieldsToFilenames(raw_json, "picture"),
+                Parser.getUpdateNoteMediaFieldsToFilenames(raw_json, "audio")
+        );
+        return "null";
     }
 
     private String storeMediaFile(JsonObject raw_json) throws Exception {
