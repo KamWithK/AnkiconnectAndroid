@@ -24,6 +24,7 @@ It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://
     * [Problem: On card add, I get `Incorrect flds argument`](#problem-on-card-add-i-get-incorrect-flds-argument)
     * [I still have a problem](#i-still-have-a-problem)
 * [Limitations](#limitations)
+* [Developer Info](#developer-info)
 
 ## Instructions
 Here's how to set everything up from scratch (if you've already got Yomichan working, then skip to step 5):
@@ -251,3 +252,11 @@ Some examples:
 2. The show card button will not work on the latest stable release of AnkiDroid. Instead, you must **manually install a pre-release version of AnkiDroid** for it to work. Please see [these instructions](#additional-instructions-show-card-button) for more details on how to make the show card button work.
 3. When viewing the note, the note cannot be viewed directly within card editor. Instead, the note is shown from the card search screen.
 4. You are unable to view the note tags on duplicate notes.
+
+
+## Developer Info
+For developers who are interested in using the API, please see [docs/api.md](./docs/api.md) for a list of all supported API calls.
+
+
+
+
