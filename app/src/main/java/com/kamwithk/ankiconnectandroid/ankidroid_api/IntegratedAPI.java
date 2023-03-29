@@ -35,12 +35,10 @@ public class IntegratedAPI {
     }
 
     public static void authenticate(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int permission = ContextCompat.checkSelfPermission(context, READ_WRITE_PERMISSION);
+        int permission = ContextCompat.checkSelfPermission(context, READ_WRITE_PERMISSION);
 
-            if (permission != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions((Activity)context, new String[]{READ_WRITE_PERMISSION}, 0);
-            }
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity)context, new String[]{READ_WRITE_PERMISSION}, 0);
         }
     }
 

@@ -46,12 +46,8 @@ public class SettingsActivity extends AppCompatActivity {
             if (preference != null) {
                 // custom handler of preference: open permissions screen
                 preference.setOnPreferenceClickListener(p -> {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        Intent permIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-                        startActivity(permIntent);
-                    } else {
-                        Toast.makeText(getContext(), "Android SDK version is less than 23. No permissions have to be set.", Toast.LENGTH_LONG).show();
-                    }
+                    Intent permIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                    startActivity(permIntent);
                     return true;
                 });
 
