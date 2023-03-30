@@ -25,6 +25,7 @@ It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://
     * [I still have a problem](#i-still-have-a-problem)
 * [Limitations](#limitations)
 * [Developer Info](#developer-info)
+* [Contributing](#contributing)
 
 ## Instructions
 Here's how to set everything up from scratch (if you've already got Yomichan working, then skip to step 5):
