@@ -239,7 +239,7 @@ and update the model fields (i.e. by switching it to a different model and back)
 
 
 ### I still have a problem
-If you've gone through the instructions and are still having trouble, feel free to create an issue here on GitHub or @/dm me on Discord (`@KamWithK#0634` on [TheMoeWay](https://learnjapanese.moe/join/)).
+If you've gone through the instructions and are still having trouble, feel free to create an issue here on GitHub or @/dm me on Discord (`@KamWithK#0634` on [TheMoeWay](https://learnjapanese.moe/join/)). Most related discussions happen in [the AnkiConnect Android thread](https://discord.com/channels/617136488840429598/1060781077955887195).
 
 
 
@@ -257,6 +257,18 @@ Some examples:
 ## Developer Info
 For developers who are interested in using the API, please see [docs/api.md](./docs/api.md) for a list of all supported API calls.
 
+## Contributing
+The primary goal of Ankiconnect Android was to support card creation with Yomichan.
+Therefore, many API calls are not implemented.
+In the spirit of
+[Anki-Connect itself](https://github.com/FooSoft/anki-connect#hey-could-you-add-a-new-action-to-support-feature),
+this *project operates on a self-serve model*.
+Feature requests will not be serviced.
 
-
-
+If you would like a new API call, make a PR with the following criteria:
+* Ensure that your API call matches an [existing Anki-Connect action](https://github.com/FooSoft/anki-connect#supported-actions). New actions, or outward modifications to existing actions (i.e. new input parameters) will not be accepted.
+    * Note: your API call does not have to have the full capability that Anki-Connect provides, so long as
+        it is documented (see the second point below).
+* Add the relevant documentation to [docs/api.md](./docs/api.md), including any edge cases and
+    important implementation details.
+* Attempt to match the code style of the project.
