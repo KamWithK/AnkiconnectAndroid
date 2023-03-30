@@ -3,8 +3,8 @@
 All actions here work exactly the same as [Anki-Connect](https://github.com/FooSoft/anki-connect#supported-actions) unless specified otherwise.
 
 All calls support the version `<= 4` and `> 4` format.
-Versions `<= 4` returns the result on success, but versions `> 4` returns a json
-of the following format on success:
+Versions `<= 4` returns the plain result on success (with no JSON object wrapping said result).
+However, versions `> 4` returns a JSON of the following format on success:
 ```
 {
     "result": (result),
@@ -75,8 +75,8 @@ Do not expect the error message to be the exact same as the PC Anki-Connect erro
     exist.
     For example, if your first field was `Word`, `canAddNotes` determines whether a note can be added
     or not by seeing if the query `Word:(WORD FIELD CONTENTS)` finds any matches.
-    Any match will return `false`, and no matches will return `true`.
-* Because this queries the database, this suffers the same problem as the query in `findNotes`.
+    Finding any match will return `false`, and no matches will return `true`.
+* Because this internally queries the database, this action suffers from the same problems as `findNotes`.
     To guarantee the correctness of the query, you must use the new backend.
 * Used by Yomichan
 
