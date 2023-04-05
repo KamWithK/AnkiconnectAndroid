@@ -24,6 +24,8 @@ It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://
     * [Problem: On card add, I get `Incorrect flds argument`](#problem-on-card-add-i-get-incorrect-flds-argument)
     * [I still have a problem](#i-still-have-a-problem)
 * [Limitations](#limitations)
+* [Developer Info](#developer-info)
+* [Contributing](#contributing)
 
 ## Instructions
 Here's how to set everything up from scratch (if you've already got Yomichan working, then skip to step 5):
@@ -238,7 +240,7 @@ and update the model fields (i.e. by switching it to a different model and back)
 
 
 ### I still have a problem
-If you've gone through the instructions and are still having trouble, feel free to create an issue here on GitHub or @/dm me on Discord (`@KamWithK#0634` on [TheMoeWay](https://learnjapanese.moe/join/)).
+If you've gone through the instructions and are still having trouble, feel free to create an issue here on GitHub or @/dm me on Discord (`@KamWithK#0634` on [TheMoeWay](https://learnjapanese.moe/join/)). Most related discussions happen in [the AnkiConnect Android thread](https://discord.com/channels/617136488840429598/1060781077955887195).
 
 
 
@@ -251,3 +253,23 @@ Some examples:
 2. The show card button will not work on the latest stable release of AnkiDroid. Instead, you must **manually install a pre-release version of AnkiDroid** for it to work. Please see [these instructions](#additional-instructions-show-card-button) for more details on how to make the show card button work.
 3. When viewing the note, the note cannot be viewed directly within card editor. Instead, the note is shown from the card search screen.
 4. You are unable to view the note tags on duplicate notes.
+
+
+## Developer Info
+For developers who are interested in using the API, please see [docs/api.md](./docs/api.md) for a list of all supported API calls.
+
+## Contributing
+The primary goal of Ankiconnect Android was to support card creation with Yomichan.
+Therefore, many API calls are not implemented.
+In the spirit of
+[Anki-Connect itself](https://github.com/FooSoft/anki-connect#hey-could-you-add-a-new-action-to-support-feature),
+this *project operates on a self-serve model*.
+Feature requests will not be serviced.
+
+If you would like a new API call, make a PR with the following criteria:
+* Ensure that your API call matches an [existing Anki-Connect action](https://github.com/FooSoft/anki-connect#supported-actions). New actions, or outward modifications to existing actions (i.e. new input parameters) will not be accepted.
+    * Note: your API call does not have to have the full capability that Anki-Connect provides, so long as
+        it is documented (see the second point below).
+* Add the relevant documentation to [docs/api.md](./docs/api.md), including any edge cases and
+    important implementation details.
+* Attempt to match the code style of the project.
