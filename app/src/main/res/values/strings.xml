@@ -8,4 +8,5 @@
     <string name="settings_other_header">Other</string>
     <string name="get_dir_path_title">Print Local Audio Directory</string>
     <string name="get_dir_path_title_summary">Prints the expected directory path where the local audio is searched in.</string>
+    <string name="dialog_notif_perm_info">This app uses a persistent notification to inform you that the server is running. Please enable notifications to see this.</string>
 </resources>

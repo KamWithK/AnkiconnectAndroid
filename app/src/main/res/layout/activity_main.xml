@@ -49,13 +49,13 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="startService"
+                android:onClick="startServiceBtn"
                 android:text="Start Service" />
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="stopService"
+                android:onClick="stopServiceBtn"
                 android:text="Stop Service" />
 
 
