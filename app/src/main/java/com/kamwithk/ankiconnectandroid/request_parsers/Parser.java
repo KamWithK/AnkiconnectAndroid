@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class Parser {
     public static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
@@ -62,7 +64,7 @@ public class Parser {
         return raw_data.get("params").getAsJsonObject().get("query").getAsString();
     }
 
-    public static long getNoteId(JsonObject raw_data) {
+    public static long getUpdateNoteFieldsId(JsonObject raw_data) {
         return raw_data.get("params").getAsJsonObject().get("note").getAsJsonObject().get("id").getAsLong();
     }
 
@@ -71,66 +73,31 @@ public class Parser {
         return gson.fromJson(raw_data.get("params").getAsJsonObject().get("note").getAsJsonObject().get("fields"), fieldType);
     }
 
-    public static Map<String, byte[]> getUpdateNoteFilesToAdd(JsonObject raw_data) {
+    public static ArrayList<RequestMedia> getUpdateNoteFieldsMedia(JsonObject raw_data) {
+        Map<String, RequestMedia.RequestMediaTypes> media_types = Map.of(
+            "audio", RequestMedia.RequestMediaTypes.AUDIO,
+            "video", RequestMedia.RequestMediaTypes.VIDEO,
+            "picture", RequestMedia.RequestMediaTypes.PICTURE
+        );
         JsonObject note_json = raw_data.get("params").getAsJsonObject().get("note").getAsJsonObject();
-        /*
-         * note_json looks something like:
-         * id: int,
-         * fields: {
-         *     field_name: string
-         * },
-         * audio | video | picture: [
-         *     {
-         *         data: base64 string,
-         *         filename: string,
-         *         fields: string[]
-         *      }
-         * ]
-         *  want to pull out each file and put into a map of filename: base64 data
-         */
 
-        Map<String, byte[]> filename_to_bytes = new HashMap<>();
-        String[] media_types = {"audio", "video", "picture"};
-        for (String media_type: media_types) {
-            if (note_json.get(media_type) == null || !note_json.get(media_type).isJsonArray()) { continue; }
-            for (JsonElement media_element : note_json.get(media_type).getAsJsonArray()) {
+        ArrayList<RequestMedia> request_medias = new ArrayList<>();
+        for (Map.Entry<String, RequestMedia.RequestMediaTypes> entry: media_types.entrySet()) {
+            if (note_json.get(entry.getKey()) == null || !note_json.get(entry.getKey()).isJsonArray()) {
+                continue;
+            }
+            for (JsonElement media_element: note_json.get(entry.getKey()).getAsJsonArray()) {
                 JsonObject media_object = media_element.getAsJsonObject();
-                filename_to_bytes.put(media_object.get("filename").getAsString(), Base64.decode(media_object.get("data").getAsString(), Base64.DEFAULT));
+                request_medias.add(new RequestMedia(
+                    entry.getValue(),
+                    Base64.decode(media_object.get("data").getAsString(), Base64.DEFAULT),
+                    media_object.get("filename").getAsString(),
+                    StreamSupport.stream(media_object.get("fields").getAsJsonArray().spliterator(), false)
+                        .map(JsonElement::getAsString)
+                        .collect(Collectors.toCollection(ArrayList::new))));
             }
         }
-        return filename_to_bytes;
-    }
-
-    public static Map<String, ArrayList<String>> getUpdateNoteMediaFieldsToFilenames(JsonObject raw_data, String type) {
-        JsonObject note_json = raw_data.get("params").getAsJsonObject().get("note").getAsJsonObject();
-        // See getUpdateNoteFilesToAdd for note_json structure,
-        // want to map each field to the filename(s) that will be inserted into it
-
-        Map<String, ArrayList<String>> field_to_filename = new HashMap<>();
-
-        // Separate these cases because it's either added to the note as an <img> or a [sound: ]
-        String[] media_types;
-        if (type.equals("picture")) {
-            media_types = new String[]{"picture"};
-        } else {
-            media_types = new String[]{"audio", "video"};
-        }
-
-        for (String media_type: media_types) {
-            if (note_json.get(media_type) == null || !note_json.get(media_type).isJsonArray()) { continue; }
-            for (JsonElement media_element : note_json.get(media_type).getAsJsonArray()) {
-                JsonObject media_object = media_element.getAsJsonObject();
-                for (JsonElement field : media_object.get("fields").getAsJsonArray()) {
-                    ArrayList<String> filenames = field_to_filename.get(field.getAsString());
-                    if (filenames == null) {
-                        filenames = new ArrayList<>();
-                    }
-                    filenames.add(media_object.get("filename").getAsString());
-                    field_to_filename.put(field.getAsString(), filenames);
-                }
-            }
-        }
-        return field_to_filename;
+        return request_medias;
     }
 
     public static ArrayList<HashMap<String, String>> getNoteFront(JsonObject raw_data) {

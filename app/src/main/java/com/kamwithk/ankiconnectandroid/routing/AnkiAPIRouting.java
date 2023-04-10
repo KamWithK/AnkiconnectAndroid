@@ -212,14 +212,12 @@ public class AnkiAPIRouting {
 
         return noteId;
     }
-    
+
     private String updateNoteFields(JsonObject raw_json) throws Exception {
         integratedAPI.updateNoteFields(
-                Parser.getNoteId(raw_json),
+                Parser.getUpdateNoteFieldsId(raw_json),
                 Parser.getUpdateNoteFieldsFields(raw_json),
-                Parser.getUpdateNoteFilesToAdd(raw_json),
-                Parser.getUpdateNoteMediaFieldsToFilenames(raw_json, "picture"),
-                Parser.getUpdateNoteMediaFieldsToFilenames(raw_json, "audio")
+                Parser.getUpdateNoteFieldsMedia(raw_json)
         );
         return "null";
     }
