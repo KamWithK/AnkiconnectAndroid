@@ -83,6 +83,8 @@ Do not expect the error message to be the exact same as the PC Anki-Connect erro
 ### `addNote`
 * See: [Anki-Connect `addNote`](https://github.com/FooSoft/anki-connect#addnote)
 * Used by Yomichan
+* Anki-Connect desktop allows using various formats for the media file, but this api currently only
+  supports using urls.
 
 <br>
 
