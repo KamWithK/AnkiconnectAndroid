@@ -1,4 +1,5 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="@string/settings_permissions_header">
 
@@ -6,6 +7,19 @@
             app:key="access_overlay_perms"
             app:title="@string/settings_overlay_permissions_title"
             app:summary="@string/settings_overlay_permissions_summary" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Access from other sites"
+        app:summary="Allow access from an external site">
+
+        <EditTextPreference
+            app:dialogMessage="Enter the hostname you want to allow access from."
+            app:dialogTitle="Enter CORS Host"
+            app:key="cors_host"
+            app:title="CORS Host"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
@@ -17,5 +31,4 @@
             app:summary="@string/get_dir_path_title_summary" />
 
     </PreferenceCategory>
-
 </PreferenceScreen>

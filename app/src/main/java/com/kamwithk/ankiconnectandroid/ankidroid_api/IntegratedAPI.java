@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -61,6 +60,7 @@ public class IntegratedAPI {
     /**
      * Add flashcards to AnkiDroid through instant add API
      * @param data Map of (field name, field value) pairs
+     * @return The id of the note added
      */
     public Long addNote(final Map<String, String> data, String deck_name, String model_name, Set<String> tags) throws Exception {
         Long deck_id = deckAPI.getDeckID(deck_name);
@@ -76,8 +76,8 @@ public class IntegratedAPI {
         }
     }
 
-    public String storeMediaFile(String filename, byte[] data) throws IOException {
-        return mediaAPI.storeMediaFile(filename, data);
+    public String storeMediaFile(BinaryFile binaryFile) throws IOException {
+        return mediaAPI.storeMediaFile(binaryFile.getFilename(), binaryFile.getData());
     }
 
     public ArrayList<Long> guiBrowse(String query) {
@@ -101,3 +101,4 @@ public class IntegratedAPI {
         return new ArrayList<>();
     }
 }
+

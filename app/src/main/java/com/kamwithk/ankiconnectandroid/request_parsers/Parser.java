@@ -1,11 +1,22 @@
 package com.kamwithk.ankiconnectandroid.request_parsers;
 
 import android.util.Base64;
-import com.google.gson.*;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Parser {
     public static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
@@ -83,6 +94,30 @@ public class Parser {
         return raw_data.get("params").getAsJsonObject().get("filename").getAsString();
     }
 
+    /**
+     * Returns a list of {@link DownloadMediaRequest} objects for audio from the raw_data.
+     * They are used to download audio files so that they can be attached into notes.
+     * If they are not available in the request, an empty list is returned.
+     */
+    public static List<DownloadMediaRequest> getDownloadAudioRequests(JsonObject raw_data) {
+        try {
+            JsonArray jsonAudioFiles = raw_data
+                    .get("params").getAsJsonObject()
+                    .get("note").getAsJsonObject()
+                    .get("audio").getAsJsonArray();
+
+            ArrayList<DownloadMediaRequest> audioRequests = new ArrayList<>();
+            for (JsonElement audioFile : jsonAudioFiles) {
+                DownloadMediaRequest audioRequest = DownloadMediaRequest.fromJson(audioFile);
+                audioRequests.add(audioRequest);
+            }
+            return audioRequests;
+        } catch (NullPointerException e) {
+            // valid audio was not provided
+            return List.of();
+        }
+    }
+
     public static byte[] getMediaData(JsonObject raw_data) {
         String encoded = raw_data.get("params").getAsJsonObject().get("data").getAsString();
         return Base64.decode(encoded, Base64.DEFAULT);
@@ -92,3 +127,4 @@ public class Parser {
         return raw_data.get("params").getAsJsonObject().get("actions").getAsJsonArray();
     }
 }
+

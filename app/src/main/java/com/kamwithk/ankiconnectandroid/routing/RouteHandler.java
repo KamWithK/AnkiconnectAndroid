@@ -1,16 +1,23 @@
 package com.kamwithk.ankiconnectandroid.routing;
 
+import static com.kamwithk.ankiconnectandroid.routing.Router.contentType;
+
+import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
+
 import android.content.Context;
+import android.content.SharedPreferences;
+
+import androidx.preference.PreferenceManager;
 
 import com.kamwithk.ankiconnectandroid.ankidroid_api.IntegratedAPI;
-import fi.iki.elonen.NanoHTTPD;
-import fi.iki.elonen.router.RouterNanoHTTPD;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import static com.kamwithk.ankiconnectandroid.routing.Router.contentType;
+import fi.iki.elonen.NanoHTTPD;
+import fi.iki.elonen.router.RouterNanoHTTPD;
 
 public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
 
@@ -37,8 +44,8 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
 
     public NanoHTTPD.Response get(RouterNanoHTTPD.UriResource uriResource, Map<String, String> urlParams, NanoHTTPD.IHTTPSession session) {
 //        Setup
+        Context context = uriResource.initParameter(0, Context.class);
         if (apiHandler == null) {
-            Context context = uriResource.initParameter(0, Context.class);
             apiHandler = new APIHandler(new IntegratedAPI(context), context);
         }
 
@@ -52,10 +59,28 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
             e.printStackTrace();
         }
 
-        NanoHTTPD.Response rep = apiHandler.chooseAPI(files.get("postData"), session.getParameters());
+        Map<String, List<String>> parameters = session.getParameters();
+        if (parameters == null || parameters.isEmpty() && files.get("postData") == null) {
+            // No data was provided in the POST request so we return a simple response
+            NanoHTTPD.Response rep = newFixedLengthResponse("Ankiconnect Android is running.");
+            addCorsHeaders(context, rep);
+            return rep;
+        }
 
-        // TODO CORS based on settings
-        // rep.addHeader("Access-Control-Allow-Origin", "http://localhost");
+        NanoHTTPD.Response rep = apiHandler.chooseAPI(files.get("postData"), parameters);
+
+        addCorsHeaders(context, rep);
         return rep;
+    }
+
+    private void addCorsHeaders(Context context, NanoHTTPD.Response rep) {
+        // Add a CORS header if it is set in the preferences
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String corsHost = sharedPreferences.getString("cors_host", "");
+
+        if (!corsHost.trim().equals("")) {
+            rep.addHeader("Access-Control-Allow-Origin", corsHost);
+            rep.addHeader("Access-Control-Allow-Headers", "*");
+        }
     }
 }

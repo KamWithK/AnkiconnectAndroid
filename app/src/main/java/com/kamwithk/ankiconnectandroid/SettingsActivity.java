@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
@@ -75,8 +76,9 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
 
-
-
+           EditTextPreference corsHostPreference = findPreference("cors_hostname");
+           if (corsHostPreference != null) {
+                corsHostPreference.setOnBindEditTextListener(editText -> editText.setHint("e.g. http://example.com"));            }
         }
     }
 
