@@ -118,12 +118,10 @@ public class IntegratedAPI {
             }
 
             for (String field: media.getFields()) {
-                ArrayList<String> reverse_mapped_fields = field_to_files.get(field);
-                if (reverse_mapped_fields == null) {
-                    reverse_mapped_fields = new ArrayList<>();
+                if (!field_to_files.containsKey(field)) {
+                    field_to_files.put(field, new ArrayList<>());
                 }
-                reverse_mapped_fields.add(enclosed_filename);
-                field_to_files.put(field, reverse_mapped_fields);
+                field_to_files.get(field).add(enclosed_filename);
             }
         }
 
