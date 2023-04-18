@@ -103,20 +103,17 @@ public class IntegratedAPI {
         // Store media and create a field: enclosed_filename map to avoid O(n^2) lookup later
         Map<String, ArrayList<String>> field_to_files = new HashMap<>();
         for (RequestMedia media: media_to_add) {
-            // See note in common.RequestMedia
-            if (!media.isStored()) {
-                media.setFilename(mediaAPI.storeMediaFile(media.getFilename(), media.getData()));
-                media.setStored(true);
-            }
+            // mediaAPI.storeMediaFile() doesn't store as the passed in filename, need to use the returned one
+            String stored_filename = mediaAPI.storeMediaFile(media.getFilename(), media.getData());
 
             String enclosed_filename = "";
             switch (media.getType()) {
                 case AUDIO:
                 case VIDEO:
-                    enclosed_filename = "[sound:" + media.getFilename() + "]";
+                    enclosed_filename = "[sound:" + stored_filename + "]";
                     break;
                 case PICTURE:
-                    enclosed_filename = "<img src=\"" + media.getFilename() + "\">";
+                    enclosed_filename = "<img src=\"" + stored_filename + "\">";
                     break;
             }
 
