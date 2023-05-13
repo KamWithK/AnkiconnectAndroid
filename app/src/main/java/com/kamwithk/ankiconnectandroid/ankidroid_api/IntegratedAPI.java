@@ -17,6 +17,8 @@ import java.util.*;
 
 import static com.ichi2.anki.api.AddContentApi.READ_WRITE_PERMISSION;
 
+import com.kamwithk.ankiconnectandroid.request_parsers.RequestMedia;
+
 public class IntegratedAPI {
     private Context context;
     public final DeckAPI deckAPI;
@@ -74,6 +76,74 @@ public class IntegratedAPI {
             new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, "Failed to add card", Toast.LENGTH_LONG).show());
             throw new Exception("Couldn't add note");
         }
+    }
+
+    public void updateNoteFields(long note_id, Map<String, String> new_fields, ArrayList<RequestMedia> media_to_add) throws Exception {
+        /*
+         * updateNoteFields request looks like:
+         * id: int,
+         * fields: {
+         *     field_name: string
+         * },
+         * audio | video | picture: [
+         *     {
+         *         data: base64 string,
+         *         filename: string,
+         *         fields: string[]
+         *         + more fields that are currently unsupported
+         *      }
+         * ]
+         *
+         * Fields is an incomplete list of fields, and the Anki API expects the the passed in field
+         * list to be complete. So, need to get the existing fields and only update them if present
+         * in the request. Also need to reverse map each media file back to the field it will be
+         * included in and append it enclosed in either <img> or [sound: ]
+         */
+
+        // Store media and create a field: enclosed_filename map to avoid O(n^2) lookup later
+        Map<String, ArrayList<String>> field_to_files = new HashMap<>();
+        for (RequestMedia media: media_to_add) {
+            // mediaAPI.storeMediaFile() doesn't store as the passed in filename, need to use the returned one
+            String stored_filename = mediaAPI.storeMediaFile(media.getFilename(), media.getData());
+
+            String enclosed_filename = "";
+            switch (media.getType()) {
+                case AUDIO:
+                case VIDEO:
+                    enclosed_filename = "[sound:" + stored_filename + "]";
+                    break;
+                case PICTURE:
+                    enclosed_filename = "<img src=\"" + stored_filename + "\">";
+                    break;
+            }
+
+            for (String field: media.getFields()) {
+                if (!field_to_files.containsKey(field)) {
+                    field_to_files.put(field, new ArrayList<>());
+                }
+                field_to_files.get(field).add(enclosed_filename);
+            }
+        }
+
+        // Get old fields and update values as needed
+        String[] model_field_names = modelAPI.modelFieldNames(noteAPI.getNoteModelId(note_id));
+        String[] card_fields = noteAPI.getNoteFields(note_id);
+        for (int i = 0; i < model_field_names.length; i++) {
+            if (new_fields.get(model_field_names[i]) != null) {
+                // Update field to new value
+                card_fields[i] = new_fields.get(model_field_names[i]);
+
+                // Add media files
+                ArrayList<String> enclosed_media_filenames = field_to_files.get(model_field_names[i]);
+                if (enclosed_media_filenames != null) {
+                    for (String enclosed_media_filename: enclosed_media_filenames) {
+                        card_fields[i] += enclosed_media_filename;
+                    }
+                }
+            }
+        }
+
+        noteAPI.updateNoteFields(note_id, card_fields);
     }
 
     public String storeMediaFile(BinaryFile binaryFile) throws IOException {

@@ -35,6 +35,7 @@ public class MediaAPI {
      */
     @SuppressLint("SetWorldReadable")
     public String storeMediaFile(String filename, byte[] data) throws IOException {
+        // TODO: investigate why filename gets a number attached to it, i.e. file.png -> file_123456789.png
         String lastPathSegment = Uri.parse(filename).getLastPathSegment();
         lastPathSegment = lastPathSegment == null ? filename : lastPathSegment;
         File file = new File(context.getCacheDir(), lastPathSegment);

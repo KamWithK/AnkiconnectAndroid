@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class Parser {
     public static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
@@ -60,6 +62,42 @@ public class Parser {
 
     public static String getNoteQuery(JsonObject raw_data) {
         return raw_data.get("params").getAsJsonObject().get("query").getAsString();
+    }
+
+    public static long getUpdateNoteFieldsId(JsonObject raw_data) {
+        return raw_data.get("params").getAsJsonObject().get("note").getAsJsonObject().get("id").getAsLong();
+    }
+
+    public static Map<String, String> getUpdateNoteFieldsFields(JsonObject raw_data) {
+        Type fieldType = new TypeToken<Map<String, String>>() {}.getType();
+        return gson.fromJson(raw_data.get("params").getAsJsonObject().get("note").getAsJsonObject().get("fields"), fieldType);
+    }
+
+    public static ArrayList<RequestMedia> getUpdateNoteFieldsMedia(JsonObject raw_data) {
+        Map<String, RequestMedia.RequestMediaTypes> media_types = Map.of(
+            "audio", RequestMedia.RequestMediaTypes.AUDIO,
+            "video", RequestMedia.RequestMediaTypes.VIDEO,
+            "picture", RequestMedia.RequestMediaTypes.PICTURE
+        );
+        JsonObject note_json = raw_data.get("params").getAsJsonObject().get("note").getAsJsonObject();
+
+        ArrayList<RequestMedia> request_medias = new ArrayList<>();
+        for (Map.Entry<String, RequestMedia.RequestMediaTypes> entry: media_types.entrySet()) {
+            if (note_json.get(entry.getKey()) == null || !note_json.get(entry.getKey()).isJsonArray()) {
+                continue;
+            }
+            for (JsonElement media_element: note_json.get(entry.getKey()).getAsJsonArray()) {
+                JsonObject media_object = media_element.getAsJsonObject();
+                request_medias.add(new RequestMedia(
+                    entry.getValue(),
+                    Base64.decode(media_object.get("data").getAsString(), Base64.DEFAULT),
+                    media_object.get("filename").getAsString(),
+                    StreamSupport.stream(media_object.get("fields").getAsJsonArray().spliterator(), false)
+                        .map(JsonElement::getAsString)
+                        .collect(Collectors.toCollection(ArrayList::new))));
+            }
+        }
+        return request_medias;
     }
 
     public static ArrayList<HashMap<String, String>> getNoteFront(JsonObject raw_data) {

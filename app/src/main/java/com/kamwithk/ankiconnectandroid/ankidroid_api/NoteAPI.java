@@ -65,6 +65,19 @@ public class NoteAPI {
         return note_does_not_exist;
     }
 
+    public String[] getNoteFields(long note_id) throws Exception {
+        return api.getNote(note_id).getFields();
+    }
+
+    public boolean updateNoteFields(long note_id, String[] fields) throws Exception {
+        return api.updateNoteFields(note_id, fields);
+    }
+
+    public long getNoteModelId(long note_id) throws Exception {
+        api.getNote(note_id); //set cursor to correct position
+        return api.getCurrentModelId();
+    }
+
     public ArrayList<Long> findNotes(String query) {
         ArrayList<Long> noteIds = new ArrayList<>();
 

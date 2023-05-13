@@ -86,12 +86,17 @@ Do not expect the error message to be the exact same as the PC Anki-Connect erro
 * Anki-Connect desktop allows using various formats for the media file, but this api currently only
   supports using urls.
 
+### `updateNoteFields`
+* See: [Anki-Connect `updateNoteFields`](https://github.com/FooSoft/anki-connect#updatenotefields)
+* Does not support `url` or `skipHash` for media
+
 <br>
 
 ## Media Actions
 
 ### `storeMediaFile`
 * See: [Anki-Connect `storeMediaFile`](https://github.com/FooSoft/anki-connect#storemediafile)
+* Filenames will get a random number appended to the end of them, i.e. `file.png` becomes `file_123456789.png`
 * Used by Yomichan
 
 <br>
