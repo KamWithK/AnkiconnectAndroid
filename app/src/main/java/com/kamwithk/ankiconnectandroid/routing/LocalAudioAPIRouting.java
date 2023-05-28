@@ -22,6 +22,7 @@ import com.kamwithk.ankiconnectandroid.routing.localaudiosource.JPodAltAudioSour
 import com.kamwithk.ankiconnectandroid.routing.localaudiosource.JPodAudioSource;
 import com.kamwithk.ankiconnectandroid.routing.localaudiosource.LocalAudioSource;
 import com.kamwithk.ankiconnectandroid.routing.localaudiosource.NHK16AudioSource;
+import com.kamwithk.ankiconnectandroid.routing.localaudiosource.Shinmeikai8AudioSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -63,9 +64,11 @@ public class LocalAudioAPIRouting {
 
         this.sourceIdToSource = new HashMap<>();
 
+        // TODO: read config
         this.sourceIdToSource.put("jpod", new JPodAudioSource());
         this.sourceIdToSource.put("jpod_alternate", new JPodAltAudioSource());
         this.sourceIdToSource.put("nhk16", new NHK16AudioSource());
+        this.sourceIdToSource.put("shinmeikai8", new Shinmeikai8AudioSource());
         this.sourceIdToSource.put("forvo", new ForvoAudioSource());
     }
 
