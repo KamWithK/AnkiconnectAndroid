@@ -221,13 +221,24 @@ public class LocalAudioAPIRouting {
         byte[] data = audioFileEntryDao.getData(path, source);
 
         // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+        String mimeType = null;
         if (path.endsWith(".mp3")) {
-            return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "audio/mpeg", new ByteArrayInputStream(data), data.length);
+            mimeType = "audio/mpeg";
         } else if (path.endsWith(".aac")) {
-            return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "audio/aac", new ByteArrayInputStream(data), data.length);
-        } else {
-            return audioError("File is neither a .mp3 or .acc file: " + path);
+            mimeType = "audio/aac";
+        } else if (path.endsWith(".m4a")) {
+            mimeType = "audio/mp4";
+        } else if (path.endsWith(".ogg") || path.endsWith(".oga") || path.endsWith(".opus")) {
+            mimeType = "audio/ogg";
+        } else if (path.endsWith(".flac")) {
+            mimeType = "audio/flac";
+        } else if (path.endsWith(".wav")) {
+            mimeType = "audio/wav";
         }
+        if (mimeType == null) {
+            return audioError("File is not a supported audio file: " + path);
+        }
+        return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, mimeType, new ByteArrayInputStream(data), data.length);
 
     }
 }
