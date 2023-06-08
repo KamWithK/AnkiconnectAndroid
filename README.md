@@ -67,7 +67,13 @@ compared to the default audio sources from Yomichan.
 
 1. Click on `Configure audio playback sources` and under the `Audio` section
 2. Click the `Add` button (top right corner)
-3. **Select `Custom URL (JSON)` and copy paste `http://localhost:8765/?term={term}&reading={reading}` into the `URL` box** (NOTE: This is NOT the same URL as from your PC, the port is different)
+3. **Select `Custom URL (JSON)` and copy paste the following into the `URL` box**:
+
+    ```
+    http://localhost:8765/?term={term}&reading={reading}
+    ```
+
+    NOTE: This is NOT the same URL as from your PC, the port is different
 
 
 
@@ -167,7 +173,7 @@ can be found within the above link.
         * The `sources` and `user` parameters should behave exactly like the desktop local audio plugin.
 
             <details>
-            <summary>Example: sources in the default order</summary>
+            <summary>Example, with sources in the default order <i>(click here)</i></summary>
 
             ```
             http://localhost:8765/localaudio/get/?term={term}&reading={reading}&sources=nhk16,shinmeikai8,forvo,jpod,jpod_alternate
