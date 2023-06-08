@@ -146,22 +146,35 @@ can be found within the above link.
 
     * After locating the two folders, copy `android.db` from the desktop's add-on folder
         into Ankiconnect Android's data folder.
-        Do NOT copy the entire `user_files` folder.
-
-        This should result in the following:
-        ```
-        /storage/emulated/0/Android/data/com.kamwithk.ankiconnectandroid/files/android.db
-        ```
+        * If you have a previous `android.db`, please delete this file and any related files (i.e. delete `android.db-shm` and `android.db-wa`)
+        * Ensure AnkiConnectAndroid is fully closed before copying the database, because
+            AnkiConnectAndroid may override the new database if it is open.
+            If you want to be 100% sure that the app is closed, you can restart your device.
+        * Do NOT copy the entire `user_files` folder.
+        * After copying the file, this should result in the following:
+            ```
+            /storage/emulated/0/Android/data/com.kamwithk.ankiconnectandroid/files/android.db
+            ```
 
 4. Setup local audio on Kiwi Browser's Yomichan. (Warning: this URL is different than the one on desktop!)
     * Click on `Configure audio playback sources` and under the `Audio` section
     * Click the `Add` button (top right corner)
     * Select `Custom URL (JSON)` and copy paste the following into the `url` box (tap the code box, and then tap the button to the right to copy the text to the clipboard):
         ```
-        http://localhost:8765/localaudio/get/?sources=jpod,jpod_alternate,nhk16,forvo&term={term}&reading={reading}
+        http://localhost:8765/localaudio/get/?term={term}&reading={reading}
         ```
 
-        The `sources` and `user` parameters should behave exactly like the desktop local audio plugin.
+        * The `sources` and `user` parameters should behave exactly like the desktop local audio plugin.
+
+            <details>
+            <summary>Example: sources in the default order</summary>
+
+            ```
+            http://localhost:8765/localaudio/get/?term={term}&reading={reading}&sources=nhk16,shinmeikai8,forvo,jpod,jpod_alternate
+            ```
+
+            </details>
+
 
 5. Ensure it works.
     * You can do the
