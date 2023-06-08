@@ -3,8 +3,6 @@ package com.kamwithk.ankiconnectandroid.routing;
 import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import androidx.room.Room;
@@ -30,6 +28,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -58,13 +57,14 @@ import fi.iki.elonen.NanoHTTPD;
 public class LocalAudioAPIRouting {
     private final Context context;
 
-    private final Map<String, LocalAudioSource> sourceIdToSource;
+    // sourceIdToSource is a LinkedHashMap to preserve insertion order
+    private final LinkedHashMap<String, LocalAudioSource> sourceIdToSource;
+
     public LocalAudioAPIRouting(Context context) {
         this.context = context;
 
-        this.sourceIdToSource = new HashMap<>();
-
         // TODO: read config
+        this.sourceIdToSource = new LinkedHashMap<>();
         this.sourceIdToSource.put("nhk16", new NHK16AudioSource());
         this.sourceIdToSource.put("shinmeikai8", new Shinmeikai8AudioSource());
         this.sourceIdToSource.put("forvo", new ForvoAudioSource());
@@ -207,8 +207,13 @@ public class LocalAudioAPIRouting {
     }
 
     private List<String> getSources(Map<String, List<String>> parameters) {
-        String[] sources = Objects.requireNonNull(parameters.get("sources")).get(0).split(",");
-        return List.of(sources);
+        List<String> sources = parameters.get("sources");
+        if (sources != null && sources.size() == 1) {
+            return List.of(sources.get(0).split(","));
+        }
+
+        // default order
+        return new ArrayList<>(sourceIdToSource.keySet());
     }
 
     public NanoHTTPD.Response getAudioHandleError(String source, String path) {
