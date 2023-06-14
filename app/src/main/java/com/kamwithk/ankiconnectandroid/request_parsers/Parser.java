@@ -14,11 +14,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class Parser {
     public static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
@@ -73,28 +70,23 @@ public class Parser {
         return gson.fromJson(raw_data.get("params").getAsJsonObject().get("note").getAsJsonObject().get("fields"), fieldType);
     }
 
-    public static ArrayList<RequestMedia> getUpdateNoteFieldsMedia(JsonObject raw_data) {
-        Map<String, RequestMedia.RequestMediaTypes> media_types = Map.of(
-            "audio", RequestMedia.RequestMediaTypes.AUDIO,
-            "video", RequestMedia.RequestMediaTypes.VIDEO,
-            "picture", RequestMedia.RequestMediaTypes.PICTURE
+    public static ArrayList<MediaRequest> getNoteMediaRequests(JsonObject raw_data) {
+        Map<String, MediaRequest.MediaType> media_types = Map.of(
+            "audio", MediaRequest.MediaType.AUDIO,
+            "video", MediaRequest.MediaType.VIDEO,
+            "picture", MediaRequest.MediaType.PICTURE
         );
         JsonObject note_json = raw_data.get("params").getAsJsonObject().get("note").getAsJsonObject();
 
-        ArrayList<RequestMedia> request_medias = new ArrayList<>();
-        for (Map.Entry<String, RequestMedia.RequestMediaTypes> entry: media_types.entrySet()) {
+        ArrayList<MediaRequest> request_medias = new ArrayList<>();
+        for (Map.Entry<String, MediaRequest.MediaType> entry: media_types.entrySet()) {
             if (note_json.get(entry.getKey()) == null || !note_json.get(entry.getKey()).isJsonArray()) {
                 continue;
             }
             for (JsonElement media_element: note_json.get(entry.getKey()).getAsJsonArray()) {
                 JsonObject media_object = media_element.getAsJsonObject();
-                request_medias.add(new RequestMedia(
-                    entry.getValue(),
-                    Base64.decode(media_object.get("data").getAsString(), Base64.DEFAULT),
-                    media_object.get("filename").getAsString(),
-                    StreamSupport.stream(media_object.get("fields").getAsJsonArray().spliterator(), false)
-                        .map(JsonElement::getAsString)
-                        .collect(Collectors.toCollection(ArrayList::new))));
+                MediaRequest requestMedia = MediaRequest.fromJson(media_object, entry.getValue());
+                request_medias.add(requestMedia);
             }
         }
         return request_medias;
@@ -130,30 +122,6 @@ public class Parser {
 
     public static String getMediaFilename(JsonObject raw_data) {
         return raw_data.get("params").getAsJsonObject().get("filename").getAsString();
-    }
-
-    /**
-     * Returns a list of {@link DownloadMediaRequest} objects for audio from the raw_data.
-     * They are used to download audio files so that they can be attached into notes.
-     * If they are not available in the request, an empty list is returned.
-     */
-    public static List<DownloadMediaRequest> getDownloadAudioRequests(JsonObject raw_data) {
-        try {
-            JsonArray jsonAudioFiles = raw_data
-                    .get("params").getAsJsonObject()
-                    .get("note").getAsJsonObject()
-                    .get("audio").getAsJsonArray();
-
-            ArrayList<DownloadMediaRequest> audioRequests = new ArrayList<>();
-            for (JsonElement audioFile : jsonAudioFiles) {
-                DownloadMediaRequest audioRequest = DownloadMediaRequest.fromJson(audioFile);
-                audioRequests.add(audioRequest);
-            }
-            return audioRequests;
-        } catch (NullPointerException e) {
-            // valid audio was not provided
-            return List.of();
-        }
     }
 
     public static byte[] getMediaData(JsonObject raw_data) {

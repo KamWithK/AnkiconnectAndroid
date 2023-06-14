@@ -29,15 +29,15 @@ public class NoteAPI {
      * @param data Map of (field name, field value) pairs
      */
     public Long addNote(final Map<String, String> data, Long deck_id, Long model_id, Set<String> tags) throws Exception {
-        String[] all_field_names = api.getFieldList(model_id);
-        if (all_field_names == null) {
+        String[] allFieldNames = api.getFieldList(model_id);
+        if (allFieldNames == null) {
             throw new Exception("Couldn't get fields");
         }
 
         // Get list in correct order
         String[] fields = new String[data.size()];
         for (int i = 0; i < data.size(); i++) {
-            fields[i] = data.get(all_field_names[i]);
+            fields[i] = data.get(allFieldNames[i]);
         }
 
         return api.addNote(model_id, deck_id, fields, tags);
@@ -69,7 +69,19 @@ public class NoteAPI {
         return api.getNote(note_id).getFields();
     }
 
-    public boolean updateNoteFields(long note_id, String[] fields) throws Exception {
+    public boolean updateNoteFields(long note_id, final Map<String, String> data) throws Exception {
+        long modelId = getNoteModelId(note_id);
+        String[] allFieldNames = api.getFieldList(modelId);
+        if (allFieldNames == null) {
+            throw new Exception("Couldn't get fields");
+        }
+
+        // Get list in correct order
+        String[] fields = new String[data.size()];
+        for (int i = 0; i < data.size(); i++) {
+            fields[i] = data.get(allFieldNames[i]);
+        }
+
         return api.updateNoteFields(note_id, fields);
     }
 
