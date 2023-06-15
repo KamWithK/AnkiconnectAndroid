@@ -80,7 +80,7 @@ public class NoteAPI {
     public Long getNoteModelId(long note_id) {
         // Manually queries the note with a specific projection to get the model ID
         // Code copied/pasted from getNote() in AddContentAPI:
-        //
+        // https://github.com/ankidroid/Anki-Android/blob/1711e56c2b5515ab89c3424b60e60867bb65d492/api/src/main/java/com/ichi2/anki/api/AddContentApi.kt#L244
 
         Uri noteUri = Uri.withAppendedPath(FlashCardsContract.Note.CONTENT_URI, Long.toString(note_id));
         Cursor cursor = context.getContentResolver().query(noteUri, MODEL_PROJECTION, null, null, null);
