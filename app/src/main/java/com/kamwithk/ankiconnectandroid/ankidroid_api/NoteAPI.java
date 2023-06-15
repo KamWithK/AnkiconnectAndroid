@@ -2,15 +2,19 @@ package com.kamwithk.ankiconnectandroid.ankidroid_api;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 
 import com.ichi2.anki.FlashCardsContract;
 import com.ichi2.anki.api.AddContentApi;
+import com.ichi2.anki.api.NoteInfo;
 
 import java.util.*;
 
 public class NoteAPI {
     private Context context;
     private final AddContentApi api;
+
+    private static final String[] MODEL_PROJECTION = {FlashCardsContract.Note.MID};
 
     public NoteAPI(Context context) {
         this.context = context;
@@ -85,9 +89,25 @@ public class NoteAPI {
         return api.updateNoteFields(note_id, fields);
     }
 
-    public long getNoteModelId(long note_id) throws Exception {
-        api.getNote(note_id); //set cursor to correct position
-        return api.getCurrentModelId();
+    public Long getNoteModelId(long note_id) {
+        // Manually queries the note with a specific projection to get the model ID
+        // Code copied/pasted from getNote() in AddContentAPI:
+        //
+
+        Uri noteUri = Uri.withAppendedPath(FlashCardsContract.Note.CONTENT_URI, Long.toString(note_id));
+        Cursor cursor = context.getContentResolver().query(noteUri, MODEL_PROJECTION, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        try {
+            if (!cursor.moveToNext()) {
+                return null;
+            }
+            int index = cursor.getColumnIndexOrThrow(FlashCardsContract.Note.MID);;
+            return cursor.getLong(index); // mid
+        } finally {
+            cursor.close();
+        }
     }
 
     public ArrayList<Long> findNotes(String query) {
