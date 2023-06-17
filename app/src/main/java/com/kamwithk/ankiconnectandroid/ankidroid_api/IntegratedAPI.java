@@ -247,9 +247,10 @@ public class IntegratedAPI {
         for (int i = 0; i < modelFieldNames.length; i++) {
             String fieldName = modelFieldNames[i];
 
-            if (newFields.get(modelFieldNames[i]) == null) {
+            String newValue = newFields.get(modelFieldNames[i]);
+            if (newValue != null) {
                 // Update field to new value
-                cardFields.put(fieldName, newFields.get(modelFieldNames[i]));
+                cardFields.put(fieldName, newValue);
             } else {
                 cardFields.put(fieldName, originalFields[i]);
             }
