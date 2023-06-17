@@ -76,6 +76,7 @@ public class IntegratedAPI {
         String modelName = notesToTest.get(0).getModelName();
 
         // If all model names are the same, then we can run one call to api.findDuplicateNotes()
+        // in order to speed up query times
         boolean sameModelName = true;
         for (Parser.NoteFront noteFront : notesToTest) {
             if (!modelName.equals(noteFront.getModelName())) {
@@ -85,7 +86,6 @@ public class IntegratedAPI {
         }
 
         if (sameModelName) {
-            // Uses AnkiDroid's internal API to
             Map<String, Long> modelNameToId = modelAPI.modelNamesAndIds(0);
             Long modelId = modelNameToId.get(modelName);
             if (modelId == null) { // i.e. not found
