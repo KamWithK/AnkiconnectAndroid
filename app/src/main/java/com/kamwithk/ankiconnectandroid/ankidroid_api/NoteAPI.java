@@ -7,7 +7,7 @@ import android.net.Uri;
 
 import com.ichi2.anki.FlashCardsContract;
 import com.ichi2.anki.api.AddContentApi;
-import com.ichi2.anki.api.NoteInfo;
+import com.kamwithk.ankiconnectandroid.request_parsers.Parser;
 
 import java.util.*;
 
@@ -25,7 +25,7 @@ public class NoteAPI {
         api = new AddContentApi(context);
     }
 
-    private String escapeQueryStr(String s) {
+    static String escapeQueryStr(String s) {
       // first replace: \ -> \\
       // second replace: " -> \"
       return "\"" + s.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
@@ -49,28 +49,6 @@ public class NoteAPI {
         }
 
         return api.addNote(model_id, deck_id, fields, tags);
-    }
-
-    public ArrayList<Boolean> canAddNotes(ArrayList<HashMap<String, String>> notes_to_test) {
-        ArrayList<Boolean> note_does_not_exist = new ArrayList<>();
-
-        for (HashMap<String, String> field : notes_to_test) {
-            String escapedQuery = escapeQueryStr(field.get("field") + ":" + field.get("value"));
-            final Cursor cursor = this.resolver.query(
-                    FlashCardsContract.Note.CONTENT_URI,
-                    NOTE_ID_PROJECTION,
-                    escapedQuery,
-                    null,
-                    null
-            );
-
-            note_does_not_exist.add(cursor == null || !cursor.moveToFirst());
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-
-        return note_does_not_exist;
     }
 
     public String[] getNoteFields(long note_id) throws Exception {

@@ -174,9 +174,9 @@ public class AnkiAPIRouting {
         return Parser.gson.toJson(integratedAPI.guiBrowse(query));
     }
 
-    private String canAddNotes(JsonObject raw_json) {
-        ArrayList<HashMap<String, String>> notes_to_test = Parser.getNoteFront(raw_json);
-        return Parser.gson.toJson(integratedAPI.noteAPI.canAddNotes(notes_to_test));
+    private String canAddNotes(JsonObject raw_json) throws Exception {
+        ArrayList<Parser.NoteFront> notes_to_test = Parser.getNoteFront(raw_json);
+        return Parser.gson.toJson(integratedAPI.canAddNotes(notes_to_test));
     }
 
     /**

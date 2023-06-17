@@ -13,7 +13,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -100,24 +99,49 @@ public class Parser {
         return request_medias;
     }
 
-    public static ArrayList<HashMap<String, String>> getNoteFront(JsonObject raw_data) {
+
+    public static class NoteFront {
+        private final String fieldName;
+        private final String fieldValue;
+        private final String modelName;
+
+        public NoteFront(String fieldName, String fieldValue, String modelName) {
+            this.fieldName = fieldName;
+            this.fieldValue = fieldValue;
+            this.modelName = modelName;
+        }
+
+        public String getFieldName() {
+            return fieldName;
+        }
+
+        public String getFieldValue() {
+            return fieldValue;
+        }
+
+        public String getModelName() {
+            return modelName;
+        }
+    }
+
+    /**
+     * Gets the first field of the note
+     */
+    public static ArrayList<NoteFront> getNoteFront(JsonObject raw_data) {
         JsonArray notes = raw_data.get("params").getAsJsonObject().get("notes").getAsJsonArray();
-        ArrayList<HashMap<String, String>> first_fields = new ArrayList<>();
+        ArrayList<NoteFront> projections = new ArrayList<>();
 
         for (JsonElement jsonElement : notes) {
             JsonObject jsonObject = jsonElement.getAsJsonObject().get("fields").getAsJsonObject();
 
             String field = jsonObject.keySet().toArray()[0].toString();
             String value = jsonObject.get(field).getAsString();
-
-            HashMap<String, String> fields = new HashMap<>();
-            fields.put("field", field);
-            fields.put("value", value);
-
-            first_fields.add(fields);
+            String model = jsonElement.getAsJsonObject().get("modelName").getAsString();
+            NoteFront projection = new NoteFront(field, value, model);
+            projections.add(projection);
         }
 
-        return first_fields;
+        return projections;
     }
 
     public static boolean[] getNoteTrues(JsonObject raw_data) {
