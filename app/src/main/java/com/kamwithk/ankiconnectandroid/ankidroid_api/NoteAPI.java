@@ -1,5 +1,6 @@
 package com.kamwithk.ankiconnectandroid.ankidroid_api;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -12,12 +13,15 @@ import java.util.*;
 
 public class NoteAPI {
     private Context context;
+    private final ContentResolver resolver;
     private final AddContentApi api;
 
     private static final String[] MODEL_PROJECTION = {FlashCardsContract.Note.MID};
+    private static final String[] NOTE_ID_PROJECTION = {FlashCardsContract.Note._ID};
 
     public NoteAPI(Context context) {
         this.context = context;
+        this.resolver = context.getContentResolver();
         api = new AddContentApi(context);
     }
 
@@ -52,9 +56,9 @@ public class NoteAPI {
 
         for (HashMap<String, String> field : notes_to_test) {
             String escapedQuery = escapeQueryStr(field.get("field") + ":" + field.get("value"));
-            final Cursor cursor = context.getContentResolver().query(
+            final Cursor cursor = this.resolver.query(
                     FlashCardsContract.Note.CONTENT_URI,
-                    null,
+                    NOTE_ID_PROJECTION,
                     escapedQuery,
                     null,
                     null
@@ -101,9 +105,9 @@ public class NoteAPI {
     public ArrayList<Long> findNotes(String query) {
         ArrayList<Long> noteIds = new ArrayList<>();
 
-        final Cursor cursor = context.getContentResolver().query(
+        final Cursor cursor = this.resolver.query(
                 FlashCardsContract.Note.CONTENT_URI,
-                null,
+                NOTE_ID_PROJECTION,
                 query,
                 null,
                 null
