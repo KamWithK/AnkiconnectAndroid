@@ -71,6 +71,12 @@ public class Parser {
         return gson.fromJson(raw_data.get("params").getAsJsonObject().get("note").getAsJsonObject().get("fields"), fieldType);
     }
 
+    /**
+     * For each key ("audio", "video", "picture"), expect EITHER a list or singular json object!
+     * According to the official Anki-Connect docs:
+     * > If you choose to include [audio, video, picture keys], they should contain a single object
+     * > or an array of objects
+     */
     public static ArrayList<MediaRequest> getNoteMediaRequests(JsonObject raw_data) {
         Map<String, MediaRequest.MediaType> media_types = Map.of(
             "audio", MediaRequest.MediaType.AUDIO,
@@ -81,11 +87,18 @@ public class Parser {
 
         ArrayList<MediaRequest> request_medias = new ArrayList<>();
         for (Map.Entry<String, MediaRequest.MediaType> entry: media_types.entrySet()) {
-            if (note_json.get(entry.getKey()) == null || !note_json.get(entry.getKey()).isJsonArray()) {
+            JsonElement media_value = note_json.get(entry.getKey());
+            if (media_value == null) {
                 continue;
             }
-            for (JsonElement media_element: note_json.get(entry.getKey()).getAsJsonArray()) {
-                JsonObject media_object = media_element.getAsJsonObject();
+            if (media_value.isJsonArray()) {
+                for (JsonElement media_element: media_value.getAsJsonArray()) {
+                    JsonObject media_object = media_element.getAsJsonObject();
+                    MediaRequest requestMedia = MediaRequest.fromJson(media_object, entry.getValue());
+                    request_medias.add(requestMedia);
+                }
+            } else if (media_value.isJsonObject()) {
+                JsonObject media_object = media_value.getAsJsonObject();
                 MediaRequest requestMedia = MediaRequest.fromJson(media_object, entry.getValue());
                 request_medias.add(requestMedia);
             }
