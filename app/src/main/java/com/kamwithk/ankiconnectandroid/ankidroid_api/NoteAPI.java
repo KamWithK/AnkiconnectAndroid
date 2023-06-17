@@ -77,7 +77,7 @@ public class NoteAPI {
         // https://github.com/ankidroid/Anki-Android/blob/1711e56c2b5515ab89c3424b60e60867bb65d492/api/src/main/java/com/ichi2/anki/api/AddContentApi.kt#L244
 
         Uri noteUri = Uri.withAppendedPath(FlashCardsContract.Note.CONTENT_URI, Long.toString(note_id));
-        Cursor cursor = context.getContentResolver().query(noteUri, MODEL_PROJECTION, null, null, null);
+        Cursor cursor = this.resolver.query(noteUri, MODEL_PROJECTION, null, null, null);
         if (cursor == null) {
             return null;
         }
