@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.SparseArray;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -17,6 +19,10 @@ import java.util.*;
 import static com.ichi2.anki.api.AddContentApi.READ_WRITE_PERMISSION;
 
 import com.kamwithk.ankiconnectandroid.request_parsers.MediaRequest;
+import com.ichi2.anki.FlashCardsContract;
+import com.ichi2.anki.api.AddContentApi;
+import com.ichi2.anki.api.NoteInfo;
+import com.kamwithk.ankiconnectandroid.request_parsers.Parser;
 
 public class IntegratedAPI {
     private Context context;
@@ -24,6 +30,7 @@ public class IntegratedAPI {
     public final ModelAPI modelAPI;
     public final NoteAPI noteAPI;
     public final MediaAPI mediaAPI;
+    private final AddContentApi api; // TODO: Combine all API classes???
 
     public IntegratedAPI(Context context) {
         this.context = context;
@@ -32,6 +39,8 @@ public class IntegratedAPI {
         modelAPI = new ModelAPI(context);
         noteAPI = new NoteAPI(context);
         mediaAPI = new MediaAPI(context);
+
+        api = new AddContentApi(context);
     }
 
     public static void authenticate(Context context) {
@@ -56,6 +65,80 @@ public class IntegratedAPI {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    public ArrayList<Boolean> canAddNotes(ArrayList<Parser.NoteFront> notesToTest) throws Exception {
+
+        if (notesToTest.size() <= 0) {
+            return new ArrayList<>();
+        }
+        String modelName = notesToTest.get(0).getModelName();
+
+        // If all model names are the same, then we can run one call to api.findDuplicateNotes()
+        // in order to speed up query times
+        boolean sameModelName = true;
+        for (Parser.NoteFront noteFront : notesToTest) {
+            if (!modelName.equals(noteFront.getModelName())) {
+                sameModelName = false;
+                break;
+            }
+        }
+
+        if (sameModelName) {
+            Map<String, Long> modelNameToId = modelAPI.modelNamesAndIds(0);
+            Long modelId = modelNameToId.get(modelName);
+            if (modelId == null) { // i.e. not found
+                // all false! (cannot add the note if there's no valid model to add it with)
+                ArrayList<Boolean> allFalse = new ArrayList<>();
+                for (int i = 0; i < notesToTest.size(); i++) {
+                    allFalse.add(false);
+                }
+                return allFalse;
+            }
+
+            // Otherwise, we finally can use the internal API call
+            List<String> keys = new ArrayList<>();
+            for (Parser.NoteFront noteFront : notesToTest) {
+                keys.add(noteFront.getFieldValue());
+            }
+            SparseArray<List<NoteInfo>> duplicateNotes =
+                    api.findDuplicateNotes(modelId, keys);
+
+            ArrayList<Boolean> noteDoesNotExist = new ArrayList<>();
+            for (int i = 0; i < notesToTest.size(); i++) {
+                noteDoesNotExist.add(duplicateNotes.get(i) == null);
+            }
+            return noteDoesNotExist;
+
+        } else {
+            // Use the old code instead for correctness, at the cost of performance.
+            // TODO: We can probably use findDuplicateNotes here as well for 100% correctness
+            //       with old AnkiDroid versions
+            ArrayList<Boolean> noteDoesNotExist = new ArrayList<>();
+
+            for (Parser.NoteFront noteFront : notesToTest) {
+                // NOTE: This does not work if the field value has spaces or quotations unless
+                // the rust backend is used!
+                String escapedQuery = NoteAPI.escapeQueryStr(noteFront.getFieldName() + ":" + noteFront.getFieldValue());
+                final Cursor cursor = context.getContentResolver().query(
+                        FlashCardsContract.Note.CONTENT_URI,
+                        null,
+                        escapedQuery,
+                        null,
+                        null
+                );
+
+                noteDoesNotExist.add(cursor == null || !cursor.moveToFirst());
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+
+            return noteDoesNotExist;
+
+        }
+
     }
 
     /**
