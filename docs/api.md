@@ -84,11 +84,12 @@ Do not expect the error message to be the exact same as the PC Anki-Connect erro
 * See: [Anki-Connect `addNote`](https://github.com/FooSoft/anki-connect#addnote)
 * Used by Yomichan
 * Anki-Connect desktop allows using various formats for the media file, but this api currently only
-  supports using urls.
+  supports using the `url` and `data` field. Does not support `skipHash` for the `url` field.
+  All of `picture`, `audio` and `video` are supported.
 
 ### `updateNoteFields`
 * See: [Anki-Connect `updateNoteFields`](https://github.com/FooSoft/anki-connect#updatenotefields)
-* Does not support `url` or `skipHash` for media
+* See [addNote](#addnote) for supported media actions.
 
 <br>
 
