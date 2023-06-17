@@ -78,6 +78,8 @@ Do not expect the error message to be the exact same as the PC Anki-Connect erro
     Finding any match will return `false`, and no matches will return `true`.
 * Because this internally queries the database, this action suffers from the same problems as `findNotes`.
     To guarantee the correctness of the query, you must use the new backend.
+* If all notes have the same model, then the call is optimized as we can call an internal Ankidroid API
+    function on the entire set of data.
 * Used by Yomichan
 
 ### `addNote`
