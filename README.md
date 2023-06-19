@@ -36,7 +36,6 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
 4. Set up the [Yomichan extension](https://chrome.google.com/webstore/detail/yomichan/ogmnaimimemjmbakcfefmnahgdfhfami) in Kiwi Browser to your liking:
     * `Import` 1+ dictionaries by clicking `Configure installed and enabled dictionaries` and then `Import` under `Dictionaries` section ([external resources](https://learnjapanese.moe/resources/#dictionaries))
     * **`Scan modifier key` under the `Scanning` section should be "No Key" (unless using mouse/keyboard, advanced options contains more config options)**
-    * **Ensure `Anki` → `Show Card Tags` is set to "Never"**
 5. **Optimize Yomichan for mobile usage:**
     * `Scan delay` under the `Scanning` section can feel laggy and so can be set to `0`
     * It is recommended to lower the value of `Maximum number of results` (under `General`) to prevent unnecessary lag. A sane value would be `8`
@@ -223,7 +222,6 @@ To fix this, simply switch it on (under `Yomichan Settings` → `General` → `E
 - Check that the `Enable Anki integration` setting in Yomichan is indeed enabled, and properly connected.
 - Under `Anki` → `Configure Anki card format`, ensure that the Deck and Model at the top right corner
     are not highlighted in red. If they are, please select the correct deck and/or model.
-- Under `Anki` → `Show card tags`, make sure this is set to `Never`.
 
 
 ### Problem: Duplicate checks aren't working

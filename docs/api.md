@@ -93,6 +93,12 @@ Do not expect the error message to be the exact same as the PC Anki-Connect erro
 * See: [Anki-Connect `updateNoteFields`](https://github.com/FooSoft/anki-connect#updatenotefields)
 * See [addNote](#addnote) for supported media actions.
 
+### `notesInfo`
+* See: [Anki-Connect `notesInfo`](https://github.com/FooSoft/anki-connect#notesInfo)
+* Used by Yomichan (`Anki` → `Show card tags`)
+* Internally, the info is fetched very inefficiently (although this is definitely fixable).
+    Expect poor performance if you are requesting many notes.
+
 <br>
 
 ## Media Actions

@@ -21,6 +21,8 @@ import java.util.Set;
 public class Parser {
     public static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 
+    private static final String FIELD_SEPARATOR = Character.toString('\u001f');
+
     public static JsonObject parse(String raw_data) {
         return JsonParser.parseString(raw_data).getAsJsonObject();
     }
@@ -159,6 +161,16 @@ public class Parser {
         return array;
     }
 
+
+    public static ArrayList<Long> getNoteIds(JsonObject raw_data) {
+        ArrayList<Long> noteIds = new ArrayList<>();
+        JsonArray jsonNoteIds = raw_data.get("params").getAsJsonObject().get("notes").getAsJsonArray();
+        for (JsonElement noteId: jsonNoteIds) {
+            noteIds.add(noteId.getAsLong());
+        }
+        return noteIds;
+    }
+
     public static String getMediaFilename(JsonObject raw_data) {
         return raw_data.get("params").getAsJsonObject().get("filename").getAsString();
     }
@@ -170,6 +182,18 @@ public class Parser {
 
     public static JsonArray getMultiActions(JsonObject raw_data) {
         return raw_data.get("params").getAsJsonObject().get("actions").getAsJsonArray();
+    }
+
+    // taken from AnkiDroid
+    public static String[] splitTags(String tags) {
+        if (tags == null) {
+            return null;
+        }
+        return tags.trim().split("\\s+");
+    }
+
+    public static String[] splitFields(String fields) {
+        return fields != null? fields.split(FIELD_SEPARATOR, -1): null;
     }
 }
 
