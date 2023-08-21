@@ -10,22 +10,24 @@ Ankiconnect Android is a from scratch unofficial reimplementation of the [deskto
 It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://github.com/ankidroid/Anki-Android/).
 
 ## Table of Contents
-* [Instructions](#Instructions)
-    * [Additional Instructions: Forvo Audio](#additional-instructions-forvo-audio)
-    * [Additional Instructions: Show Card Button](#additional-instructions-show-card-button)
-    * [Additional Instructions: Local Audio](#additional-instructions-local-audio)
-* [Common Errors and Solutions](#common-errors-and-solutions)
-    * [First Steps](#first-steps)
-    * [Problem: The Yomichan popup appears upon scrolling](#problem-the-yomichan-popup-appears-upon-scrolling)
-    * [Problem: The add button is always greyed out](#problem-the-add-button-is-always-greyed-out)
-    * [Problem: The add card button does not appear](#problem-the-add-card-button-does-not-appear)
-    * [Problem: Duplicate checks aren't working](#problem-duplicate-checks-arent-working)
-    * [Problem: Forvo audio won't load](#problem-forvo-audio-wont-load)
-    * [Problem: On card add, I get `Incorrect flds argument`](#problem-on-card-add-i-get-incorrect-flds-argument)
-    * [I still have a problem](#i-still-have-a-problem)
-* [Limitations](#limitations)
-* [Developer Info](#developer-info)
-* [Contributing](#contributing)
+- [Ankiconnect Android](#ankiconnect-android)
+  - [Table of Contents](#table-of-contents)
+  - [Instructions](#instructions)
+    - [Additional Instructions: Forvo Audio](#additional-instructions-forvo-audio)
+    - [Additional Instructions: Show Card Button](#additional-instructions-show-card-button)
+    - [Additional Instructions: Local Audio](#additional-instructions-local-audio)
+  - [Common Errors and Solutions](#common-errors-and-solutions)
+    - [First Steps](#first-steps)
+    - [Problem: The Yomichan popup appears upon scrolling](#problem-the-yomichan-popup-appears-upon-scrolling)
+    - [Problem: The add button is always greyed out](#problem-the-add-button-is-always-greyed-out)
+    - [Problem: The add card button does not appear](#problem-the-add-card-button-does-not-appear)
+    - [Problem: Duplicate checks aren't working](#problem-duplicate-checks-arent-working)
+    - [Problem: Forvo audio won't load](#problem-forvo-audio-wont-load)
+    - [Problem: On card add, I get `Incorrect flds argument`](#problem-on-card-add-i-get-incorrect-flds-argument)
+    - [I still have a problem](#i-still-have-a-problem)
+  - [Limitations](#limitations)
+  - [Developer Info](#developer-info)
+  - [Contributing](#contributing)
 
 ## Instructions
 Here's how to set everything up from scratch (if you've already got Yomichan working, then skip to step 5):
@@ -46,7 +48,7 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
             * Ensure that advanced options within the `Scanning Inputs` window is enabled.
                 To do this, scroll to the right, and tap on the three dots.
             *   <details> <summary>Match your settings to the this image: <i>(click here)</i></summary>
-                <a href="https://github.com/KamWithK/AnkiconnectAndroid/blob/master/img/scanning_inputs.jpg"><img src="https://github.com/KamWithK/AnkiconnectAndroid/blob/master/img/scanning_inputs.jpg" width="400" /></a>
+                <a href="https://github.com/KamWithK/AnkiconnectAndroid/blob/master/img/scanning_inputs.jpg"><img src="https://github.com/KamWithK/AnkiconnectAndroid/blob/master/img/scanning_inputs.ppg" width="400" /></a>
                 </details>
         * Navigate to `Scanning` → `Support inputs for devices with touch screens`
             * Ensure that `Touch inputs` is checked, and `Pointer inputs` is NOT checked.
