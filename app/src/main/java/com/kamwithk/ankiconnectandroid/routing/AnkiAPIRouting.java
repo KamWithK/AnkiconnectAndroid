@@ -9,8 +9,9 @@ import com.kamwithk.ankiconnectandroid.ankidroid_api.DeckAPI;
 import com.kamwithk.ankiconnectandroid.ankidroid_api.IntegratedAPI;
 import com.kamwithk.ankiconnectandroid.ankidroid_api.MediaAPI;
 import com.kamwithk.ankiconnectandroid.ankidroid_api.ModelAPI;
-import com.kamwithk.ankiconnectandroid.request_parsers.DownloadMediaRequest;
 import com.kamwithk.ankiconnectandroid.request_parsers.Parser;
+import com.kamwithk.ankiconnectandroid.request_parsers.MediaRequest;
+
 import fi.iki.elonen.NanoHTTPD;
 
 import java.io.IOException;
@@ -18,7 +19,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
@@ -65,6 +65,8 @@ public class AnkiAPIRouting {
                 return updateNoteFields(raw_json);
             case "storeMediaFile":
                 return storeMediaFile(raw_json);
+            case "notesInfo":
+                return notesInfo(raw_json);
             case "multi":
                 JsonArray actions = Parser.getMultiActions(raw_json);
                 JsonArray results = new JsonArray();
@@ -174,9 +176,9 @@ public class AnkiAPIRouting {
         return Parser.gson.toJson(integratedAPI.guiBrowse(query));
     }
 
-    private String canAddNotes(JsonObject raw_json) {
-        ArrayList<HashMap<String, String>> notes_to_test = Parser.getNoteFront(raw_json);
-        return Parser.gson.toJson(integratedAPI.noteAPI.canAddNotes(notes_to_test));
+    private String canAddNotes(JsonObject raw_json) throws Exception {
+        ArrayList<Parser.NoteFront> notes_to_test = Parser.getNoteFront(raw_json);
+        return Parser.gson.toJson(integratedAPI.canAddNotes(notes_to_test));
     }
 
     /**
@@ -187,21 +189,9 @@ public class AnkiAPIRouting {
     private String addNote(JsonObject raw_json) throws Exception {
         Map<String, String> noteValues = Parser.getNoteValues(raw_json);
 
-        List<DownloadMediaRequest> audioRequests = Parser.getDownloadAudioRequests(raw_json);
-        for (DownloadMediaRequest audioRequest : audioRequests) {
-            // download the requested audio file to the media folder
-            String filePath = mediaAPI.downloadAndStoreAudioFile(audioRequest);
-
-            // Attach this audio to the note.
-            // Note that the audio will be appended to the field contents.
-            String[] fields = audioRequest.getFields();
-            for (String field : fields) {
-                String existingValue = noteValues.get(field);
-                String sound = String.format("[sound:%s]", filePath);
-                String newValue = (existingValue == null) ? sound : existingValue + sound;
-                noteValues.put(field, newValue);
-            }
-        }
+        ArrayList<MediaRequest> mediaRequests =
+                Parser.getNoteMediaRequests(raw_json);
+        integratedAPI.addMedia(noteValues, mediaRequests);
 
         String noteId = String.valueOf(integratedAPI.addNote(
                 noteValues,
@@ -217,7 +207,7 @@ public class AnkiAPIRouting {
         integratedAPI.updateNoteFields(
                 Parser.getUpdateNoteFieldsId(raw_json),
                 Parser.getUpdateNoteFieldsFields(raw_json),
-                Parser.getUpdateNoteFieldsMedia(raw_json)
+                Parser.getNoteMediaRequests(raw_json)
         );
         return "null";
     }
@@ -228,5 +218,10 @@ public class AnkiAPIRouting {
         binaryFile.setData(Parser.getMediaData(raw_json));
 
         return Parser.gson.toJson(integratedAPI.storeMediaFile(binaryFile));
+    }
+
+    private String notesInfo(JsonObject raw_json) throws Exception {
+        ArrayList<Long> noteIds = Parser.getNoteIds(raw_json);
+        return Parser.gson.toJson(integratedAPI.noteAPI.notesInfo(noteIds));
     }
 }

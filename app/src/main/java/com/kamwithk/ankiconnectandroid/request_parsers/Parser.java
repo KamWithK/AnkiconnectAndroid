@@ -17,11 +17,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class Parser {
     public static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+
+    private static final String FIELD_SEPARATOR = Character.toString('\u001f');
 
     public static JsonObject parse(String raw_data) {
         return JsonParser.parseString(raw_data).getAsJsonObject();
@@ -73,51 +73,84 @@ public class Parser {
         return gson.fromJson(raw_data.get("params").getAsJsonObject().get("note").getAsJsonObject().get("fields"), fieldType);
     }
 
-    public static ArrayList<RequestMedia> getUpdateNoteFieldsMedia(JsonObject raw_data) {
-        Map<String, RequestMedia.RequestMediaTypes> media_types = Map.of(
-            "audio", RequestMedia.RequestMediaTypes.AUDIO,
-            "video", RequestMedia.RequestMediaTypes.VIDEO,
-            "picture", RequestMedia.RequestMediaTypes.PICTURE
+    /**
+     * For each key ("audio", "video", "picture"), expect EITHER a list or singular json object!
+     * According to the official Anki-Connect docs:
+     * > If you choose to include [audio, video, picture keys], they should contain a single object
+     * > or an array of objects
+     */
+    public static ArrayList<MediaRequest> getNoteMediaRequests(JsonObject raw_data) {
+        Map<String, MediaRequest.MediaType> media_types = Map.of(
+            "audio", MediaRequest.MediaType.AUDIO,
+            "video", MediaRequest.MediaType.VIDEO,
+            "picture", MediaRequest.MediaType.PICTURE
         );
         JsonObject note_json = raw_data.get("params").getAsJsonObject().get("note").getAsJsonObject();
 
-        ArrayList<RequestMedia> request_medias = new ArrayList<>();
-        for (Map.Entry<String, RequestMedia.RequestMediaTypes> entry: media_types.entrySet()) {
-            if (note_json.get(entry.getKey()) == null || !note_json.get(entry.getKey()).isJsonArray()) {
+        ArrayList<MediaRequest> request_medias = new ArrayList<>();
+        for (Map.Entry<String, MediaRequest.MediaType> entry: media_types.entrySet()) {
+            JsonElement media_value = note_json.get(entry.getKey());
+            if (media_value == null) {
                 continue;
             }
-            for (JsonElement media_element: note_json.get(entry.getKey()).getAsJsonArray()) {
-                JsonObject media_object = media_element.getAsJsonObject();
-                request_medias.add(new RequestMedia(
-                    entry.getValue(),
-                    Base64.decode(media_object.get("data").getAsString(), Base64.DEFAULT),
-                    media_object.get("filename").getAsString(),
-                    StreamSupport.stream(media_object.get("fields").getAsJsonArray().spliterator(), false)
-                        .map(JsonElement::getAsString)
-                        .collect(Collectors.toCollection(ArrayList::new))));
+            if (media_value.isJsonArray()) {
+                for (JsonElement media_element: media_value.getAsJsonArray()) {
+                    JsonObject media_object = media_element.getAsJsonObject();
+                    MediaRequest requestMedia = MediaRequest.fromJson(media_object, entry.getValue());
+                    request_medias.add(requestMedia);
+                }
+            } else if (media_value.isJsonObject()) {
+                JsonObject media_object = media_value.getAsJsonObject();
+                MediaRequest requestMedia = MediaRequest.fromJson(media_object, entry.getValue());
+                request_medias.add(requestMedia);
             }
         }
         return request_medias;
     }
 
-    public static ArrayList<HashMap<String, String>> getNoteFront(JsonObject raw_data) {
+
+    public static class NoteFront {
+        private final String fieldName;
+        private final String fieldValue;
+        private final String modelName;
+
+        public NoteFront(String fieldName, String fieldValue, String modelName) {
+            this.fieldName = fieldName;
+            this.fieldValue = fieldValue;
+            this.modelName = modelName;
+        }
+
+        public String getFieldName() {
+            return fieldName;
+        }
+
+        public String getFieldValue() {
+            return fieldValue;
+        }
+
+        public String getModelName() {
+            return modelName;
+        }
+    }
+
+    /**
+     * Gets the first field of the note
+     */
+    public static ArrayList<NoteFront> getNoteFront(JsonObject raw_data) {
         JsonArray notes = raw_data.get("params").getAsJsonObject().get("notes").getAsJsonArray();
-        ArrayList<HashMap<String, String>> first_fields = new ArrayList<>();
+        ArrayList<NoteFront> projections = new ArrayList<>();
 
         for (JsonElement jsonElement : notes) {
             JsonObject jsonObject = jsonElement.getAsJsonObject().get("fields").getAsJsonObject();
 
             String field = jsonObject.keySet().toArray()[0].toString();
             String value = jsonObject.get(field).getAsString();
-
-            HashMap<String, String> fields = new HashMap<>();
-            fields.put("field", field);
-            fields.put("value", value);
-
-            first_fields.add(fields);
+            String model = jsonElement.getAsJsonObject().get("modelName").getAsString();
+            NoteFront projection = new NoteFront(field, value, model);
+            projections.add(projection);
         }
 
-        return first_fields;
+        return projections;
     }
 
     public static boolean[] getNoteTrues(JsonObject raw_data) {
@@ -128,32 +161,18 @@ public class Parser {
         return array;
     }
 
-    public static String getMediaFilename(JsonObject raw_data) {
-        return raw_data.get("params").getAsJsonObject().get("filename").getAsString();
+
+    public static ArrayList<Long> getNoteIds(JsonObject raw_data) {
+        ArrayList<Long> noteIds = new ArrayList<>();
+        JsonArray jsonNoteIds = raw_data.get("params").getAsJsonObject().get("notes").getAsJsonArray();
+        for (JsonElement noteId: jsonNoteIds) {
+            noteIds.add(noteId.getAsLong());
+        }
+        return noteIds;
     }
 
-    /**
-     * Returns a list of {@link DownloadMediaRequest} objects for audio from the raw_data.
-     * They are used to download audio files so that they can be attached into notes.
-     * If they are not available in the request, an empty list is returned.
-     */
-    public static List<DownloadMediaRequest> getDownloadAudioRequests(JsonObject raw_data) {
-        try {
-            JsonArray jsonAudioFiles = raw_data
-                    .get("params").getAsJsonObject()
-                    .get("note").getAsJsonObject()
-                    .get("audio").getAsJsonArray();
-
-            ArrayList<DownloadMediaRequest> audioRequests = new ArrayList<>();
-            for (JsonElement audioFile : jsonAudioFiles) {
-                DownloadMediaRequest audioRequest = DownloadMediaRequest.fromJson(audioFile);
-                audioRequests.add(audioRequest);
-            }
-            return audioRequests;
-        } catch (NullPointerException e) {
-            // valid audio was not provided
-            return List.of();
-        }
+    public static String getMediaFilename(JsonObject raw_data) {
+        return raw_data.get("params").getAsJsonObject().get("filename").getAsString();
     }
 
     public static byte[] getMediaData(JsonObject raw_data) {
@@ -163,6 +182,18 @@ public class Parser {
 
     public static JsonArray getMultiActions(JsonObject raw_data) {
         return raw_data.get("params").getAsJsonObject().get("actions").getAsJsonArray();
+    }
+
+    // taken from AnkiDroid
+    public static String[] splitTags(String tags) {
+        if (tags == null) {
+            return null;
+        }
+        return tags.trim().split("\\s+");
+    }
+
+    public static String[] splitFields(String fields) {
+        return fields != null? fields.split(FIELD_SEPARATOR, -1): null;
     }
 }
 

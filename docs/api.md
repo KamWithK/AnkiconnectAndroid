@@ -78,17 +78,26 @@ Do not expect the error message to be the exact same as the PC Anki-Connect erro
     Finding any match will return `false`, and no matches will return `true`.
 * Because this internally queries the database, this action suffers from the same problems as `findNotes`.
     To guarantee the correctness of the query, you must use the new backend.
+* If all notes have the same model, then the call is optimized as we can call an internal Ankidroid API
+    function on the entire set of data.
 * Used by Yomichan
 
 ### `addNote`
 * See: [Anki-Connect `addNote`](https://github.com/FooSoft/anki-connect#addnote)
 * Used by Yomichan
 * Anki-Connect desktop allows using various formats for the media file, but this api currently only
-  supports using urls.
+  supports using the `url` and `data` field. Does not support `skipHash` for the `url` field.
+  All of `picture`, `audio` and `video` are supported.
 
 ### `updateNoteFields`
 * See: [Anki-Connect `updateNoteFields`](https://github.com/FooSoft/anki-connect#updatenotefields)
-* Does not support `url` or `skipHash` for media
+* See [addNote](#addnote) for supported media actions.
+
+### `notesInfo`
+* See: [Anki-Connect `notesInfo`](https://github.com/FooSoft/anki-connect#notesInfo)
+* Used by Yomichan (`Anki` → `Show card tags`)
+* Internally, the info is fetched very inefficiently (although this is definitely fixable).
+    Expect poor performance if you are requesting many notes.
 
 <br>
 

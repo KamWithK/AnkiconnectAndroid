@@ -4,10 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.SparseArray;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -17,7 +18,11 @@ import java.util.*;
 
 import static com.ichi2.anki.api.AddContentApi.READ_WRITE_PERMISSION;
 
-import com.kamwithk.ankiconnectandroid.request_parsers.RequestMedia;
+import com.kamwithk.ankiconnectandroid.request_parsers.MediaRequest;
+import com.ichi2.anki.FlashCardsContract;
+import com.ichi2.anki.api.AddContentApi;
+import com.ichi2.anki.api.NoteInfo;
+import com.kamwithk.ankiconnectandroid.request_parsers.Parser;
 
 public class IntegratedAPI {
     private Context context;
@@ -25,6 +30,7 @@ public class IntegratedAPI {
     public final ModelAPI modelAPI;
     public final NoteAPI noteAPI;
     public final MediaAPI mediaAPI;
+    private final AddContentApi api; // TODO: Combine all API classes???
 
     public IntegratedAPI(Context context) {
         this.context = context;
@@ -33,6 +39,8 @@ public class IntegratedAPI {
         modelAPI = new ModelAPI(context);
         noteAPI = new NoteAPI(context);
         mediaAPI = new MediaAPI(context);
+
+        api = new AddContentApi(context);
     }
 
     public static void authenticate(Context context) {
@@ -59,6 +67,80 @@ public class IntegratedAPI {
         }
     }
 
+
+    public ArrayList<Boolean> canAddNotes(ArrayList<Parser.NoteFront> notesToTest) throws Exception {
+
+        if (notesToTest.size() <= 0) {
+            return new ArrayList<>();
+        }
+        String modelName = notesToTest.get(0).getModelName();
+
+        // If all model names are the same, then we can run one call to api.findDuplicateNotes()
+        // in order to speed up query times
+        boolean sameModelName = true;
+        for (Parser.NoteFront noteFront : notesToTest) {
+            if (!modelName.equals(noteFront.getModelName())) {
+                sameModelName = false;
+                break;
+            }
+        }
+
+        if (sameModelName) {
+            Map<String, Long> modelNameToId = modelAPI.modelNamesAndIds(0);
+            Long modelId = modelNameToId.get(modelName);
+            if (modelId == null) { // i.e. not found
+                // all false! (cannot add the note if there's no valid model to add it with)
+                ArrayList<Boolean> allFalse = new ArrayList<>();
+                for (int i = 0; i < notesToTest.size(); i++) {
+                    allFalse.add(false);
+                }
+                return allFalse;
+            }
+
+            // Otherwise, we finally can use the internal API call
+            List<String> keys = new ArrayList<>();
+            for (Parser.NoteFront noteFront : notesToTest) {
+                keys.add(noteFront.getFieldValue());
+            }
+            SparseArray<List<NoteInfo>> duplicateNotes =
+                    api.findDuplicateNotes(modelId, keys);
+
+            ArrayList<Boolean> noteDoesNotExist = new ArrayList<>();
+            for (int i = 0; i < notesToTest.size(); i++) {
+                noteDoesNotExist.add(duplicateNotes.get(i) == null);
+            }
+            return noteDoesNotExist;
+
+        } else {
+            // Use the old code instead for correctness, at the cost of performance.
+            // TODO: We can probably use findDuplicateNotes here as well for 100% correctness
+            //       with old AnkiDroid versions
+            ArrayList<Boolean> noteDoesNotExist = new ArrayList<>();
+
+            for (Parser.NoteFront noteFront : notesToTest) {
+                // NOTE: This does not work if the field value has spaces or quotations unless
+                // the rust backend is used!
+                String escapedQuery = NoteAPI.escapeQueryStr(noteFront.getFieldName() + ":" + noteFront.getFieldValue());
+                final Cursor cursor = context.getContentResolver().query(
+                        FlashCardsContract.Note.CONTENT_URI,
+                        null,
+                        escapedQuery,
+                        null,
+                        null
+                );
+
+                noteDoesNotExist.add(cursor == null || !cursor.moveToFirst());
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+
+            return noteDoesNotExist;
+
+        }
+
+    }
+
     /**
      * Add flashcards to AnkiDroid through instant add API
      * @param data Map of (field name, field value) pairs
@@ -78,7 +160,62 @@ public class IntegratedAPI {
         }
     }
 
-    public void updateNoteFields(long note_id, Map<String, String> new_fields, ArrayList<RequestMedia> media_to_add) throws Exception {
+    /**
+     * Adds the media to the collection, and updates noteValues
+     *
+     * @param noteValues Map from field name to field value
+     * @param mediaRequests
+     * @throws Exception
+     */
+    public void addMedia(Map<String, String> noteValues, List<MediaRequest> mediaRequests) throws Exception {
+
+        // Store media and create a field: enclosed_filename map to avoid O(n^2) lookup later
+        Map<String, ArrayList<String>> field_to_files = new HashMap<>();
+        for (MediaRequest media: mediaRequests) {
+            // mediaAPI.storeMediaFile() doesn't store as the passed in filename, need to use the returned one
+            Optional<byte[]> data = media.getData();
+            Optional<String> url = media.getUrl();
+            String stored_filename;
+            if (data.isPresent()) {
+                stored_filename = mediaAPI.storeMediaFile(media.getFilename(), data.get());
+            } else if (url.isPresent()) {
+                stored_filename = mediaAPI.downloadAndStoreBinaryFile(media.getFilename(), url.get());
+            } else {
+                throw new Exception("You must provide a \"data\" or \"url\" field. Note that \"path\" is currently not supported on AnkiConnectAndroid.");
+            }
+
+            String enclosed_filename = "";
+            switch (media.getMediaType()) {
+                case AUDIO:
+                case VIDEO:
+                    enclosed_filename = "[sound:" + stored_filename + "]";
+                    break;
+                case PICTURE:
+                    enclosed_filename = "<img src=\"" + stored_filename + "\">";
+                    break;
+            }
+
+            for (String field: media.getFields()) {
+                if (!field_to_files.containsKey(field)) {
+                    field_to_files.put(field, new ArrayList<>());
+                }
+                field_to_files.get(field).add(enclosed_filename);
+            }
+        }
+
+        for (String fieldName : noteValues.keySet()) {
+            ArrayList<String> enclosed_media_filenames = field_to_files.get(fieldName);
+            if (enclosed_media_filenames != null) {
+                for (String enclosed_media_filename: enclosed_media_filenames) {
+                    // noteValues[fieldName] += enclosed_media_filename
+                    String fieldValue = noteValues.get(fieldName);
+                    noteValues.put(fieldName, fieldValue + enclosed_media_filename);
+                }
+            }
+        }
+    }
+
+    public void updateNoteFields(long note_id, Map<String, String> newFields, ArrayList<MediaRequest> mediaRequests) throws Exception {
         /*
          * updateNoteFields request looks like:
          * id: int,
@@ -100,50 +237,27 @@ public class IntegratedAPI {
          * included in and append it enclosed in either <img> or [sound: ]
          */
 
-        // Store media and create a field: enclosed_filename map to avoid O(n^2) lookup later
-        Map<String, ArrayList<String>> field_to_files = new HashMap<>();
-        for (RequestMedia media: media_to_add) {
-            // mediaAPI.storeMediaFile() doesn't store as the passed in filename, need to use the returned one
-            String stored_filename = mediaAPI.storeMediaFile(media.getFilename(), media.getData());
+        String[] modelFieldNames = modelAPI.modelFieldNames(noteAPI.getNoteModelId(note_id));
+        String[] originalFields = noteAPI.getNoteFields(note_id);
 
-            String enclosed_filename = "";
-            switch (media.getType()) {
-                case AUDIO:
-                case VIDEO:
-                    enclosed_filename = "[sound:" + stored_filename + "]";
-                    break;
-                case PICTURE:
-                    enclosed_filename = "<img src=\"" + stored_filename + "\">";
-                    break;
-            }
-
-            for (String field: media.getFields()) {
-                if (!field_to_files.containsKey(field)) {
-                    field_to_files.put(field, new ArrayList<>());
-                }
-                field_to_files.get(field).add(enclosed_filename);
-            }
-        }
+        // updated fields
+        HashMap<String, String> cardFields = new HashMap<>();
 
         // Get old fields and update values as needed
-        String[] model_field_names = modelAPI.modelFieldNames(noteAPI.getNoteModelId(note_id));
-        String[] card_fields = noteAPI.getNoteFields(note_id);
-        for (int i = 0; i < model_field_names.length; i++) {
-            if (new_fields.get(model_field_names[i]) != null) {
-                // Update field to new value
-                card_fields[i] = new_fields.get(model_field_names[i]);
+        for (int i = 0; i < modelFieldNames.length; i++) {
+            String fieldName = modelFieldNames[i];
 
-                // Add media files
-                ArrayList<String> enclosed_media_filenames = field_to_files.get(model_field_names[i]);
-                if (enclosed_media_filenames != null) {
-                    for (String enclosed_media_filename: enclosed_media_filenames) {
-                        card_fields[i] += enclosed_media_filename;
-                    }
-                }
+            String newValue = newFields.get(modelFieldNames[i]);
+            if (newValue != null) {
+                // Update field to new value
+                cardFields.put(fieldName, newValue);
+            } else {
+                cardFields.put(fieldName, originalFields[i]);
             }
         }
 
-        noteAPI.updateNoteFields(note_id, card_fields);
+        addMedia(cardFields, mediaRequests);
+        noteAPI.updateNoteFields(note_id, cardFields);
     }
 
     public String storeMediaFile(BinaryFile binaryFile) throws IOException {

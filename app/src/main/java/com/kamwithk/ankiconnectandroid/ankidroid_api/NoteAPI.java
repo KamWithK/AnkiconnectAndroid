@@ -1,7 +1,12 @@
 package com.kamwithk.ankiconnectandroid.ankidroid_api;
 
+import static com.kamwithk.ankiconnectandroid.request_parsers.Parser.splitFields;
+import static com.kamwithk.ankiconnectandroid.request_parsers.Parser.splitTags;
+
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 
 import com.ichi2.anki.FlashCardsContract;
 import com.ichi2.anki.api.AddContentApi;
@@ -10,14 +15,20 @@ import java.util.*;
 
 public class NoteAPI {
     private Context context;
+    private final ContentResolver resolver;
     private final AddContentApi api;
+
+    private static final String[] MODEL_PROJECTION = {FlashCardsContract.Note.MID};
+    private static final String[] NOTE_ID_PROJECTION = {FlashCardsContract.Note._ID};
+    private static final String[] NOTES_INFO_PROJECTION = {FlashCardsContract.Note._ID, FlashCardsContract.Note.MID, FlashCardsContract.Note.TAGS, FlashCardsContract.Note.FLDS};
 
     public NoteAPI(Context context) {
         this.context = context;
+        this.resolver = context.getContentResolver();
         api = new AddContentApi(context);
     }
 
-    private String escapeQueryStr(String s) {
+    static String escapeQueryStr(String s) {
       // first replace: \ -> \\
       // second replace: " -> \"
       return "\"" + s.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
@@ -29,61 +40,67 @@ public class NoteAPI {
      * @param data Map of (field name, field value) pairs
      */
     public Long addNote(final Map<String, String> data, Long deck_id, Long model_id, Set<String> tags) throws Exception {
-        String[] all_field_names = api.getFieldList(model_id);
-        if (all_field_names == null) {
+        String[] allFieldNames = api.getFieldList(model_id);
+        if (allFieldNames == null) {
             throw new Exception("Couldn't get fields");
         }
 
         // Get list in correct order
         String[] fields = new String[data.size()];
         for (int i = 0; i < data.size(); i++) {
-            fields[i] = data.get(all_field_names[i]);
+            fields[i] = data.get(allFieldNames[i]);
         }
 
         return api.addNote(model_id, deck_id, fields, tags);
-    }
-
-    public ArrayList<Boolean> canAddNotes(ArrayList<HashMap<String, String>> notes_to_test) {
-        ArrayList<Boolean> note_does_not_exist = new ArrayList<>();
-
-        for (HashMap<String, String> field : notes_to_test) {
-            String escapedQuery = escapeQueryStr(field.get("field") + ":" + field.get("value"));
-            final Cursor cursor = context.getContentResolver().query(
-                    FlashCardsContract.Note.CONTENT_URI,
-                    null,
-                    escapedQuery,
-                    null,
-                    null
-            );
-
-            note_does_not_exist.add(cursor == null || !cursor.moveToFirst());
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-
-        return note_does_not_exist;
     }
 
     public String[] getNoteFields(long note_id) throws Exception {
         return api.getNote(note_id).getFields();
     }
 
-    public boolean updateNoteFields(long note_id, String[] fields) throws Exception {
+    public boolean updateNoteFields(long note_id, final Map<String, String> data) throws Exception {
+        long modelId = getNoteModelId(note_id);
+        String[] allFieldNames = api.getFieldList(modelId);
+        if (allFieldNames == null) {
+            throw new Exception("Couldn't get fields");
+        }
+
+        // Get list in correct order
+        String[] fields = new String[data.size()];
+        for (int i = 0; i < data.size(); i++) {
+            fields[i] = data.get(allFieldNames[i]);
+        }
+
         return api.updateNoteFields(note_id, fields);
     }
 
-    public long getNoteModelId(long note_id) throws Exception {
-        api.getNote(note_id); //set cursor to correct position
-        return api.getCurrentModelId();
+    public Long getNoteModelId(long note_id) {
+        // Manually queries the note with a specific projection to get the model ID
+        // Code copied/pasted from getNote() in AddContentAPI:
+        // https://github.com/ankidroid/Anki-Android/blob/1711e56c2b5515ab89c3424b60e60867bb65d492/api/src/main/java/com/ichi2/anki/api/AddContentApi.kt#L244
+
+        Uri noteUri = Uri.withAppendedPath(FlashCardsContract.Note.CONTENT_URI, Long.toString(note_id));
+        Cursor cursor = this.resolver.query(noteUri, MODEL_PROJECTION, null, null, null);
+        if (cursor == null) {
+            return null;
+        }
+        try {
+            if (!cursor.moveToNext()) {
+                return null;
+            }
+            int index = cursor.getColumnIndexOrThrow(FlashCardsContract.Note.MID);;
+            return cursor.getLong(index); // mid
+        } finally {
+            cursor.close();
+        }
     }
 
     public ArrayList<Long> findNotes(String query) {
         ArrayList<Long> noteIds = new ArrayList<>();
 
-        final Cursor cursor = context.getContentResolver().query(
+        final Cursor cursor = this.resolver.query(
                 FlashCardsContract.Note.CONTENT_URI,
-                null,
+                NOTE_ID_PROJECTION,
                 query,
                 null,
                 null
@@ -102,5 +119,106 @@ public class NoteAPI {
         }
 
         return noteIds;
+    }
+
+    static class NoteInfoField {
+        private final String value;
+        private final int order;
+
+        public NoteInfoField(String value, int order) {
+            this.value = value;
+            this.order = order;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public int getOrder() {
+            return order;
+        }
+    }
+    static class NoteInfo {
+        private final long noteId;
+        private final String modelName;
+        private final List<String> tags;
+        private final Map<String, NoteInfoField> fields;
+
+        public NoteInfo(long noteId, String modelName, List<String> tags, Map<String,
+                NoteInfoField> fields) {
+            this.noteId = noteId;
+            this.modelName = modelName;
+            this.tags = tags;
+            this.fields = fields;
+        }
+
+        public long getNoteId() {
+            return noteId;
+        }
+
+        public String getModelName() {
+            return modelName;
+        }
+
+        public List<String> getTags() {
+            return tags;
+        }
+
+        public Map<String, NoteInfoField> getFields() {
+            return fields;
+        }
+    }
+
+
+    public List<NoteInfo> notesInfo(ArrayList<Long> noteIds) throws Exception {
+        List<NoteInfo> notesInfoList = new ArrayList<>();
+
+        // TODO: This can be optimized by combining all queries into one
+        for (Long noteId : noteIds) {
+            if (noteId == null) {
+                continue; // shouldn't happen
+            }
+            Uri noteUri = Uri.withAppendedPath(FlashCardsContract.Note.CONTENT_URI, Long.toString(noteId));
+            Cursor cursor = this.resolver.query(noteUri, NOTES_INFO_PROJECTION, null, null, null);
+            if (cursor == null) {
+                return null;
+            }
+            try {
+                if (!cursor.moveToNext()) {
+                    return null;
+                }
+                int idIdx = cursor.getColumnIndexOrThrow(FlashCardsContract.Note._ID);
+                int midIdx = cursor.getColumnIndexOrThrow(FlashCardsContract.Note.MID);
+                int tagsIdx = cursor.getColumnIndexOrThrow(FlashCardsContract.Note.TAGS);
+                int fldsIdx = cursor.getColumnIndexOrThrow(FlashCardsContract.Note.FLDS);
+
+                long id = cursor.getLong(idIdx);
+                long mid = cursor.getLong(midIdx);
+                List<String> tags = Arrays.asList(splitTags(cursor.getString(tagsIdx)));
+                String[] fieldValues = splitFields(cursor.getString(fldsIdx));
+                // TODO: cache the model info within this function only for better performance
+                String[] fieldNames = api.getFieldList(mid);
+                String modelName = api.getModelName(mid);
+
+                if (fieldNames.length != fieldValues.length) {
+                    // shouldn't happen
+                    throw new Exception("fieldNames.length != fieldValues.length");
+                }
+
+                Map<String, NoteInfoField> fields = new HashMap<>();
+                for (int i = 0; i < fieldNames.length; i++) {
+                    String fieldName = fieldNames[i];
+                    String fieldValue = fieldValues[i];
+                    NoteInfoField noteInfoField = new NoteInfoField(fieldValue, i);
+                    fields.put(fieldName, noteInfoField);
+                }
+                NoteInfo noteInfo = new NoteInfo(id, modelName, tags, fields);
+                notesInfoList.add(noteInfo);
+            } finally {
+                cursor.close();
+            }
+        }
+
+        return notesInfoList;
     }
 }
