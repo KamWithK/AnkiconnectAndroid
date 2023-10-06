@@ -78,6 +78,7 @@ public class NoteAPI {
 
         Uri noteUri = Uri.withAppendedPath(FlashCardsContract.Note.CONTENT_URI, Long.toString(note_id));
         Cursor cursor = this.resolver.query(noteUri, MODEL_PROJECTION, null, null, null);
+
         if (cursor == null) {
             return null;
         }
