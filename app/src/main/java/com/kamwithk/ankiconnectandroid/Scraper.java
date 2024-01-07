@@ -1,6 +1,11 @@
 package com.kamwithk.ankiconnectandroid;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Base64;
+
+import androidx.preference.PreferenceManager;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,30 +21,37 @@ import java.util.regex.Pattern;
 
 // Regular expressions and method source - https://github.com/jamesnicolas/yomichan-forvo-server
 public class Scraper {
+    private final Context context;
     private final String SERVER_HOST = "https://forvo.com";
     private final String AUDIO_HTTP_HOST = "https://audio00.forvo.com";
-    private final String LANGUAGE = "ja";
+
+    public Scraper(Context context) {
+        this.context = context;
+    }
 
     public ArrayList<HashMap<String, String>> scrape(String word, String reading) throws IOException {
-        ArrayList<HashMap<String, String>> audio_sources = scrapeWord(word);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String forvoLanguage = preferences.getString("forvo_language", "ja");
+
+        ArrayList<HashMap<String, String>> audio_sources = scrapeWord(word, forvoLanguage);
 
 //        Get similar words audio if exact word isn't found
         if (audio_sources.size() == 0) {
-            audio_sources = scrapeWord(reading);
+            audio_sources = scrapeWord(reading, forvoLanguage);
         }
         if (audio_sources.size() == 0) {
-            audio_sources = scrapeSearch(word);
+            audio_sources = scrapeSearch(word, forvoLanguage);
         }
         if (audio_sources.size() == 0) {
-            audio_sources = scrapeSearch(reading);
+            audio_sources = scrapeSearch(reading, forvoLanguage);
         }
 
         return audio_sources;
     }
 
-    private ArrayList<HashMap<String, String>> scrapeWord(String word) throws IOException {
+    private ArrayList<HashMap<String, String>> scrapeWord(String word, String language) throws IOException {
         Document document = Jsoup.connect(SERVER_HOST + "/word/" + strip(word) + "/").get();
-        Elements elements = document.select("#language-container-" + LANGUAGE + ">article>ul>li:not(.li-ad)");
+        Elements elements = document.select("#language-container-" + language + ">article>ul>li:not(.li-ad)");
 
         ArrayList<HashMap<String, String>> audio_sources = new ArrayList<>();
 
@@ -56,8 +68,8 @@ public class Scraper {
         return audio_sources;
     }
 
-    private ArrayList<HashMap<String, String>> scrapeSearch(String input) throws IOException {
-        Document document = Jsoup.connect(SERVER_HOST + "/search/" + strip(input) + "/" + LANGUAGE + "/").get();
+    private ArrayList<HashMap<String, String>> scrapeSearch(String input, String language) throws IOException {
+        Document document = Jsoup.connect(SERVER_HOST + "/search/" + strip(input) + "/" + language + "/").get();
         Elements elements = document.select("ul.word-play-list-icon-size-l>li>.play");
 
         ArrayList<HashMap<String, String>> audio_sources = new ArrayList<>();

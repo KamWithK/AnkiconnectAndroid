@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="forvo_language_entries">
+        <item>Japanese (ja)</item>
+        <item>Chinese (zh)</item>
+        <item>Cantonese (yue)</item>
+    </string-array>
+
+    <string-array name="forvo_language_values">
+        <item>ja</item>
+        <item>zh</item>
+        <item>yue</item>
+    </string-array>
+</resources>
