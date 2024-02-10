@@ -24,6 +24,7 @@ public class Scraper {
     private final Context context;
     private final String SERVER_HOST = "https://forvo.com";
     private final String AUDIO_HTTP_HOST = "https://audio00.forvo.com";
+    private final String DEFAULT_FORVO_LANGUAGE = "ja";
 
     public Scraper(Context context) {
         this.context = context;
@@ -31,7 +32,7 @@ public class Scraper {
 
     public ArrayList<HashMap<String, String>> scrape(String word, String reading) throws IOException {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String forvoLanguage = preferences.getString("forvo_language", "ja");
+        String forvoLanguage = preferences.getString("forvo_language", DEFAULT_FORVO_LANGUAGE);
 
         ArrayList<HashMap<String, String>> audio_sources = scrapeWord(word, forvoLanguage);
 
