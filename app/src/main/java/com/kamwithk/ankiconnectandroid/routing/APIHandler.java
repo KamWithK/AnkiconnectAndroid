@@ -17,7 +17,7 @@ public class APIHandler {
 
     public APIHandler(IntegratedAPI integratedAPI, Context context) {
         ankiAPIRouting = new AnkiAPIRouting(integratedAPI);
-        forvoAPIRouting = new ForvoAPIRouting();
+        forvoAPIRouting = new ForvoAPIRouting(context);
         localAudioAPIRouting = new LocalAudioAPIRouting(context);
     }
 

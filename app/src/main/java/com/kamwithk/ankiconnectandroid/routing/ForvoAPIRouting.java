@@ -1,5 +1,6 @@
 package com.kamwithk.ankiconnectandroid.routing;
 
+import android.content.Context;
 import android.util.Log;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -19,8 +20,8 @@ import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 public class ForvoAPIRouting {
     private final Scraper scraper;
 
-    public ForvoAPIRouting() {
-        scraper = new Scraper();
+    public ForvoAPIRouting(Context context) {
+        scraper = new Scraper(context);
     }
 
 //    Term can also be named expression (older versions)

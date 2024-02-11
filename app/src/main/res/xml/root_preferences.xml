@@ -25,6 +25,15 @@
 
     <PreferenceCategory app:title="@string/settings_other_header">
 
+        <ListPreference
+            app:key="forvo_language"
+            app:title="@string/settings_forvo_language_title"
+            app:summary="@string/settings_forvo_language_summary"
+            android:dialogTitle="@string/settings_forvo_language_dialog_title"
+            android:defaultValue="ja"
+            android:entries="@array/forvo_language_entries"
+            android:entryValues="@array/forvo_language_values" />
+
         <Preference
             app:key="get_dir_path"
             app:title="@string/get_dir_path_title"
