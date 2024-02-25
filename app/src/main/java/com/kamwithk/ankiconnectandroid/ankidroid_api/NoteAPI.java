@@ -43,9 +43,10 @@ public class NoteAPI {
         }
 
         // Get list in correct order
-        String[] fields = new String[data.size()];
-        for (int i = 0; i < data.size(); i++) {
-            fields[i] = data.get(allFieldNames[i]);
+        String[] fields = new String[allFieldNames.length];
+
+        for (int i = 0; i < allFieldNames.length; i++) {
+            fields[i] = data.getOrDefault(allFieldNames[i], "");
         }
 
         return api.addNote(model_id, deck_id, fields, tags);

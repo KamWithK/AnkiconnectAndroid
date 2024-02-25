@@ -168,10 +168,7 @@ public class IntegratedAPI {
      * @throws Exception
      */
     public void addMedia(Map<String, String> noteValues, List<MediaRequest> mediaRequests) throws Exception {
-
-        // Store media and create a field: enclosed_filename map to avoid O(n^2) lookup later
-        Map<String, ArrayList<String>> field_to_files = new HashMap<>();
-        for (MediaRequest media: mediaRequests) {
+        for (MediaRequest media : mediaRequests) {
             // mediaAPI.storeMediaFile() doesn't store as the passed in filename, need to use the returned one
             Optional<byte[]> data = media.getData();
             Optional<String> url = media.getUrl();
@@ -195,21 +192,13 @@ public class IntegratedAPI {
                     break;
             }
 
-            for (String field: media.getFields()) {
-                if (!field_to_files.containsKey(field)) {
-                    field_to_files.put(field, new ArrayList<>());
-                }
-                field_to_files.get(field).add(enclosed_filename);
-            }
-        }
+            for (String field : media.getFields()) {
+                String existingValue = noteValues.get(field);
 
-        for (String fieldName : noteValues.keySet()) {
-            ArrayList<String> enclosed_media_filenames = field_to_files.get(fieldName);
-            if (enclosed_media_filenames != null) {
-                for (String enclosed_media_filename: enclosed_media_filenames) {
-                    // noteValues[fieldName] += enclosed_media_filename
-                    String fieldValue = noteValues.get(fieldName);
-                    noteValues.put(fieldName, fieldValue + enclosed_media_filename);
+                if (existingValue == null) {
+                    noteValues.put(field, enclosed_filename);
+                } else {
+                    noteValues.put(field, existingValue + enclosed_filename);
                 }
             }
         }
