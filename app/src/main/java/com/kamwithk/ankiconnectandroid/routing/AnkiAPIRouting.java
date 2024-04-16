@@ -65,6 +65,8 @@ public class AnkiAPIRouting {
                 return updateNoteFields(raw_json);
             case "storeMediaFile":
                 return storeMediaFile(raw_json);
+            case "notesInfo":
+                return notesInfo(raw_json);
             case "multi":
                 JsonArray actions = Parser.getMultiActions(raw_json);
                 JsonArray results = new JsonArray();
@@ -216,5 +218,10 @@ public class AnkiAPIRouting {
         binaryFile.setData(Parser.getMediaData(raw_json));
 
         return Parser.gson.toJson(integratedAPI.storeMediaFile(binaryFile));
+    }
+
+    private String notesInfo(JsonObject raw_json) throws Exception {
+        ArrayList<Long> noteIds = Parser.getNoteIds(raw_json);
+        return Parser.gson.toJson(integratedAPI.noteAPI.notesInfo(noteIds));
     }
 }
