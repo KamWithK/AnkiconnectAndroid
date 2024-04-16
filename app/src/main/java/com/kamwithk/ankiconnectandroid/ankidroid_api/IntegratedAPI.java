@@ -32,6 +32,8 @@ public class IntegratedAPI {
     public final MediaAPI mediaAPI;
     private final AddContentApi api; // TODO: Combine all API classes???
 
+    //From anki-connect repo
+    private static final String CAN_ADD_ERROR_REASON = "cannot create note because it is a duplicate";
     public IntegratedAPI(Context context) {
         this.context = context;
 
@@ -66,7 +68,6 @@ public class IntegratedAPI {
             e.printStackTrace();
         }
     }
-
 
     public ArrayList<Boolean> canAddNotes(ArrayList<Parser.NoteFront> notesToTest) throws Exception {
 
@@ -139,6 +140,42 @@ public class IntegratedAPI {
 
         }
 
+    }
+
+    class CanAddWithError {
+        private final boolean canAdd;
+        private final String error;
+
+        public CanAddWithError(boolean canAdd, String error) {
+            this.canAdd = canAdd;
+            this.error = error;
+        }
+
+        public boolean isCanAdd() {
+            return canAdd;
+        }
+
+        public String getError() {
+            return error;
+        }
+    }
+
+    public List<CanAddWithError> canAddNotesWithErrorDetail(ArrayList<Parser.NoteFront> notesToTest) throws Exception {
+        List<CanAddWithError> canAddWithErrorList = new ArrayList<>();
+        List<Boolean> canAddList = canAddNotes(notesToTest);
+
+        for (boolean canAdd: canAddList) {
+            CanAddWithError canAddWithError;
+            if (canAdd) {
+                canAddWithError = new CanAddWithError(true, null);
+            }
+            else {
+                canAddWithError = new CanAddWithError(false, CAN_ADD_ERROR_REASON);
+            }
+            canAddWithErrorList.add(canAddWithError);
+        }
+
+        return canAddWithErrorList;
     }
 
     /**

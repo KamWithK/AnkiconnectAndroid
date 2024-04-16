@@ -19,6 +19,7 @@ import java.util.Set;
 
 public class Parser {
     public static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+    public static Gson gsonNoSerialize = new GsonBuilder().setPrettyPrinting().create();
 
     private static final String FIELD_SEPARATOR = Character.toString('\u001f');
 

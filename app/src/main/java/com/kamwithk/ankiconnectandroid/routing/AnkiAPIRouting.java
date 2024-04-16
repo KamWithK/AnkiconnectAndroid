@@ -59,6 +59,8 @@ public class AnkiAPIRouting {
                 return guiBrowse(raw_json);
             case "canAddNotes":
                 return canAddNotes(raw_json);
+            case "canAddNotesWithErrorDetail":
+                return canAddNotesWithErrorDetail(raw_json);
             case "addNote":
                 return addNote(raw_json);
             case "updateNoteFields":
@@ -179,6 +181,11 @@ public class AnkiAPIRouting {
     private String canAddNotes(JsonObject raw_json) throws Exception {
         ArrayList<Parser.NoteFront> notes_to_test = Parser.getNoteFront(raw_json);
         return Parser.gson.toJson(integratedAPI.canAddNotes(notes_to_test));
+    }
+
+    private String canAddNotesWithErrorDetail(JsonObject raw_json) throws Exception {
+        ArrayList<Parser.NoteFront> notes_to_test = Parser.getNoteFront(raw_json);
+        return Parser.gsonNoSerialize.toJson(integratedAPI.canAddNotesWithErrorDetail(notes_to_test));
     }
 
     /**
