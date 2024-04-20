@@ -47,8 +47,11 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
         * Navigate to `Scanning` → `Configure advanced scanning inputs`
             * Ensure that advanced options within the `Scanning Inputs` window is enabled.
                 To do this, scroll to the right, and tap on the three dots.
-            *   <details> <summary>Match your settings to be like this image: <i>(click here)</i></summary>
-                <a href="https://github.com/KamWithK/AnkiconnectAndroid/blob/master/img/scanning_inputs.png"><img src="https://github.com/KamWithK/AnkiconnectAndroid/blob/master/img/scanning_inputs.png" width="400" /></a>
+            *   <details> <summary>For Yomichan, match your settings to be like this image: <i>(click here)</i></summary>
+                <a href="./img/scanning_inputs.png"><img src="./img/scanning_inputs.png" width="400" /></a>
+                </details>
+            *   <details> <summary>For Yomitan, use the defaults or match your settings to be like this image: <i>(click here)</i></summary>
+                <a href="./img/scanning_inputs_yomitan.png"><img src="./img/scanning_inputs_yomitan.png" width="400" /></a>
                 </details>
         * Navigate to `Scanning` → `Support inputs for devices with touch screens`
             * Ensure that `Touch inputs` is checked, and `Pointer inputs` is NOT checked.
