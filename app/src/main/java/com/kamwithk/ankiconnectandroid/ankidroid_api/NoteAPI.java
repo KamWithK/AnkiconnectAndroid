@@ -9,9 +9,6 @@ import android.text.TextUtils;
 import com.ichi2.anki.FlashCardsContract;
 import com.ichi2.anki.api.AddContentApi;
 
-import static com.kamwithk.ankiconnectandroid.request_parsers.Parser.splitFields;
-import static com.kamwithk.ankiconnectandroid.request_parsers.Parser.splitTags;
-
 import java.util.*;
 
 public class NoteAPI {
@@ -224,8 +221,8 @@ public class NoteAPI {
 
                 long id = cursor.getLong(idIdx);
                 long mid = cursor.getLong(midIdx);
-                List<String> tags = Arrays.asList(splitTags(cursor.getString(tagsIdx)));
-                String[] fieldValues = splitFields(cursor.getString(fldsIdx));
+                List<String> tags = Arrays.asList(Utility.splitTags(cursor.getString(tagsIdx)));
+                String[] fieldValues = Utility.splitFields(cursor.getString(fldsIdx));
                 Model model = null;
 
                 if (cache.containsKey(mid)) {

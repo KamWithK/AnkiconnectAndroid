@@ -9,6 +9,7 @@ import com.kamwithk.ankiconnectandroid.ankidroid_api.DeckAPI;
 import com.kamwithk.ankiconnectandroid.ankidroid_api.IntegratedAPI;
 import com.kamwithk.ankiconnectandroid.ankidroid_api.MediaAPI;
 import com.kamwithk.ankiconnectandroid.ankidroid_api.ModelAPI;
+import com.kamwithk.ankiconnectandroid.request_parsers.NoteRequest;
 import com.kamwithk.ankiconnectandroid.request_parsers.Parser;
 import com.kamwithk.ankiconnectandroid.request_parsers.MediaRequest;
 
@@ -179,12 +180,12 @@ public class AnkiAPIRouting {
     }
 
     private String canAddNotes(JsonObject raw_json) throws Exception {
-        ArrayList<Parser.NoteFront> notes_to_test = Parser.getNoteFront(raw_json);
+        ArrayList<NoteRequest> notes_to_test = Parser.getNoteFront(raw_json);
         return Parser.gson.toJson(integratedAPI.canAddNotes(notes_to_test));
     }
 
     private String canAddNotesWithErrorDetail(JsonObject raw_json) throws Exception {
-        ArrayList<Parser.NoteFront> notes_to_test = Parser.getNoteFront(raw_json);
+        ArrayList<NoteRequest> notes_to_test = Parser.getNoteFront(raw_json);
         return Parser.gsonNoSerialize.toJson(integratedAPI.canAddNotesWithErrorDetail(notes_to_test));
     }
 
