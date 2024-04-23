@@ -82,6 +82,15 @@ Do not expect the error message to be the exact same as the PC Anki-Connect erro
     function on the entire set of data.
 * Used by Yomichan
 
+### `canAddNotesWithErrorDetail`
+* See: [Anki-Connect `canAddNotesWithErrorDetail](https://git.foosoft.net/alex/anki-connect#notesInfo)
+* Currently, if a card fails `canAddNotes`, the error message will always say it's due to it being a duplicate, even if there was a different reason for the failure (For example, in Anki-Connect a card could fail the `canAddNotes` check if the first field was empty).
+* Used by Yomitan
+
+### `notesInfo`
+* See: [Anki-Connect `notesInfo`](https://git.foosoft.net/alex/anki-connect#notesInfo)
+* Used by Yomitan
+
 ### `addNote`
 * See: [Anki-Connect `addNote`](https://github.com/FooSoft/anki-connect#addnote)
 * Used by Yomichan
