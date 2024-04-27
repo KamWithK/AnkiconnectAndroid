@@ -70,7 +70,6 @@ public class IntegratedAPI {
 
     public ArrayList<Boolean> canAddNotes(ArrayList<NoteRequest> notesToTest) throws Exception {
         final String[] NOTE_PROJECTION = {FlashCardsContract.Note._ID, FlashCardsContract.Note.CSUM};
-        final String[] CARD_PROJECTION = {FlashCardsContract.Card.DECK_ID};
 
         if(notesToTest.isEmpty()) {
             return new ArrayList<>();
@@ -80,12 +79,30 @@ public class IntegratedAPI {
         ArrayList<Boolean> canAddNote = new ArrayList<>(notesToTest.size());
         NoteRequest.NoteOptions noteOptions = notesToTest.get(0).getOptions();
 
-        for (NoteRequest note: notesToTest) {
+        // If duplicate scope is "deck" or "deck root", we need to get extra information to figure out if DID matches.
+        // If duplicate scope is "deck root" we need to include children, noteOptions.getDeckName() will not be null
+        HashSet<Long> deckIds = new HashSet<>();
+        Map<String, Long> deckNamesToIds = deckAPI.deckNamesAndIds();
+        String deckName = noteOptions.getDeckName();
+        if(deckName == null) {
+            // Deck, not root
+            deckName = notesToTest.get(0).getDeckName();
+            deckIds.add(deckNamesToIds.get(deckName));
+        }
+        else {
+            for (String name : deckNamesToIds.keySet()) {
+                if (name.contains(deckName)) {
+                    deckIds.add(deckNamesToIds.get(name));
+                }
+            }
+        }
+
+        for (NoteRequest note : notesToTest) {
             String key = note.getFieldValue();
             checksums.add(Utility.getFieldChecksum(key));
         }
 
-        //If duplicates are allowed, just need to see if they are valid notes (checksum != 0)
+        // If duplicates are allowed, just need to see if they are valid notes (checksum != 0)
         if (noteOptions.isAllowDuplicate()) {
             for (long checksum: checksums) {
                 canAddNote.add(checksum != 0);
@@ -93,27 +110,10 @@ public class IntegratedAPI {
             return canAddNote;
         }
 
-        //Grabbing the note options and model for the first note and assuming the rest are the same.
-        //This is true for yomitan but might not be for other applications.
+        // Grabbing the note options and model for the first note and assuming the rest are the same.
+        // This is true for yomitan but might not be for other applications.
         String modelName = notesToTest.get(0).getModelName();
 
-        //If duplicate scope is "deck" or "deck root", we need to get extra information to figure out if did matches.
-        //If duplicate scope is "deck root" we need to include children, noteOptions.getDeckName() will not be null
-        String deckName = noteOptions.getDeckName();
-        HashSet<Long> deckIds = new HashSet<>();
-        Map<String, Long> deckNamesToIds = deckAPI.deckNamesAndIds();
-        if(deckName == null) {
-            //Deck, not root
-            deckName = notesToTest.get(0).getDeckName();
-            deckIds.add(deckNamesToIds.get(deckName));
-        }
-        else {
-            for (String name: deckNamesToIds.keySet()) {
-                if (name.contains(deckName)) {
-                    deckIds.add(deckNamesToIds.get(name));
-                }
-            }
-        }
         Map<String, Long> modelNameToId = modelAPI.modelNamesAndIds(0);
         Long modelId = modelNameToId.get(modelName);
 
@@ -147,62 +147,75 @@ public class IntegratedAPI {
             }
         }
         else {
-            LinkedHashSet<Long> queryChecksums = new LinkedHashSet<>();
-            try (cursor) {
-                while (cursor.moveToNext()) {
-                    //build list of CSUM (queryChecksums)
-                    //if an entry in queryChecksums is in checksums, then we have a duplicate
-                    //if scope is "deck", these duplicates need to be checked again for the deck
-                    int idIdx = cursor.getColumnIndexOrThrow(FlashCardsContract.Note._ID);
-                    int csumIdx = cursor.getColumnIndexOrThrow(FlashCardsContract.Note.CSUM);
-
-                    long queryNid = cursor.getLong(idIdx);
-                    long queryCsum = cursor.getLong(csumIdx);
-
-                    if (noteOptions.getDuplicateScope().equals("deck")) {
-                        //if duplicate scope is "deck" need an additional query
-                        Uri noteUri = Uri.withAppendedPath(FlashCardsContract.Note.CONTENT_URI, Long.toString(queryNid));
-                        Uri cardUri = Uri.withAppendedPath(noteUri, "cards");
-                        Cursor cardCursor = context.getContentResolver().query(
-                                cardUri,
-                                CARD_PROJECTION,
-                                null,
-                                null,
-                                null
-                        );
-
-                        if(cardCursor != null) {
-                            try (cardCursor) {
-                                while(cardCursor.moveToNext()) {
-                                    int didIdx = cardCursor.getColumnIndexOrThrow(FlashCardsContract.Card.DECK_ID);
-                                    long did = cardCursor.getLong(didIdx);
-
-                                    if (deckIds.contains(did)) {
-                                        queryChecksums.add(queryCsum);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else {
-                        queryChecksums.add(queryCsum);
-                    }
-                }
-            }
+            LinkedHashSet<Long> queryChecksums = findChecksumsInQuery(
+                    cursor,
+                    noteOptions.getDuplicateScope().equals("deck"), deckIds);
 
             for (int i = 0; i < checksums.size(); i++) {
-                if (!queryChecksums.contains(checksums.get(i))) {
-                    canAddNote.add(true);
-                }
-                else {
-                    canAddNote.add(false);
-                }
+                boolean isChecksumFound = !queryChecksums.contains(checksums.get(i));
+                canAddNote.add(isChecksumFound);
             }
         }
 
         return canAddNote;
     }
 
+    private LinkedHashSet<Long> findChecksumsInQuery(Cursor cursor, boolean isDuplicateScopeDeck, Set<Long> deckIds) {
+        LinkedHashSet<Long> queryChecksums = new LinkedHashSet<>();
+
+        try (cursor) {
+            while (cursor.moveToNext()) {
+                // Build list of CSUM (queryChecksums)
+                // If an entry in queryChecksums is in checksums, then we have a duplicate
+                // If scope is "deck", these duplicates need to be checked again for the deck
+                int idIdx = cursor.getColumnIndexOrThrow(FlashCardsContract.Note._ID);
+                int csumIdx = cursor.getColumnIndexOrThrow(FlashCardsContract.Note.CSUM);
+
+                long queryNid = cursor.getLong(idIdx);
+                long queryCsum = cursor.getLong(csumIdx);
+
+                // If duplicate scope is "deck", need an additional query
+                if (isDuplicateScopeDeck && isNoteInDeck(queryNid, deckIds)) {
+                    queryChecksums.add(queryCsum);
+                }
+                else {
+                    queryChecksums.add(queryCsum);
+                }
+            }
+        }
+
+        return queryChecksums;
+    }
+
+    private boolean isNoteInDeck(long noteId, Set<Long> deckIds) {
+        // Need to search for all cards with the same note ID, and see if they exist in one of the decks.
+        final String[] CARD_PROJECTION = {FlashCardsContract.Card.DECK_ID};
+
+        Uri noteUri = Uri.withAppendedPath(FlashCardsContract.Note.CONTENT_URI, Long.toString(noteId));
+        Uri cardUri = Uri.withAppendedPath(noteUri, "cards");
+        Cursor cardCursor = context.getContentResolver().query(
+                cardUri,
+                CARD_PROJECTION,
+                null,
+                null,
+                null
+        );
+
+        if(cardCursor != null) {
+            try (cardCursor) {
+                while(cardCursor.moveToNext()) {
+                    int didIdx = cardCursor.getColumnIndexOrThrow(FlashCardsContract.Card.DECK_ID);
+                    long did = cardCursor.getLong(didIdx);
+
+                    if (deckIds.contains(did)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 
     public static class CanAddWithError {
         private final boolean canAdd;
@@ -226,7 +239,7 @@ public class IntegratedAPI {
         List<CanAddWithError> canAddWithErrorList = new ArrayList<>();
         List<Boolean> canAddList = canAddNotes(notesToTest);
 
-        for (boolean canAdd: canAddList) {
+        for (boolean canAdd : canAddList) {
             CanAddWithError canAddWithError;
             if (canAdd) {
                 canAddWithError = new CanAddWithError(true, null);

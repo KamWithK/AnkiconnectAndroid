@@ -111,7 +111,7 @@ public class NoteRequest {
         String deckName = noteObject.get("deckName").getAsString();
 
         JsonArray jsonTags = noteElement.getAsJsonObject().get("tags").getAsJsonArray();
-        for (JsonElement tag: jsonTags) {
+        for (JsonElement tag : jsonTags) {
             tagList.add(tag.getAsString());
         }
 

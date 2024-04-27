@@ -32,6 +32,7 @@ public final class Utility {
     }
 
     public static long getFieldChecksum(String data) {
+        final String SHA1_ZEROES =  "0000000000000000000000000000000000000000";
         String strippedData = stripHTMLMedia(data);
 
         try {
@@ -41,8 +42,7 @@ public final class Utility {
             String result = bigInteger.toString(16);
 
             if(result.length() < 40) {
-                String zeroes = "0000000000000000000000000000000000000000";
-                result = zeroes.substring(0, zeroes.length() - result.length()) + result;
+                result = SHA1_ZEROES.substring(0, SHA1_ZEROES.length() - result.length()) + result;
             }
             return Long.valueOf(result.substring(0, 8), 16);
         }

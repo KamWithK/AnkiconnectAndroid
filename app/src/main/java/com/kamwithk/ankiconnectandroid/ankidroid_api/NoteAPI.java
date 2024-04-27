@@ -232,11 +232,6 @@ public class NoteAPI {
                     String[] fieldNames = api.getFieldList(mid);
                     String modelName = api.getModelName(mid);
 
-                    if (fieldNames.length != fieldValues.length) {
-                        // shouldn't happen
-                        throw new Exception("fieldNames.length != fieldValues.length");
-                    }
-
                     model = new Model(mid, modelName, fieldNames);
                     cache.put(mid, model);
                 }
