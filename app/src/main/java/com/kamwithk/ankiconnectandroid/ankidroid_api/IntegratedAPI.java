@@ -175,10 +175,7 @@ public class IntegratedAPI {
                 long queryCsum = cursor.getLong(csumIdx);
 
                 // If duplicate scope is "deck", need an additional query
-                if (isDuplicateScopeDeck && isNoteInDeck(queryNid, deckIds)) {
-                    queryChecksums.add(queryCsum);
-                }
-                else {
+                if (!isDuplicateScopeDeck || isNoteInDeck(queryNid, deckIds)) {
                     queryChecksums.add(queryCsum);
                 }
             }
