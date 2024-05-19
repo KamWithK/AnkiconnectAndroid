@@ -212,7 +212,7 @@ public class NoteAPI {
         }
 
         try (cursor) {
-            while (!cursor.moveToNext()) {
+            while (cursor.moveToNext()) {
 
                 int idIdx = cursor.getColumnIndexOrThrow(FlashCardsContract.Note._ID);
                 int midIdx = cursor.getColumnIndexOrThrow(FlashCardsContract.Note.MID);
