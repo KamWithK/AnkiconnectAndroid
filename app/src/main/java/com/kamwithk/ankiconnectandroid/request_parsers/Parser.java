@@ -19,6 +19,7 @@ import java.util.Set;
 
 public class Parser {
     public static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+    public static Gson gsonNoSerialize = new GsonBuilder().setPrettyPrinting().create();
 
     public static JsonObject parse(String raw_data) {
         return JsonParser.parseString(raw_data).getAsJsonObject();
@@ -105,46 +106,15 @@ public class Parser {
         return request_medias;
     }
 
-
-    public static class NoteFront {
-        private final String fieldName;
-        private final String fieldValue;
-        private final String modelName;
-
-        public NoteFront(String fieldName, String fieldValue, String modelName) {
-            this.fieldName = fieldName;
-            this.fieldValue = fieldValue;
-            this.modelName = modelName;
-        }
-
-        public String getFieldName() {
-            return fieldName;
-        }
-
-        public String getFieldValue() {
-            return fieldValue;
-        }
-
-        public String getModelName() {
-            return modelName;
-        }
-    }
-
     /**
      * Gets the first field of the note
      */
-    public static ArrayList<NoteFront> getNoteFront(JsonObject raw_data) {
+    public static ArrayList<NoteRequest> getNoteFront(JsonObject raw_data) {
         JsonArray notes = raw_data.get("params").getAsJsonObject().get("notes").getAsJsonArray();
-        ArrayList<NoteFront> projections = new ArrayList<>();
+        ArrayList<NoteRequest> projections = new ArrayList<>();
 
         for (JsonElement jsonElement : notes) {
-            JsonObject jsonObject = jsonElement.getAsJsonObject().get("fields").getAsJsonObject();
-
-            String field = jsonObject.keySet().toArray()[0].toString();
-            String value = jsonObject.get(field).getAsString();
-            String model = jsonElement.getAsJsonObject().get("modelName").getAsString();
-            NoteFront projection = new NoteFront(field, value, model);
-            projections.add(projection);
+            projections.add(NoteRequest.fromJson(jsonElement));
         }
 
         return projections;
@@ -156,6 +126,15 @@ public class Parser {
         Arrays.fill(array, true);
 
         return array;
+    }
+
+    public static ArrayList<Long> getNoteIds(JsonObject raw_data) {
+        ArrayList<Long> noteIds = new ArrayList<>();
+        JsonArray jsonNoteIds = raw_data.get("params").getAsJsonObject().get("notes").getAsJsonArray();
+        for(JsonElement noteId: jsonNoteIds) {
+            noteIds.add(noteId.getAsLong());
+        }
+        return noteIds;
     }
 
     public static String getMediaFilename(JsonObject raw_data) {
