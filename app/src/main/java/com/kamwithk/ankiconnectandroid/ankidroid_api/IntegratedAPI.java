@@ -349,8 +349,12 @@ public class IntegratedAPI {
             if (newValue != null) {
                 // Update field to new value
                 cardFields.put(fieldName, newValue);
-            } else {
+                // Ankidroids `getFields` won't return empty fields that are at the end of the array
+                // so `originalFields` may potentially contain less fields than `modelFieldNames`
+            } else if (originalFields.length >= i + 1) {
                 cardFields.put(fieldName, originalFields[i]);
+            } else {
+                cardFields.put(fieldName, "");
             }
         }
 
