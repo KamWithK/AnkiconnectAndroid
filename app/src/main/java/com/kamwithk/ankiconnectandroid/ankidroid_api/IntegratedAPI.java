@@ -8,7 +8,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.SparseArray;
+import android.text.TextUtils;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -21,8 +21,7 @@ import static com.ichi2.anki.api.AddContentApi.READ_WRITE_PERMISSION;
 import com.kamwithk.ankiconnectandroid.request_parsers.MediaRequest;
 import com.ichi2.anki.FlashCardsContract;
 import com.ichi2.anki.api.AddContentApi;
-import com.ichi2.anki.api.NoteInfo;
-import com.kamwithk.ankiconnectandroid.request_parsers.Parser;
+import com.kamwithk.ankiconnectandroid.request_parsers.NoteRequest;
 
 public class IntegratedAPI {
     private Context context;
@@ -32,6 +31,8 @@ public class IntegratedAPI {
     public final MediaAPI mediaAPI;
     private final AddContentApi api; // TODO: Combine all API classes???
 
+    //From anki-connect repo
+    private static final String CAN_ADD_ERROR_REASON = "cannot create note because it is a duplicate";
     public IntegratedAPI(Context context) {
         this.context = context;
 
@@ -67,78 +68,186 @@ public class IntegratedAPI {
         }
     }
 
+    public ArrayList<Boolean> canAddNotes(ArrayList<NoteRequest> notesToTest) throws Exception {
+        final String[] NOTE_PROJECTION = {FlashCardsContract.Note._ID, FlashCardsContract.Note.CSUM};
 
-    public ArrayList<Boolean> canAddNotes(ArrayList<Parser.NoteFront> notesToTest) throws Exception {
-
-        if (notesToTest.size() <= 0) {
+        if(notesToTest.isEmpty()) {
             return new ArrayList<>();
         }
+
+        ArrayList<Long> checksums = new ArrayList<>(notesToTest.size());
+        ArrayList<Boolean> canAddNote = new ArrayList<>(notesToTest.size());
+        NoteRequest.NoteOptions noteOptions = notesToTest.get(0).getOptions();
+
+        // If duplicate scope is "deck" or "deck root", we need to get extra information to figure out if DID matches.
+        // If duplicate scope is "deck root" we need to include children, noteOptions.getDeckName() will not be null
+        HashSet<Long> deckIds = new HashSet<>();
+        Map<String, Long> deckNamesToIds = deckAPI.deckNamesAndIds();
+        String deckName = noteOptions.getDeckName();
+        if(deckName == null) {
+            // Deck, not root
+            deckName = notesToTest.get(0).getDeckName();
+            deckIds.add(deckNamesToIds.get(deckName));
+        }
+        else {
+            for (String name : deckNamesToIds.keySet()) {
+                if (name.contains(deckName)) {
+                    deckIds.add(deckNamesToIds.get(name));
+                }
+            }
+        }
+
+        for (NoteRequest note : notesToTest) {
+            String key = note.getFieldValue();
+            checksums.add(Utility.getFieldChecksum(key));
+        }
+
+        // If duplicates are allowed, just need to see if they are valid notes (checksum != 0)
+        if (noteOptions.isAllowDuplicate()) {
+            for (long checksum: checksums) {
+                canAddNote.add(checksum != 0);
+            }
+            return canAddNote;
+        }
+
+        // Grabbing the note options and model for the first note and assuming the rest are the same.
+        // This is true for yomitan but might not be for other applications.
         String modelName = notesToTest.get(0).getModelName();
 
-        // If all model names are the same, then we can run one call to api.findDuplicateNotes()
-        // in order to speed up query times
-        boolean sameModelName = true;
-        for (Parser.NoteFront noteFront : notesToTest) {
-            if (!modelName.equals(noteFront.getModelName())) {
-                sameModelName = false;
-                break;
-            }
+        Map<String, Long> modelNameToId = modelAPI.modelNamesAndIds(0);
+        Long modelId = modelNameToId.get(modelName);
+
+        String selectionQuery = "";
+        if (!noteOptions.isCheckAllModels()) {
+            selectionQuery = String.format(
+                    Locale.US,
+                    "%s=%d and ",
+                    FlashCardsContract.Note.MID,
+                    modelId
+            );
         }
+        selectionQuery = selectionQuery + String.format(
+                Locale.US,
+                "%s in (%s)",
+                FlashCardsContract.Note.CSUM,
+                TextUtils.join(",", checksums)
+        );
 
-        if (sameModelName) {
-            Map<String, Long> modelNameToId = modelAPI.modelNamesAndIds(0);
-            Long modelId = modelNameToId.get(modelName);
-            if (modelId == null) { // i.e. not found
-                // all false! (cannot add the note if there's no valid model to add it with)
-                ArrayList<Boolean> allFalse = new ArrayList<>();
-                for (int i = 0; i < notesToTest.size(); i++) {
-                    allFalse.add(false);
-                }
-                return allFalse;
-            }
+        final Cursor cursor = context.getContentResolver().query(
+                FlashCardsContract.Note.CONTENT_URI_V2,
+                NOTE_PROJECTION,
+                selectionQuery,
+                null,
+                null
+        );
 
-            // Otherwise, we finally can use the internal API call
-            List<String> keys = new ArrayList<>();
-            for (Parser.NoteFront noteFront : notesToTest) {
-                keys.add(noteFront.getFieldValue());
-            }
-            SparseArray<List<NoteInfo>> duplicateNotes =
-                    api.findDuplicateNotes(modelId, keys);
-
-            ArrayList<Boolean> noteDoesNotExist = new ArrayList<>();
+        if (cursor == null || cursor.getCount() == 0) {
             for (int i = 0; i < notesToTest.size(); i++) {
-                noteDoesNotExist.add(duplicateNotes.get(i) == null);
+                canAddNote.add(true);
             }
-            return noteDoesNotExist;
+        }
+        else {
+            LinkedHashSet<Long> queryChecksums = findChecksumsInQuery(
+                    cursor,
+                    noteOptions.getDuplicateScope().equals("deck"), deckIds);
 
-        } else {
-            // Use the old code instead for correctness, at the cost of performance.
-            // TODO: We can probably use findDuplicateNotes here as well for 100% correctness
-            //       with old AnkiDroid versions
-            ArrayList<Boolean> noteDoesNotExist = new ArrayList<>();
-
-            for (Parser.NoteFront noteFront : notesToTest) {
-                // NOTE: This does not work if the field value has spaces or quotations unless
-                // the rust backend is used!
-                String escapedQuery = NoteAPI.escapeQueryStr(noteFront.getFieldName() + ":" + noteFront.getFieldValue());
-                final Cursor cursor = context.getContentResolver().query(
-                        FlashCardsContract.Note.CONTENT_URI,
-                        null,
-                        escapedQuery,
-                        null,
-                        null
-                );
-
-                noteDoesNotExist.add(cursor == null || !cursor.moveToFirst());
-                if (cursor != null) {
-                    cursor.close();
-                }
+            for (int i = 0; i < checksums.size(); i++) {
+                boolean isChecksumFound = !queryChecksums.contains(checksums.get(i));
+                canAddNote.add(isChecksumFound);
             }
-
-            return noteDoesNotExist;
-
         }
 
+        return canAddNote;
+    }
+
+    private LinkedHashSet<Long> findChecksumsInQuery(Cursor cursor, boolean isDuplicateScopeDeck, Set<Long> deckIds) {
+        LinkedHashSet<Long> queryChecksums = new LinkedHashSet<>();
+
+        try (cursor) {
+            while (cursor.moveToNext()) {
+                // Build list of CSUM (queryChecksums)
+                // If an entry in queryChecksums is in checksums, then we have a duplicate
+                // If scope is "deck", these duplicates need to be checked again for the deck
+                int idIdx = cursor.getColumnIndexOrThrow(FlashCardsContract.Note._ID);
+                int csumIdx = cursor.getColumnIndexOrThrow(FlashCardsContract.Note.CSUM);
+
+                long queryNid = cursor.getLong(idIdx);
+                long queryCsum = cursor.getLong(csumIdx);
+
+                // If duplicate scope is "deck", need an additional query
+                if (!isDuplicateScopeDeck || isNoteInDeck(queryNid, deckIds)) {
+                    queryChecksums.add(queryCsum);
+                }
+            }
+        }
+
+        return queryChecksums;
+    }
+
+    private boolean isNoteInDeck(long noteId, Set<Long> deckIds) {
+        // Need to search for all cards with the same note ID, and see if they exist in one of the decks.
+        final String[] CARD_PROJECTION = {FlashCardsContract.Card.DECK_ID};
+
+        Uri noteUri = Uri.withAppendedPath(FlashCardsContract.Note.CONTENT_URI, Long.toString(noteId));
+        Uri cardUri = Uri.withAppendedPath(noteUri, "cards");
+        Cursor cardCursor = context.getContentResolver().query(
+                cardUri,
+                CARD_PROJECTION,
+                null,
+                null,
+                null
+        );
+
+        if(cardCursor != null) {
+            try (cardCursor) {
+                while(cardCursor.moveToNext()) {
+                    int didIdx = cardCursor.getColumnIndexOrThrow(FlashCardsContract.Card.DECK_ID);
+                    long did = cardCursor.getLong(didIdx);
+
+                    if (deckIds.contains(did)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static class CanAddWithError {
+        private final boolean canAdd;
+        private final String error;
+
+        public CanAddWithError(boolean canAdd, String error) {
+            this.canAdd = canAdd;
+            this.error = error;
+        }
+
+        public boolean isCanAdd() {
+            return canAdd;
+        }
+
+        public String getError() {
+            return error;
+        }
+    }
+
+    public List<CanAddWithError> canAddNotesWithErrorDetail(ArrayList<NoteRequest> notesToTest) throws Exception {
+        List<CanAddWithError> canAddWithErrorList = new ArrayList<>();
+        List<Boolean> canAddList = canAddNotes(notesToTest);
+
+        for (boolean canAdd : canAddList) {
+            CanAddWithError canAddWithError;
+            if (canAdd) {
+                canAddWithError = new CanAddWithError(true, null);
+            }
+            else {
+                canAddWithError = new CanAddWithError(false, CAN_ADD_ERROR_REASON);
+            }
+            canAddWithErrorList.add(canAddWithError);
+        }
+
+        return canAddWithErrorList;
     }
 
     /**
