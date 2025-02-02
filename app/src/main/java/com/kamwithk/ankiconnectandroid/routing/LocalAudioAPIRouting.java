@@ -226,12 +226,11 @@ public class LocalAudioAPIRouting {
         EntriesDatabase db = getDB();
         AudioFileEntryDao audioFileEntryDao = db.audioFileEntryDao();
 
-        String pathDecoded;
+        String pathDecoded = path;
         try {
-            pathDecoded = URLDecoder.decode(path, "UTF-8");
+            pathDecoded = URLDecoder.decode(pathDecoded, "UTF-8");
         }
-        catch (UnsupportedEncodingException e) {
-            pathDecoded = path;
+        catch (UnsupportedEncodingException ignored) {
         }
 
         byte[] data = audioFileEntryDao.getData(pathDecoded, source);
