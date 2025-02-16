@@ -24,7 +24,9 @@ import com.kamwithk.ankiconnectandroid.routing.localaudiosource.Shinmeikai8Audio
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -223,7 +225,15 @@ public class LocalAudioAPIRouting {
 
         EntriesDatabase db = getDB();
         AudioFileEntryDao audioFileEntryDao = db.audioFileEntryDao();
-        byte[] data = audioFileEntryDao.getData(path, source);
+
+        String pathDecoded = path;
+        try {
+            pathDecoded = URLDecoder.decode(pathDecoded, "UTF-8");
+        }
+        catch (UnsupportedEncodingException ignored) {
+        }
+
+        byte[] data = audioFileEntryDao.getData(pathDecoded, source);
 
         // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
         String mimeType = null;
