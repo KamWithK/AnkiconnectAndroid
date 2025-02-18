@@ -1,13 +1,13 @@
 # Ankiconnect Android
 
 Ankiconnect Android allows you to utilize the standard Anki mining workflow on Android devices like phones and eReaders.
-Create Anki cards using [Yomichan](https://foosoft.net/projects/yomichan/) on [Kiwi Browser](https://kiwibrowser.com/) and add them straight into your Anki deck!
+Create Anki cards using [Yomitan](https://yomitan.wiki/) on [Firefox Browser](https://play.google.com/store/apps/details?id=org.mozilla.firefox) and add them straight into your Anki deck!
 Mine on the go in the same way as you mine on your desktop pc.
 Forvo and local audio are now supported!
 
 
-Ankiconnect Android is a from scratch unofficial reimplementation of the [desktop Ankiconnect extension](https://github.com/FooSoft/anki-connect), [desktop Forvo Server extension](https://github.com/jamesnicolas/yomichan-forvo-server) and [desktop Local Audio Server for Yomichan](https://github.com/themoeway/local-audio-yomichan).
-It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://github.com/ankidroid/Anki-Android/).
+Ankiconnect Android is a from scratch unofficial reimplementation of the [desktop Ankiconnect extension](https://github.com/FooSoft/anki-connect), [desktop Forvo Server extension](https://github.com/jamesnicolas/yomichan-forvo-server) and [desktop Local Audio Server for Yomitan](https://github.com/themoeway/local-audio-yomichan).
+It reimplements the core APIs used by Yomitan to work with [Ankidroid](https://github.com/ankidroid/Anki-Android/).
 
 ## Table of Contents
 - [Ankiconnect Android](#ankiconnect-android)
@@ -18,7 +18,7 @@ It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://
     - [Additional Instructions: Local Audio](#additional-instructions-local-audio)
   - [Common Errors and Solutions](#common-errors-and-solutions)
     - [First Steps](#first-steps)
-    - [Problem: The Yomichan popup appears upon scrolling](#problem-the-yomichan-popup-appears-upon-scrolling)
+    - [Problem: The Yomitan popup appears upon scrolling](#problem-the-yomitan-popup-appears-upon-scrolling)
     - [Problem: The add button is always greyed out](#problem-the-add-button-is-always-greyed-out)
     - [Problem: The add card button does not appear](#problem-the-add-card-button-does-not-appear)
     - [Problem: Duplicate checks aren't working](#problem-duplicate-checks-arent-working)
@@ -30,16 +30,16 @@ It reimplements the core APIs used by Yomichan to work with [Ankidroid](https://
   - [Contributing](#contributing)
 
 ## Instructions
-Here's how to set everything up from scratch (if you've already got Yomichan working, then skip to step 5):
+Here's how to set everything up from scratch (if you've already got Yomitan working, then skip to step 5):
 
-1. Install [Kiwi Browser](https://play.google.com/store/apps/details?id=com.kiwibrowser.browser) and [Ankidroid](https://play.google.com/store/apps/details?id=com.ichi2.anki)
+1. Install [Firefox Browser](https://play.google.com/store/apps/details?id=org.mozilla.firefox) and [Ankidroid](https://play.google.com/store/apps/details?id=com.ichi2.anki)
 2. Install Ankiconnect Android - Download from the [Releases Section](https://github.com/KamWithK/AnkiconnectAndroid/releases/latest) or from [IzzyOnDroid repo](https://apt.izzysoft.de/fdroid/index/apk/com.kamwithk.ankiconnectandroid)
 3. Start the Ankiconnect Android app, accept the permissions and hit start service
-4. Set up the [Yomichan extension](https://chrome.google.com/webstore/detail/yomichan/ogmnaimimemjmbakcfefmnahgdfhfami) in Kiwi Browser to your liking:
+4. Set up the [Yomitan extension](https://addons.mozilla.org/en-US/firefox/addon/yomitan/) in Firefox Browser to your liking:
     * `Import` 1+ dictionaries by clicking `Configure installed and enabled dictionaries` and then `Import` under `Dictionaries` section ([external resources](https://learnjapanese.moe/resources/#dictionaries))
     * **`Scan modifier key` under the `Scanning` section should be "No Key" (unless using mouse/keyboard, advanced options contains more config options)**
     * **Ensure `Anki` → `Show Card Tags` is set to "Never"**
-5. **Optimize Yomichan for mobile usage:**
+5. **Optimize Yomitan for mobile usage:**
     * `Scan delay` under the `Scanning` section can feel laggy and so can be set to `0`
     * It is recommended to lower the value of `Maximum number of results` (under `General`) to prevent unnecessary lag. A sane value would be `8`
     * Ensure `Scanning Inputs` is optimized for mobile (prevents lookups on scrolling):
@@ -47,28 +47,25 @@ Here's how to set everything up from scratch (if you've already got Yomichan wor
         * Navigate to `Scanning` → `Configure advanced scanning inputs`
             * Ensure that advanced options within the `Scanning Inputs` window is enabled.
                 To do this, scroll to the right, and tap on the three dots.
-            *   <details> <summary>For Yomichan, match your settings to be like this image: <i>(click here)</i></summary>
-                <a href="./img/scanning_inputs.png"><img src="./img/scanning_inputs.png" width="400" /></a>
-                </details>
             *   <details> <summary>For Yomitan, use the defaults or match your settings to be like this image: <i>(click here)</i></summary>
                 <a href="./img/scanning_inputs_yomitan.png"><img src="./img/scanning_inputs_yomitan.png" width="400" /></a>
                 </details>
         * Navigate to `Scanning` → `Support inputs for devices with touch screens`
             * Ensure that `Touch inputs` is checked, and `Pointer inputs` is NOT checked.
-6. Set up Yomichan for sentence mining:
+6. Set up Yomitan for sentence mining:
     * Toggle `Enable Anki integration` on, under `Anki`
     * Click on `Configure Anki card format` and choose the deck, model and field/values you desire
     * For further customisation you can write/modify the script under `Configure Anki card templates`
 ***Sections and Advanced options visible via the blue menu icon on the bottom right of the screen***
 
-> Easier Yomichan setup: If you import settings from a computer, ensure that the bolded steps are still followed
+> Easier Yomitan setup: If you import settings from a computer, ensure that the bolded steps are still followed
 
 ### Additional Instructions: Forvo Audio
-The default audio sources from Yomichan should already work.
+The default audio sources from Yomitan should already work.
 However, Forvo can be added as an audio source.
 It is recommended that you add this Forvo audio source
 because Forvo significantly extends the coverage of audio
-compared to the default audio sources from Yomichan.
+compared to the default audio sources from Yomitan.
 
 1. Click on `Configure audio playback sources` and under the `Audio` section
 2. Click the `Add` button (top right corner)
@@ -104,12 +101,12 @@ From here, you should be able to use the show card button as normal.
 
 > **Warning**:
 > Make sure you save your note changes if you edit your note! If you do not
-> save your changes and re-click on the "show card" button from Kiwi Browser, you will
+> save your changes and re-click on the "show card" button from Firefox Browser, you will
 > lose all your current note changes!
 
 ### Additional Instructions: Local Audio
 The [(desktop) local audio server](https://github.com/themoeway/local-audio-yomichan)
-setup for Yomichan has been ported over to Ankiconnect Android, and can be used similarly.
+setup for Yomitan has been ported over to Ankiconnect Android, and can be used similarly.
 Again, this is *a completely optional* setup that does not need to be done.
 
 General information about the setup, including reasons for and against using the setup,
@@ -119,7 +116,7 @@ can be found within the above link.
 > This setup takes up about 5gb of space on your Android device! Ensure you have enough space before setting this up.
 
 1. Ensure you have set up the latest version of the [desktop local audio server](https://github.com/themoeway/local-audio-yomichan) setup.
-    If you already have the add-on installed, check for updates by navigating to `Tools` → `Add-ons` → (select "Local Audio Server for Yomichan") → `Check for Updates`.
+    If you already have the add-on installed, check for updates by navigating to `Tools` → `Add-ons` → (select "Local Audio Server for Yomitan") → `Check for Updates`.
 
 2. Generate the Android database.
 
@@ -141,7 +138,7 @@ can be found within the above link.
 
 3. Copy the files from desktop to Android.
     * Locate the add-on folder on desktop.
-        To do this, navigate to `Tools` → `Add-ons` → (select "Local Audio Server for Yomichan") → `View Files`.
+        To do this, navigate to `Tools` → `Add-ons` → (select "Local Audio Server for Yomitan") → `View Files`.
         When you are here, navigate to `user_files`.
 
     * Locate AnkiConnect Android's data folder. By default, it is under:
@@ -167,7 +164,7 @@ can be found within the above link.
             /storage/emulated/0/Android/data/com.kamwithk.ankiconnectandroid/files/android.db
             ```
 
-4. Setup local audio on Kiwi Browser's Yomichan. (Warning: this URL is different than the one on desktop!)
+4. Setup local audio on Firefox Browser's Yomitan. (Warning: this URL is different than the one on desktop!)
     * Click on `Configure audio playback sources` and under the `Audio` section
     * Click the `Add` button (top right corner)
     * Select `Custom URL (JSON)` and copy paste the following into the `url` box (tap the code box, and then tap the button to the right to copy the text to the clipboard):
@@ -198,17 +195,17 @@ can be found within the above link.
 ## Common Errors and Solutions
 
 ### First Steps
-If you are having issues with anything, such as Yomichan being unable to connect to AnkiDroid, please ensure all these steps are followed before continuing:
+If you are having issues with anything, such as Yomitan being unable to connect to AnkiDroid, please ensure all these steps are followed before continuing:
 
 * Make sure the latest [app release](https://github.com/KamWithK/AnkiconnectAndroid/releases/latest) is installed.
 * If you imported the settings from the PC, try to use the sanitized version upon import, and manually re-add the handlebars after.
-* Double check that your Yomichan settings are correct. In particular, check that the `Configure Anki card format...` section, and the audio sources section is correct.
-    * On rare occasions, settings exported from the computer and imported into your Android device may not work. Instead, try to reset Yomichan's settings and redo everything from scratch.
-* Battery saving/automatic optimisation is turned off for Ankidroid, Ankiconnect Android and optionally (but recommended) Kiwi browser.
+* Double check that your Yomitan settings are correct. In particular, check that the `Configure Anki card format...` section, and the audio sources section is correct.
+    * On rare occasions, settings exported from the computer and imported into your Android device may not work. Instead, try to reset Yomitan's settings and redo everything from scratch.
+* Battery saving/automatic optimisation is turned off for Ankidroid, Ankiconnect Android and optionally (but recommended) Firefox browser.
 * You allowed Ankiconnect Android to be running in the background (if this option is available on your device).
 
 
-### Problem: The Yomichan popup appears upon scrolling
+### Problem: The Yomitan popup appears upon scrolling
 Try going through step 5 of the [instructions](#instructions).
 In particular, see the step that says
 **Ensure `Scanning Inputs` is optimized for mobile (prevents lookups on scrolling)**.
@@ -216,7 +213,7 @@ In particular, see the step that says
 
 ### Problem: The add button is always greyed out
 This usually happens if `Enable Content Scanning` is switched off.
-To fix this, simply switch it on (under `Yomichan Settings` → `General` → `Enable content scanning`).
+To fix this, simply switch it on (under `Yomitan Settings` → `General` → `Enable content scanning`).
 
 > **Note**:
 > If you have this switched off in the first place, it is also very likely that the popup is
@@ -225,7 +222,7 @@ To fix this, simply switch it on (under `Yomichan Settings` → `General` → `E
 
 
 ### Problem: The add card button does not appear
-- Check that the `Enable Anki integration` setting in Yomichan is indeed enabled, and properly connected.
+- Check that the `Enable Anki integration` setting in Yomitan is indeed enabled, and properly connected.
 - Under `Anki` → `Configure Anki card format`, ensure that the Deck and Model at the top right corner
     are not highlighted in red. If they are, please select the correct deck and/or model.
 - Under `Anki` → `Show card tags`, make sure this is set to `Never`.
@@ -233,7 +230,7 @@ To fix this, simply switch it on (under `Yomichan Settings` → `General` → `E
 
 ### Problem: Duplicate checks aren't working
 To determine that duplicate checks aren't working:
-- Enable duplicate checks in the Yomichan settings (under `Anki` → `Check for card duplicates`),
+- Enable duplicate checks in the Yomitan settings (under `Anki` → `Check for card duplicates`),
 - Select a word and add a card
 - Tap outside of the popup, and re-select the word. Normally, you should not be able to add a card here.
 
@@ -259,7 +256,7 @@ This URL is different from the one on PC.
 ### Problem: On card add, I get `Incorrect flds argument`
 This happens when you change the fields of a card. For example, if you added a field,
 renamed a field, or deleted a field, then this error may pop up.
-To fix it, navigate to `Yomichan Settings` → `Anki` →  `Configure Anki card format...`,
+To fix it, navigate to `Yomitan Settings` → `Anki` →  `Configure Anki card format...`,
 and update the model fields (i.e. by switching it to a different model and back).
 
 
@@ -283,7 +280,7 @@ Some examples:
 For developers who are interested in using the API, please see [docs/api.md](./docs/api.md) for a list of all supported API calls.
 
 ## Contributing
-The primary goal of Ankiconnect Android was to support card creation with Yomichan.
+The primary goal of Ankiconnect Android was to support card creation with Yomitan.
 Therefore, many API calls are not implemented.
 In the spirit of
 [Anki-Connect itself](https://github.com/FooSoft/anki-connect#hey-could-you-add-a-new-action-to-support-feature),
