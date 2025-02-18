@@ -32,33 +32,31 @@ It reimplements the core APIs used by Yomitan to work with [Ankidroid](https://g
 ## Instructions
 Here's how to set everything up from scratch (if you've already got Yomitan working, then skip to step 5):
 
-1. Install [Firefox Browser](https://play.google.com/store/apps/details?id=org.mozilla.firefox) and [Ankidroid](https://play.google.com/store/apps/details?id=com.ichi2.anki)
-2. Install Ankiconnect Android - Download from the [Releases Section](https://github.com/KamWithK/AnkiconnectAndroid/releases/latest) or from [IzzyOnDroid repo](https://apt.izzysoft.de/fdroid/index/apk/com.kamwithk.ankiconnectandroid)
-3. Start the Ankiconnect Android app, accept the permissions and hit start service
-4. Set up the [Yomitan extension](https://addons.mozilla.org/en-US/firefox/addon/yomitan/) in Firefox Browser to your liking:
-    * `Import` 1+ dictionaries by clicking `Configure installed and enabled dictionaries` and then `Import` under `Dictionaries` section ([external resources](https://learnjapanese.moe/resources/#dictionaries))
-    * **`Scan modifier key` under the `Scanning` section should be "No Key" (unless using mouse/keyboard, advanced options contains more config options)**
-    * **Ensure `Anki` → `Show Card Tags` is set to "Never"**
-5. **Optimize Yomitan for mobile usage:**
-    * `Scan delay` under the `Scanning` section can feel laggy and so can be set to `0`
-    * It is recommended to lower the value of `Maximum number of results` (under `General`) to prevent unnecessary lag. A sane value would be `8`
-    * Ensure `Scanning Inputs` is optimized for mobile (prevents lookups on scrolling):
-        * Ensure advanced settings is enabled (button at the bottom right corner)
-        * Navigate to `Scanning` → `Configure advanced scanning inputs`
-            * Ensure that advanced options within the `Scanning Inputs` window is enabled.
-                To do this, scroll to the right, and tap on the three dots.
-            *   <details> <summary>For Yomitan, use the defaults or match your settings to be like this image: <i>(click here)</i></summary>
-                <a href="./img/scanning_inputs_yomitan.png"><img src="./img/scanning_inputs_yomitan.png" width="400" /></a>
-                </details>
-        * Navigate to `Scanning` → `Support inputs for devices with touch screens`
+1. Install [Firefox Browser](https://play.google.com/store/apps/details?id=org.mozilla.firefox)
+2. Install [Ankidroid](https://play.google.com/store/apps/details?id=com.ichi2.anki)
+3. Install Ankiconnect Android - Download from the [Releases Section](https://github.com/KamWithK/AnkiconnectAndroid/releases/latest) or from [IzzyOnDroid repo](https://apt.izzysoft.de/fdroid/index/apk/com.kamwithk.ankiconnectandroid)
+4. Start the Ankiconnect Android app, accept the permissions and hit start service
+5. Install the [Yomitan extension](https://addons.mozilla.org/en-US/firefox/addon/yomitan/) in Firefox Browser
+6. Configure Yomitan general settings
+    1. Ensure advanced settings is enabled (button at the bottom right corner)
+    2. Dictionaries: `Import` 1+ dictionaries by clicking `Configure installed and enabled dictionaries` and then `Import` under `Dictionaries` section ([external resources](https://learnjapanese.moe/resources/#dictionaries))
+    3. General: It is recommended to lower the value of `Maximum number of results` to prevent unnecessary lag. A sane value would be `8`
+7. Configure Yomitan Scanning settings
+    1. Scanning: `Scan delay` can feel laggy and so can be set to `0`
+    2. Scanning: Navigate to `Scanning` → `Configure advanced scanning inputs`
+        1. Ensure that advanced options within the `Scanning Inputs` window is enabled. To do this, scroll to the right, and tap on the three dots.
+        2.   <details> <summary>For Yomitan, use the defaults or match your settings to be like this image: <i>(click here)</i></summary>
+            <a href="./img/scanning_inputs_yomitan.png"><img src="./img/scanning_inputs_yomitan.png" width="400" /></a>
+            </details>
+        3. Navigate to `Scanning` → `Support inputs for devices with touch screens`
             * Ensure that `Touch inputs` is checked, and `Pointer inputs` is NOT checked.
-6. Set up Yomitan for sentence mining:
-    * Toggle `Enable Anki integration` on, under `Anki`
-    * Click on `Configure Anki card format` and choose the deck, model and field/values you desire
-    * For further customisation you can write/modify the script under `Configure Anki card templates`
-***Sections and Advanced options visible via the blue menu icon on the bottom right of the screen***
+    3. Scanning: If you are studying Japanese/Chinese and don't want to popup to appear on any other languages disable  `Search text with non-Japanese, Chinese, or Cantonese characters`.
+8. Configure Yomitan Anki settings
+    1. Anki: Toggle `Enable Anki integration` on
+    2. Anki: Click on `Configure Anki card format` and choose the deck, model and field/values you desire. *(For further customization you can write/modify the script under `Configure Anki card templates`)*
+    3. Anki: Ensure `Show Card Tags` is set to "Never"
 
-> Easier Yomitan setup: If you import settings from a computer, ensure that the bolded steps are still followed
+> Easier Yomitan setup: If you import settings from a computer, ensure that step 7 and step 8.3 are still followed
 
 ### Additional Instructions: Forvo Audio
 The default audio sources from Yomitan should already work.
