@@ -3,6 +3,7 @@ package com.kamwithk.ankiconnectandroid.routing;
 import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.Log;
 
 import androidx.room.Room;
@@ -10,6 +11,7 @@ import androidx.sqlite.db.SimpleSQLiteQuery;
 
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.kamwithk.ankiconnectandroid.R;
 import com.kamwithk.ankiconnectandroid.request_parsers.Parser;
 import com.kamwithk.ankiconnectandroid.routing.database.AudioFileEntryDao;
 import com.kamwithk.ankiconnectandroid.routing.database.EntriesDatabase;
@@ -76,7 +78,12 @@ public class LocalAudioAPIRouting {
 
     private EntriesDatabase getDB() {
         // TODO global instance?
-        File databasePath = new File(context.getExternalFilesDir(null), "android.db");
+        //File databasePath = new File(context.getExternalFilesDir(null), "android.db");
+        Resources resources = context.getResources();
+        String key = resources.getString(R.string.shared_app_preferences);
+        File databasePath = new File(
+                context.getSharedPreferences(key , 0)
+                        .getString("storage_location", context.getExternalFilesDir(null).getAbsolutePath()), "android.db");
         EntriesDatabase db = Room.databaseBuilder(context,
                 EntriesDatabase.class, databasePath.toString()).build();
         return db;

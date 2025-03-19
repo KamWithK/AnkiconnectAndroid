@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Ankiconnect Android</string>
 
+    <string name="shared_app_preferences">com.kamwithk.ankiconnectandroid.SHARED_APP_PREFERENCES</string>
     <string name="action_settings">Settings</string>
     <string name="settings_overlay_permissions_title">Access Overlay Permissions</string>
     <string name="settings_permissions_header">Permissions</string>
@@ -9,6 +10,8 @@
     <string name="settings_forvo_language_title">Forvo language</string>
     <string name="settings_forvo_language_summary">Sets the language to use for Forvo audio.</string>
     <string name="settings_forvo_language_dialog_title">Select Language</string>
+    <string name="settings_preferred_storage_location_title">Choose Local Audio Directory Location</string>
+    <string name="settings_preferred_storage_location_summary">Allows you to choose where to fetch local audio data from.</string>
     <string name="get_dir_path_title">Print Local Audio Directory</string>
     <string name="get_dir_path_title_summary">Prints the expected directory path where the local audio is searched in.</string>
     <string name="dialog_notif_perm_info">This app uses a persistent notification to inform you that the server is running. Please enable notifications to see this.</string>
