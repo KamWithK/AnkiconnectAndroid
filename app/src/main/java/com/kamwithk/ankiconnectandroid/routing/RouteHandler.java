@@ -22,6 +22,9 @@ import fi.iki.elonen.router.RouterNanoHTTPD;
 public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
 
     private APIHandler apiHandler = null;
+    private static final String PRIVATE_NETWORK_ACCESS_REQUEST = "Access-Control-Request-Private-Network";
+    private static final String PRIVATE_NETWORK_ACCESS_RESPONSE = "Access-Control-Allow-Private-Network";
+
 
     public RouteHandler() {
         super();
@@ -68,6 +71,12 @@ public class RouteHandler extends RouterNanoHTTPD.DefaultHandler {
         }
 
         NanoHTTPD.Response rep = apiHandler.chooseAPI(files.get("postData"), parameters);
+
+        // Include this header so that if a public origin is included in the whitelist, then browsers
+        // won't fail due to the private network access check
+        if (Boolean.parseBoolean(session.getHeaders().get(PRIVATE_NETWORK_ACCESS_REQUEST))) {
+            rep.addHeader(PRIVATE_NETWORK_ACCESS_RESPONSE, "true");
+        }
 
         addCorsHeaders(context, rep);
         return rep;
