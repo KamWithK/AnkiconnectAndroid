@@ -85,7 +85,7 @@ public class LocalAudioAPIRouting {
         String preferredFilesDirPath = sharedPreferences.getString("storage_location", externalFilesDir.getAbsolutePath());
 
         // If the preferences point to a file store that no longer is available
-        // Attempt the
+        // Attempt the default externalFilesDir set by the OS.
         if (!Files.isReadable(Paths.get(preferredFilesDirPath))){
             preferredFilesDirPath = externalFilesDir.getAbsolutePath();
         }
