@@ -1,6 +1,6 @@
 # Actions
 
-All actions here work exactly the same as [Anki-Connect](https://github.com/FooSoft/anki-connect#supported-actions) unless specified otherwise.
+All actions here work exactly the same as [Anki-Connect](https://git.sr.ht/~foosoft/anki-connect#supported-actions) unless specified otherwise.
 
 All calls support the version `<= 4` and `> 4` format.
 Versions `<= 4` returns the plain result on success (with no JSON object wrapping said result).
@@ -27,11 +27,11 @@ Do not expect the error message to be the exact same as the PC Anki-Connect erro
 ## Deck Actions
 
 ### `deckNames`
-* See: [Anki-Connect `deckNames`](https://github.com/FooSoft/anki-connect#decknames)
+* See: [Anki-Connect `deckNames`](https://git.sr.ht/~foosoft/anki-connect#codedecknamescode)
 * Used by Yomichan
 
 ### `deckNamesAndIds`
-* See: [Anki-Connect `deckNamesAndIds`](https://github.com/FooSoft/anki-connect#decknamesandids)
+* See: [Anki-Connect `deckNamesAndIds`](https://git.sr.ht/~foosoft/anki-connect#codedecknamesandidscode)
 * Used by Yomichan
 
 <br>
@@ -39,15 +39,15 @@ Do not expect the error message to be the exact same as the PC Anki-Connect erro
 ## Model Actions
 
 ### `modelNames`
-* See: [Anki-Connect `modelNames`](https://github.com/FooSoft/anki-connect#modelnames)
+* See: [Anki-Connect `modelNames`](https://git.sr.ht/~foosoft/anki-connect#codemodelnamescode)
 * Used by Yomichan
 
 ### `modelNamesAndIds`
-* See: [Anki-Connect `modelnamesandids`](https://github.com/FooSoft/anki-connect#modelnamesandids)
+* See: [Anki-Connect `modelnamesandids`](https://git.sr.ht/~foosoft/anki-connect#codemodelnamesandidscode)
 * Used by Yomichan
 
 ### `modelFieldNames`
-* See: [Anki-Connect `modelFieldNames`](https://github.com/FooSoft/anki-connect#modelfieldnames)
+* See: [Anki-Connect `modelFieldNames`](https://git.sr.ht/~foosoft/anki-connect#codemodelfieldnamescode)
 * Used by Yomichan
 
 <br>
@@ -55,7 +55,7 @@ Do not expect the error message to be the exact same as the PC Anki-Connect erro
 ## Note Actions
 
 ### `findNotes`
-* See: [Anki-Connect `findNotes`](https://github.com/FooSoft/anki-connect#findnotes)
+* See: [Anki-Connect `findNotes`](https://git.sr.ht/~foosoft/anki-connect#codefindnotescode)
 * Attempting to escape a query with spaces using quotes will not work, unless
     AnkiDroid is using the new (Rust) backend.
     For example, the following query will not work: `"Note:My Mining Note"`
@@ -63,12 +63,12 @@ Do not expect the error message to be the exact same as the PC Anki-Connect erro
 * Used by Yomichan
 
 ### `guiBrowse`
-* See: [Anki-Connect `guiBrowse`](https://github.com/FooSoft/anki-connect#guibrowse)
+* See: [Anki-Connect `guiBrowse`](https://git.sr.ht/~foosoft/anki-connect#codeguibrowsecode)
 * This call only works with AnkiDroid versions past [October 8, 2022](https://github.com/ankidroid/Anki-Android/pull/11899) (2.16alpha88 and above)
 * Used by Yomichan
 
 ### `canAddNotes`
-* See: [Anki-Connect `canAddNotes`](https://github.com/FooSoft/anki-connect#canaddnotes)
+* See: [Anki-Connect `canAddNotes`](https://git.sr.ht/~foosoft/anki-connect#codecanaddnotescode)
 * Internally, this behaves entirely different from Anki-Connect. Anki-Connect literally attempts to add
     a note (without saving the collection) in order to determine whether the note can be added or not.
     AnkiConnect Android instead queries the collection with the first field, and sees if any other cards
@@ -83,23 +83,23 @@ Do not expect the error message to be the exact same as the PC Anki-Connect erro
 * Used by Yomichan
 
 ### `canAddNotesWithErrorDetail`
-* See: [Anki-Connect `canAddNotesWithErrorDetail](https://git.foosoft.net/alex/anki-connect#canaddnoteswitherrordetail)
+* See: [Anki-Connect `canAddNotesWithErrorDetail](https://git.sr.ht/~foosoft/anki-connect#codecanaddnoteswitherrordetailcode)
 * Currently, if a card fails `canAddNotes`, the error message will always say it's due to it being a duplicate, even if there was a different reason for the failure (For example, in Anki-Connect a card could fail the `canAddNotes` check if the first field was empty).
 * Used by Yomitan
 
 ### `notesInfo`
-* See: [Anki-Connect `notesInfo`](https://git.foosoft.net/alex/anki-connect#notesinfo)
+* See: [Anki-Connect `notesInfo`](https://git.sr.ht/~foosoft/anki-connect#codenotesinfocode)
 * Used by Yomitan
 
 ### `addNote`
-* See: [Anki-Connect `addNote`](https://github.com/FooSoft/anki-connect#addnote)
+* See: [Anki-Connect `addNote`](https://git.sr.ht/~foosoft/anki-connect#codeaddnotecode)
 * Used by Yomichan
 * Anki-Connect desktop allows using various formats for the media file, but this api currently only
   supports using the `url` and `data` field. Does not support `skipHash` for the `url` field.
   All of `picture`, `audio` and `video` are supported.
 
 ### `updateNoteFields`
-* See: [Anki-Connect `updateNoteFields`](https://github.com/FooSoft/anki-connect#updatenotefields)
+* See: [Anki-Connect `updateNoteFields`](https://git.sr.ht/~foosoft/anki-connect#codeupdatenotefieldscode)
 * See [addNote](#addnote) for supported media actions.
 
 <br>
@@ -107,7 +107,7 @@ Do not expect the error message to be the exact same as the PC Anki-Connect erro
 ## Media Actions
 
 ### `storeMediaFile`
-* See: [Anki-Connect `storeMediaFile`](https://github.com/FooSoft/anki-connect#storemediafile)
+* See: [Anki-Connect `storeMediaFile`](https://git.sr.ht/~foosoft/anki-connect#codestoremediafilecode)
 * Filenames will get a random number appended to the end of them, i.e. `file.png` becomes `file_123456789.png`
 * Used by Yomichan
 
@@ -116,5 +116,5 @@ Do not expect the error message to be the exact same as the PC Anki-Connect erro
 ## Miscellaneous Actions
 
 ### `multi`
-* See: [Anki-Connect `multi`](https://github.com/FooSoft/anki-connect#multi)
+* See: [Anki-Connect `multi`](https://git.sr.ht/~foosoft/anki-connect#codemulticode)
 * Used by Yomichan
