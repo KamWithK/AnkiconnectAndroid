@@ -2,7 +2,6 @@ package com.kamwithk.ankiconnectandroid;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.Toast;
@@ -11,8 +10,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.EditTextPreference;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+
+import java.io.File;
+import java.util.Arrays;
 
 
 public class SettingsActivity extends AppCompatActivity {
@@ -63,7 +66,11 @@ public class SettingsActivity extends AppCompatActivity {
                     if (context == null) {
                         Toast.makeText(getContext(), "Cannot get local audio folder, as context is null.", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(getContext(), "Local audio folder: " + context.getExternalFilesDir(null), Toast.LENGTH_LONG).show();
+                        ListPreference folderPreference = findPreference("storage_location");
+                        String folder = folderPreference != null && folderPreference.getValue() != null ?
+                                folderPreference.getValue() : context.getExternalFilesDir(null).getAbsolutePath();
+                        Toast.makeText(getContext(), "Local audio folder: " + folder, Toast.LENGTH_LONG).show();
+
                         // TODO snackbar?
                         // getView() seems to be null...
 //                        Snackbar snackbar = Snackbar.make(getView().findViewById(R.id.settings),
@@ -73,7 +80,19 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                     return true;
                 });
+            }
 
+            preference = findPreference("storage_location");
+            if (preference != null) {
+                Context context = getContext();
+                if (context == null) {
+                    Toast.makeText(getContext(), "Cannot get local audio folder, as context is null.", Toast.LENGTH_LONG).show();
+                } else {
+                    String[] dirs = Arrays.stream(context.getExternalFilesDirs(null)).map(File::getAbsolutePath).toArray(String[]::new);
+                    preference.setDefaultValue(dirs[0]); // The first value is equivalent to context.getExternalFilesDir(null)
+                    ((ListPreference) preference).setEntries(dirs);
+                    ((ListPreference) preference).setEntryValues(dirs);
+                }
             }
 
            EditTextPreference corsHostPreference = findPreference("cors_hostname");

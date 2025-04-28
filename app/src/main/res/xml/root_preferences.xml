@@ -34,6 +34,10 @@
             android:entries="@array/forvo_language_entries"
             android:entryValues="@array/forvo_language_values" />
 
+        <ListPreference
+            app:key="storage_location"
+            app:title="@string/settings_preferred_storage_location_title"
+            app:summary="@string/settings_preferred_storage_location_summary"/>
         <Preference
             app:key="get_dir_path"
             app:title="@string/get_dir_path_title"
