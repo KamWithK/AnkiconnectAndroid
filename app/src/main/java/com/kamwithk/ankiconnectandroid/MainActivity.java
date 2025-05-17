@@ -83,6 +83,11 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    protected  void onStart() {
+        super.onStart();
+        startServiceWrap();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
@@ -143,6 +148,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void startServiceBtn(View view) {
+        startServiceWrap();
+    }
+
+    public void startServiceWrap(){
         boolean notificationsEnabled = notificationManager.areNotificationsEnabled();
         if (notificationsEnabled) {
             startService();
