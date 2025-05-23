@@ -37,9 +37,8 @@ android {
     }
 
     compileOptions {
-        // Required JDK version: JDK 11 (or newer, but JDK 11 is the baseline for AGP 7.4).
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_1_9
+        targetCompatibility JavaVersion.VERSION_1_9
     }
 }
 
