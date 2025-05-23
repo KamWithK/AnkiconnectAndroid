@@ -30,8 +30,9 @@ public class Service extends android.app.Service {
         try {
             server = new Router(PORT, this);
         } catch (IOException e) {
-            Log.w("Httpd", "The Server was unable to start");
-            e.printStackTrace();
+            Log.e("Httpd", "The Server was unable to start.", e);
+            stopSelf(); // Stop the service if the server can't start
+            return;
         }
     }
 
@@ -48,6 +49,7 @@ public class Service extends android.app.Service {
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Ankiconnect Android")
+                .setContentText("AnkiConnect service is running.")
                 .setSmallIcon(R.mipmap.app_launcher)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
