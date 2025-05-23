@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -22,9 +23,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.Observer;
+
 
 import com.kamwithk.ankiconnectandroid.ankidroid_api.IntegratedAPI;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String CHANNEL_ID = "ankiConnectAndroid";
     private NotificationManager notificationManager;
     private ActivityResultLauncher<String> requestPermissionLauncher;
+    private Button startServiceButton;
+    private Button stopServiceButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,26 +68,45 @@ public class MainActivity extends AppCompatActivity {
 
         // toolbar support
         Toolbar toolbar = findViewById(R.id.materialToolbar);
+
+        try {
+            startServiceButton = findViewById(R.id.start_service_btn); 
+            stopServiceButton = findViewById(R.id.stop_service_btn); 
+        } catch (Exception e) {
+            android.util.Log.e("MainActivity", "Could not find start/stop buttons. Check IDs in XML.", e);
+        }
+
         setSupportActionBar(toolbar);
 
         IntegratedAPI.authenticate(this);
 
-        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "Ankiconnect Android", NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "Ankiconnect Android",
+                NotificationManager.IMPORTANCE_DEFAULT);
         notificationManager = getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(notificationChannel);
 
-        // this cannot be put inside attemptGrantNotifyPermissions, because it is called by
+        // this cannot be put inside attemptGrantNotifyPermissions, because it is called
+        // by
         // a onClickListener and crashes the app: https://stackoverflow.com/a/67582633
-        requestPermissionLauncher =
-                registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+        requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
                     if (!isGranted) {
-                        Toast.makeText(this, "Attempting to start server without notification...", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "Attempting to start server without notification...", Toast.LENGTH_LONG)
+                                .show();
                     }
                     startService();
                 });
+                
+        // Observe the service running state
+        Service.serviceRunningState.observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isRunning) {
+                updateButtonStates(isRunning);
+            }
+        });
     }
 
-    protected  void onStart() {
+    protected void onStart() {
         super.onStart();
         startServiceWrap();
     }
@@ -122,13 +145,17 @@ public class MainActivity extends AppCompatActivity {
         // explanation for shouldShowRequestPermissionRationale is shown below
         // (taken from: https://stackoverflow.com/a/39739972):
         //
-        // This method returns true if the app has requested this permission previously and the
-        // user denied the request. Note: If the user turned down the permission request in the
-        // past and chose the Don't ask again option in the permission request system dialog,
+        // This method returns true if the app has requested this permission previously
+        // and the
+        // user denied the request. Note: If the user turned down the permission request
+        // in the
+        // past and chose the Don't ask again option in the permission request system
+        // dialog,
         // this method returns false.
         if (shouldShowRequestPermissionRationale(POST_NOTIFICATIONS)) {
             // Explain that notifications are "needed" to display the server
-            new NotificationsPermissionDialogFragment().show(this.getSupportFragmentManager(), "post_notifications_dialog");
+            new NotificationsPermissionDialogFragment().show(this.getSupportFragmentManager(),
+                    "post_notifications_dialog");
         } else {
             // Directly ask for the permission.
             requestPermissionLauncher.launch(POST_NOTIFICATIONS);
@@ -146,12 +173,11 @@ public class MainActivity extends AppCompatActivity {
         ContextCompat.startForegroundService(this, serviceIntent);
     }
 
-
     public void startServiceBtn(View view) {
         startServiceWrap();
     }
 
-    public void startServiceWrap(){
+    public void startServiceWrap() {
         boolean notificationsEnabled = notificationManager.areNotificationsEnabled();
         if (notificationsEnabled) {
             startService();
@@ -163,5 +189,24 @@ public class MainActivity extends AppCompatActivity {
     public void stopServiceBtn(View view) {
         Intent serviceIntent = new Intent(this, Service.class);
         stopService(serviceIntent);
+    }
+
+    private void updateButtonStates(boolean isRunning) {
+        if (startServiceButton == null || stopServiceButton == null) {
+            return;
+        }
+
+        if (isRunning) {
+            startServiceButton.setEnabled(false);
+            stopServiceButton.setEnabled(true);
+            startServiceButton.setText("Server is running at port " + Service.PORT);
+            stopServiceButton.setText("Stop Service");
+            return;
+        }
+
+        startServiceButton.setEnabled(true);
+        stopServiceButton.setEnabled(false);
+        startServiceButton.setText("Start Service");
+        stopServiceButton.setText("Server stopped");
     }
 }
