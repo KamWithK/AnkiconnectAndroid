@@ -47,12 +47,14 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
+                android:id="@+id/start_service_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="startServiceBtn"
                 android:text="Start Service" />
 
             <Button
+                android:id="@+id/stop_service_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="stopServiceBtn"
