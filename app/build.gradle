@@ -9,8 +9,8 @@ android {
         applicationId "com.kamwithk.ankiconnectandroid"
         minSdk 26
         targetSdk 33
-        versionCode 13
-        versionName "1.13"
+        versionCode 15
+        versionName "1.15"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -40,6 +40,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_9
         targetCompatibility JavaVersion.VERSION_1_9
     }
+    namespace 'com.kamwithk.ankiconnectandroid'
 }
 
 dependencies {
