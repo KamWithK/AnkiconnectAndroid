@@ -3,14 +3,21 @@
 
     <string name="action_settings">Settings</string>
     <string name="settings_overlay_permissions_title">Access Overlay Permissions</string>
+    <string name="settings_manage_all_files_permissions_title">Access Manage All Files Permissions</string>
+    <string name="settings_manage_all_files_permissions_summary">If a custom local audio directory is chosen, this permission may be required.</string>
     <string name="settings_permissions_header">Permissions</string>
     <string name="settings_overlay_permissions_summary">Allows Ankiconnect Android to open AnkiDroid\'s card browser.</string>
+    <string name="settings_preferred_storage_header">Local Audio Settings</string>
     <string name="settings_other_header">Other</string>
     <string name="settings_forvo_language_title">Forvo language</string>
     <string name="settings_forvo_language_summary">Sets the language to use for Forvo audio.</string>
     <string name="settings_forvo_language_dialog_title">Select Language</string>
-    <string name="settings_preferred_storage_location_title">Choose Local Audio Directory Location</string>
-    <string name="settings_preferred_storage_location_summary">Allows you to choose where to fetch local audio data from.</string>
+    <string name="settings_preferred_storage_location_title">Choose Local Audio Storage Device</string>
+    <string name="settings_preferred_storage_location_summary">Allows you to choose which storage device to use, such as an external SD card. May only have one option if the external storage device is treated as internal or none is found.</string>
+    <string name="settings_preferred_storage_dir_path_title">Choose Local Audio Directory</string>
+    <string name="settings_preferred_storage_dir_path_summary">Allows you to choose which directory the local audio file is in. If a user-owned folder like Documents or Audio is chosen, the Manage All Files permission may also need to be granted to ensure read access to the file.</string>
+    <string name="reset_preferred_storage_settings_title">Reset Local Audio settings</string>
+    <string name="reset_preferred_storage_settings_summary">Resets the local audio settings back to default.</string>
     <string name="get_dir_path_title">Print Local Audio Directory</string>
     <string name="get_dir_path_title_summary">Prints the expected directory path where the local audio is searched in.</string>
     <string name="dialog_notif_perm_info">This app uses a persistent notification to inform you that the server is running. Please enable notifications to see this.</string>
