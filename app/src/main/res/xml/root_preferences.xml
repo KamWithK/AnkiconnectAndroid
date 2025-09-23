@@ -1,31 +1,71 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:iconSpaceReserved="false">
 
-    <PreferenceCategory app:title="@string/settings_permissions_header">
+    <PreferenceCategory app:iconSpaceReserved="false" app:title="@string/settings_permissions_header">
 
         <Preference
-            app:key="access_overlay_perms"
-            app:title="@string/settings_overlay_permissions_title"
-            app:summary="@string/settings_overlay_permissions_summary" />
+                app:iconSpaceReserved="false"
+                app:key="access_overlay_perms"
+                app:title="@string/settings_overlay_permissions_title"
+                app:summary="@string/settings_overlay_permissions_summary" />
+        <Preference
+                app:iconSpaceReserved="false"
+                app:key="access_manage_all_files_perms"
+                app:title="@string/settings_manage_all_files_permissions_title"
+                app:summary="@string/settings_manage_all_files_permissions_summary" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Access from other sites"
-        app:summary="Allow access from an external site">
+            android:title="Access from other sites"
+            app:summary="Allow access from an external site"
+            app:iconSpaceReserved="false">
 
         <EditTextPreference
-            app:dialogMessage="Enter the hostname you want to allow access from."
-            app:dialogTitle="Enter CORS Host"
-            app:key="cors_host"
-            app:title="CORS Host"
-            app:useSimpleSummaryProvider="true" />
+                app:iconSpaceReserved="false"
+                app:dialogMessage="Enter the hostname you want to allow access from."
+                app:dialogTitle="Enter CORS Host"
+                app:key="cors_host"
+                app:title="CORS Host"
+                app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/settings_other_header">
+    <PreferenceCategory
+            app:iconSpaceReserved="false"
+            app:title="@string/settings_preferred_storage_header">
 
         <ListPreference
+                app:iconSpaceReserved="false"
+                app:key="storage_location"
+                app:title="@string/settings_preferred_storage_location_title"
+                app:summary="@string/settings_preferred_storage_location_summary"/>
+        <EditTextPreference
+                app:iconSpaceReserved="false"
+                app:key="storage_dir_path"
+                app:title="@string/settings_preferred_storage_dir_path_title"
+                app:summary="@string/settings_preferred_storage_dir_path_summary"
+                app:defaultValue="/Android/data/com.kamwithk.ankiconnectandroid/files"/>
+        <Preference
+                app:iconSpaceReserved="false"
+                app:key="reset_storage_settings"
+                app:title="@string/reset_preferred_storage_settings_title"
+                app:summary="@string/reset_preferred_storage_settings_summary"/>
+        <Preference
+                app:iconSpaceReserved="false"
+                app:key="get_dir_path"
+                app:title="@string/get_dir_path_title"
+                app:summary="@string/get_dir_path_title_summary" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            app:iconSpaceReserved="false"
+            app:title="@string/settings_other_header">
+
+        <ListPreference
+            app:iconSpaceReserved="false"
             app:key="forvo_language"
             app:title="@string/settings_forvo_language_title"
             app:summary="@string/settings_forvo_language_summary"
@@ -33,11 +73,6 @@
             android:defaultValue="ja"
             android:entries="@array/forvo_language_entries"
             android:entryValues="@array/forvo_language_values" />
-
-        <Preference
-            app:key="get_dir_path"
-            app:title="@string/get_dir_path_title"
-            app:summary="@string/get_dir_path_title_summary" />
 
     </PreferenceCategory>
 </PreferenceScreen>
