@@ -221,8 +221,9 @@ To fix this, simply switch it on (under `Yomitan Settings` → `General` → `En
 
 ### Problem: The add card button does not appear
 - Check that the `Enable Anki integration` setting in Yomitan is indeed enabled, and properly connected.
-- Under `Anki` → `Configure Anki card format`, ensure that the Deck and Model at the top right corner
+- Under `Anki` → `Configure Anki flashcards...`, ensure that the Deck and Model at the top right corner
     are not highlighted in red. If they are, please select the correct deck and/or model.
+- Under `Anki` → `Configure Anki flashcards...`, delete extraneous formats, leaving just one.
 - Under `Anki` → `Show card tags`, make sure this is set to `Never`.
 
 
