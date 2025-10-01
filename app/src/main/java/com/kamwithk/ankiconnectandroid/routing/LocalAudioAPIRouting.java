@@ -3,8 +3,10 @@ package com.kamwithk.ankiconnectandroid.routing;
 import static fi.iki.elonen.NanoHTTPD.newFixedLengthResponse;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
+import androidx.preference.PreferenceManager;
 import androidx.room.Room;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 
@@ -27,6 +29,9 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -76,9 +81,21 @@ public class LocalAudioAPIRouting {
 
     private EntriesDatabase getDB() {
         // TODO global instance?
-        File databasePath = new File(context.getExternalFilesDir(null), "android.db");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        final File externalFilesDir = context.getExternalFilesDir(null);
+        final String preferredStorageDevicePath = sharedPreferences.getString("storage_location", "");
+        final String preferredDirectoryPath = sharedPreferences.getString("storage_dir_path", "");
+
+        Path preferredPath = Paths.get(preferredStorageDevicePath, preferredDirectoryPath, "android.db");
+
+        // If the preferences point to a file store that no longer is available
+        // Attempt the default externalFilesDir set by the OS.
+        if (!Files.isReadable(preferredPath)){
+            preferredPath = Paths.get(externalFilesDir.getAbsolutePath(), "android.db");
+        }
+
         EntriesDatabase db = Room.databaseBuilder(context,
-                EntriesDatabase.class, databasePath.toString()).build();
+                EntriesDatabase.class, preferredPath.toString()).build();
         return db;
     }
 
