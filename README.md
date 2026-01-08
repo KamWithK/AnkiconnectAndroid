@@ -45,7 +45,7 @@ Here's how to set everything up from scratch (if you've already got Yomitan work
     1. Scanning: `Scan delay` can feel laggy and so can be set to `0`
     2. Scanning: Navigate to `Scanning` → `Configure advanced scanning inputs`
         1. Ensure that advanced options within the `Scanning Inputs` window is enabled. To do this, scroll to the right, and tap on the three dots.
-        2.   <details> <summary>For Yomitan, use the defaults or match your settings to be like this image: <i>(click here)</i></summary>
+        2. <details><summary>For Yomitan, use the defaults or match your settings to be like this image: <i>(click here)</i></summary>
             <a href="./img/scanning_inputs_yomitan.png"><img src="./img/scanning_inputs_yomitan.png" width="400" /></a>
             </details>
         3. Navigate to `Scanning` → `Support inputs for devices with touch screens`
