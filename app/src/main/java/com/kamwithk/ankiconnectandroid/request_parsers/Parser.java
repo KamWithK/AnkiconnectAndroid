@@ -62,6 +62,10 @@ public class Parser {
         return raw_data.get("params").getAsJsonObject().get("query").getAsString();
     }
 
+    public static String getCardQuery(JsonObject raw_data) {
+        return raw_data.get("params").getAsJsonObject().get("query").getAsString();
+    }
+
     public static long getUpdateNoteFieldsId(JsonObject raw_data) {
         return raw_data.get("params").getAsJsonObject().get("note").getAsJsonObject().get("id").getAsLong();
     }
@@ -135,6 +139,15 @@ public class Parser {
             noteIds.add(noteId.getAsLong());
         }
         return noteIds;
+    }
+
+    public static ArrayList<Long> getCardIds(JsonObject raw_data) {
+        ArrayList<Long> cardIds = new ArrayList<>();
+        JsonArray jsonCardIds = raw_data.get("params").getAsJsonObject().get("cards").getAsJsonArray();
+        for(JsonElement cardId: jsonCardIds) {
+            cardIds.add(cardId.getAsLong());
+        }
+        return cardIds;
     }
 
     public static String getMediaFilename(JsonObject raw_data) {
