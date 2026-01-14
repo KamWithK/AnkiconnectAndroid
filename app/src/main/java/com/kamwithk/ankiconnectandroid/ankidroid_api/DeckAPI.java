@@ -26,26 +26,22 @@ public class DeckAPI {
     /**
      * Try to find AnkiDroid's ContentProvider by checking both release and debug authorities
      * Returns the authority string (e.g., "com.ichi2.anki.debug.flashcards")
+     * Always manually checks both authorities and verifies accessibility to handle
+     * Android 11+ package visibility restrictions on Samsung and other devices.
      */
     private String findAnkiDroidAuthority() {
         if (cachedAuthority != null) {
             return cachedAuthority;
         }
 
-        // First try the standard method
-        String packageName = AddContentApi.getAnkiDroidPackageName(context);
-        if (packageName != null) {
-            // If standard method works, use the standard authority
-            cachedAuthority = FlashCardsContract.AUTHORITY;
-            Log.d(TAG, "Using standard AnkiDroid authority: " + cachedAuthority);
-            return cachedAuthority;
-        }
-
-        // If that fails, manually check both release and debug authorities
+        // Always manually check both release and debug authorities
+        // Prioritize debug build first since it has the /cards endpoint we need
+        // Don't rely on AddContentApi.getAnkiDroidPackageName() as it may not reflect
+        // which ContentProvider is actually accessible on Android 11+ devices
         PackageManager pm = context.getPackageManager();
         String[] authorities = {
-            "com.ichi2.anki.flashcards",           // Release build
-            "com.ichi2.anki.debug.flashcards"      // Debug build
+            "com.ichi2.anki.debug.flashcards",      // Debug build (prioritized - has /cards endpoint)
+            "com.ichi2.anki.flashcards"             // Release build (fallback)
         };
 
         for (String authority : authorities) {
@@ -61,15 +57,32 @@ public class DeckAPI {
                 }
                 
                 if (providerInfo != null) {
-                    Log.d(TAG, "Found AnkiDroid ContentProvider with authority: " + authority + ", package: " + providerInfo.packageName);
-                    cachedAuthority = authority;
-                    return cachedAuthority;
+                    // Verify the ContentProvider is actually accessible by trying a test query
+                    Uri testUri = Uri.parse("content://" + authority + "/decks");
+                    try {
+                        Cursor testCursor = context.getContentResolver().query(testUri, new String[]{"_id"}, null, null, null);
+                        if (testCursor != null) {
+                            testCursor.close();
+                            Log.d(TAG, "Found accessible AnkiDroid ContentProvider with authority: " + authority + ", package: " + providerInfo.packageName);
+                            cachedAuthority = authority;
+                            return cachedAuthority;
+                        } else {
+                            Log.d(TAG, "Authority " + authority + " found but test query returned null cursor");
+                        }
+                    } catch (IllegalArgumentException e) {
+                        Log.d(TAG, "Authority " + authority + " found but URI not supported: " + e.getMessage());
+                    } catch (SecurityException e) {
+                        Log.d(TAG, "Authority " + authority + " found but access denied: " + e.getMessage());
+                    } catch (Exception e) {
+                        Log.d(TAG, "Authority " + authority + " found but test query failed: " + e.getMessage());
+                    }
                 }
             } catch (Exception e) {
                 Log.d(TAG, "Error checking authority " + authority + ": " + e.getMessage());
             }
         }
 
+        Log.e(TAG, "Could not find any accessible AnkiDroid ContentProvider authority");
         return null;
     }
 
