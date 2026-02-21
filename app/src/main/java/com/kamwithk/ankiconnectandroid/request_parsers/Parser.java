@@ -21,20 +21,38 @@ public class Parser {
     public static Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
     public static Gson gsonNoSerialize = new GsonBuilder().setPrettyPrinting().create();
 
-    public static JsonObject parse(String raw_data) {
-        return JsonParser.parseString(raw_data).getAsJsonObject();
-    }
+public static JsonObject parse(String raw_data) {
+    // Use a more lenient parser that accepts both numeric and string version fields
+    com.google.gson.stream.JsonReader reader = new com.google.gson.stream.JsonReader(
+        new java.io.StringReader(raw_data)
+    );
+    reader.setLenient(true);
+    return JsonParser.parseReader(reader).getAsJsonObject();
+}
 
     public static String get_action(JsonObject data) {
         return data.get("action").getAsString();
     }
 
-    public static int get_version(JsonObject data, int fallback) {
-        if (data.has("version")) {
-            return data.get("version").getAsInt();
+public static int get_version(JsonObject data, int fallback) {
+    if (data.has("version")) {
+        JsonElement versionElement = data.get("version");
+        // Handle both string and numeric version fields
+        if (versionElement.isJsonPrimitive()) {
+            com.google.gson.JsonPrimitive primitive = versionElement.getAsJsonPrimitive();
+            if (primitive.isNumber()) {
+                return primitive.getAsInt();
+            } else if (primitive.isString()) {
+                try {
+                    return Integer.parseInt(primitive.getAsString());
+                } catch (NumberFormatException e) {
+                    return fallback;
+                }
+            }
         }
-        return fallback;
     }
+    return fallback;
+}
 
     public static String getDeckName(JsonObject raw_data) {
         return raw_data.get("params").getAsJsonObject().get("note").getAsJsonObject().get("deckName").getAsString();
