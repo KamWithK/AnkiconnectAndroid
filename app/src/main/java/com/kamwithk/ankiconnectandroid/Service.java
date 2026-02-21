@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.lifecycle.MutableLiveData;
 import com.kamwithk.ankiconnectandroid.routing.Router;
 
 import java.io.IOException;
@@ -19,6 +20,9 @@ public class Service extends android.app.Service {
 
     private Router server;
 
+    // LiveData to observe service state
+    public static final MutableLiveData<Boolean> serviceRunningState = new MutableLiveData<>(false);
+
     @Override
     public void onCreate() { // Only one time
         super.onCreate();
@@ -26,8 +30,9 @@ public class Service extends android.app.Service {
         try {
             server = new Router(PORT, this);
         } catch (IOException e) {
-            Log.w("Httpd", "The Server was unable to start");
-            e.printStackTrace();
+            Log.e("Httpd", "The Server was unable to start.", e);
+            stopSelf(); // Stop the service if the server can't start
+            return;
         }
     }
 
@@ -44,6 +49,7 @@ public class Service extends android.app.Service {
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Ankiconnect Android")
+                .setContentText("AnkiConnect service is running.")
                 .setSmallIcon(R.mipmap.app_launcher)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
@@ -51,15 +57,21 @@ public class Service extends android.app.Service {
 
         startForeground(1, notification);
 
+        // Update LiveData on main thread
+        serviceRunningState.postValue(true);
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        server.stop();
+        if (server != null) {
+            server.stop();
+        }
+
+        // Update LiveData on main thread
+        serviceRunningState.postValue(false);
         super.onDestroy();
     }
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
