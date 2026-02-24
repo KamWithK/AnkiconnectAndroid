@@ -28,6 +28,7 @@ public class IntegratedAPI {
     public final DeckAPI deckAPI;
     public final ModelAPI modelAPI;
     public final NoteAPI noteAPI;
+    public final CardAPI cardAPI;
     public final MediaAPI mediaAPI;
     private final AddContentApi api; // TODO: Combine all API classes???
 
@@ -39,6 +40,7 @@ public class IntegratedAPI {
         deckAPI = new DeckAPI(context);
         modelAPI = new ModelAPI(context);
         noteAPI = new NoteAPI(context);
+        cardAPI = new CardAPI(context, noteAPI);
         mediaAPI = new MediaAPI(context);
 
         api = new AddContentApi(context);

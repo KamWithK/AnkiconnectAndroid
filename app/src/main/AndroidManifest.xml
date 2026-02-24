@@ -14,9 +14,18 @@
         > system-level interaction with the user.
     -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!-- Permission required to access AnkiDroid's ContentProvider (release build) -->
+    <uses-permission android:name="com.ichi2.anki.permission.READ_WRITE_DATABASE" />
+    <!-- Permission required to access AnkiDroid's ContentProvider (debug build) -->
+    <uses-permission android:name="com.ichi2.anki.debug.permission.READ_WRITE_DATABASE" />
 
     <queries>
         <package android:name="com.ichi2.anki" />
+        <package android:name="com.ichi2.anki.debug" />
+        <!-- Explicitly query for AnkiDroid's ContentProvider (release build) -->
+        <provider android:authorities="com.ichi2.anki.flashcards" />
+        <!-- Explicitly query for AnkiDroid's ContentProvider (debug build) -->
+        <provider android:authorities="com.ichi2.anki.debug.flashcards" />
     </queries>
 
     <application
