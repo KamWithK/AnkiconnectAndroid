@@ -24,10 +24,10 @@
 
         <EditTextPreference
                 app:iconSpaceReserved="false"
-                app:dialogMessage="Enter the hostname you want to allow access from."
-                app:dialogTitle="Enter CORS Host"
+                app:dialogMessage="Enter the hostnames you want to allow access from. Each hostname should be on a new line."
+                app:dialogTitle="Enter CORS Hosts"
                 app:key="cors_host"
-                app:title="CORS Host"
+                app:title="CORS Hosts"
                 app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
