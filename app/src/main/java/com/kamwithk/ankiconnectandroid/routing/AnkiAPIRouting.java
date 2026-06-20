@@ -42,6 +42,8 @@ public class AnkiAPIRouting {
 
     private String findRoute(JsonObject raw_json) throws Exception {
         switch (Parser.get_action(raw_json)) {
+            case "requestPermission":
+                return requestPermission();
             case "version":
                 return version();
             case "deckNames":
@@ -133,6 +135,28 @@ public class AnkiAPIRouting {
 
     private String version() {
         return "6";
+    }
+
+    /*
+     * Implements AnkiConnect's "requestPermission" action.
+     * KOReader's anki.koplugin calls this before every sync attempt to check
+     * whether the AnkiConnect server is reachable (see AnkiConnect:is_running()
+     * in ankiconnect.lua). Without this case, the switch in findRoute() fell
+     * through to "default", which returned the plain string "AnkiConnect v.6"
+     * instead of JSON. findRouteHandleError() then tried to re-parse that
+     * plain string as JSON (JsonParser.parseString(...)), which threw
+     * MalformedJsonException, which in turn crashed when KOReader tried to
+     * render the resulting error popup.
+     * AnkiConnect Android has no concept of API keys/origins to authorize, so
+     * we simply always grant permission, matching desktop AnkiConnect's
+     * response shape: {"permission": "granted", "requireApiKey": false, "version": 6}
+     */
+    private String requestPermission() {
+        JsonObject result = new JsonObject();
+        result.addProperty("permission", "granted");
+        result.addProperty("requireApiKey", false);
+        result.addProperty("version", 6);
+        return Parser.gson.toJson(result);
     }
 
     private String default_version() {
